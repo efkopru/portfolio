@@ -10,7 +10,10 @@ test('contact form supports same-page delivery only to the configured FormSubmit
   assert.ok(form.includes(`action="https://formsubmit.co/${profile.email}" method="POST"`));
   assert.match(form, /\bdata-contact-form(?:\s|>)/);
   assert.ok(form.includes(`data-contact-endpoint="https://formsubmit.co/ajax/${profile.email}"`));
-  assert.ok(form.includes('aria-describedby="contact-privacy"'));
+  assert.doesNotMatch(html, /\bcontact-privacy\b/, 'Remove the privacy note and its accessibility reference together');
+  assert.doesNotMatch(html, /Your email, subject, and message are sent through FormSubmit/);
+  assert.doesNotMatch(html, /Submission results appear here without leaving this page/);
+  assert.doesNotMatch(html, /<a\b[^>]*\bhref="[^"]*\/privacy(?:\/|\.html)[^"]*"/i, 'Keep privacy links off the contact page');
   for (const [id, name, label] of [['contact-email', 'email', 'Your email'], ['contact-subject', '_subject', 'Subject'], ['contact-message', 'message', 'Message']]) {
     assert.ok(form.includes(`<label for="${id}">${label}</label>`));
     assert.match(form, new RegExp(`<(?:input|textarea) id="${id}" name="${name}"[^>]* required`));
@@ -43,6 +46,17 @@ test('contact delivery permission and privacy disclosure match the form', async 
   assert.ok(!privacy.includes('No contact form collects or submits'));
 });
 
+test('published footers omit privacy notes while the direct privacy page remains available', async () => {
+  const manifest = JSON.parse(await readFile(new URL('../dist/build-manifest.json', import.meta.url), 'utf8'));
+  assert.ok(manifest.pages.includes('privacy/index.html'), 'Retain the existing direct route');
+  for (const path of manifest.pages) {
+    const html = await readFile(new URL(`../dist/${path}`, import.meta.url), 'utf8');
+    const footer = html.match(/<footer\b[^]*?<\/footer>/)?.[0];
+    assert.ok(footer, `${path}: retain the site footer`);
+    assert.doesNotMatch(footer, /privacy/i, `${path}: remove visible privacy links and notes`);
+  }
+});
+
 test('contact success popup is accessible, initially closed, and independent of form submission', async () => {
   const html = await readFile(new URL('../dist/contact/index.html', import.meta.url), 'utf8');
   const form = html.match(/<form\b[^]*?<\/form>/)?.[0];
@@ -55,7 +69,8 @@ test('contact success popup is accessible, initially closed, and independent of 
   assert.match(startTag, /\baria-describedby="contact-success-description"/);
   assert.doesNotMatch(startTag, /\sopen(?:\s|=|>)/, 'Only a confirmed submission may open the modal');
   assert.match(dialog, /<h2\b[^>]*\bid="contact-success-title"[^>]*>Message sent<\/h2>/);
-  assert.match(dialog, /<p\b[^>]*\bid="contact-success-description"[^>]*>[^<]+<\/p>/);
+  assert.match(dialog, /<p\b[^>]*\bid="contact-success-description"[^>]*>Thank you\. Your message has been submitted successfully\.<\/p>/);
+  assert.doesNotMatch(dialog, /refresh|send another message/i, 'The confirmation does not instruct visitors to bypass the send lock');
   assert.match(dialog, /<button\b(?=[^>]*\btype="button")(?=[^>]*\bdata-contact-success-close(?:\s|>))(?=[^>]*\bautofocus(?:\s|>))[^>]*>Close<\/button>/);
   assert.ok(!form.includes('data-contact-success'), 'The confirmation cannot resubmit or sit inside the busy form');
   const submit = form.match(/<button\b[^>]*\bdata-contact-submit[^>]*>/)?.[0];

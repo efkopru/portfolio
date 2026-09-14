@@ -65,7 +65,7 @@
         sent = true;
         contactForm.reset();
         status.dataset.state = 'success';
-        status.textContent = 'Message sent. Refresh this page to send another message.';
+        status.textContent = 'Message sent.';
       } catch {
         // A timeout can happen after acceptance, so never retry automatically.
         status.dataset.state = 'error';

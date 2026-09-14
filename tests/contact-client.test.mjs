@@ -203,8 +203,8 @@ function assertSent(formPage) {
   assert.notEqual(formPage.attributes.get('aria-busy'), 'true', 'A confirmed submission is no longer busy');
   assert.ok(formPage.fields.every(field => field.readOnly && !field.disabled), 'Keep the completed form read-only');
   assert.equal(formPage.status.dataset.state, 'success');
-  assert.match(formPage.status.textContent, /message sent/i);
-  assert.match(formPage.status.textContent, /refresh this page/i, 'Explain how another message can be sent');
+  assert.equal(formPage.status.textContent, 'Message sent.');
+  assert.doesNotMatch(formPage.status.textContent, /refresh|send another message/i, 'Do not display instructions for bypassing the send lock');
   assert.equal(formPage.timers.size, 0);
   assert.deepEqual(formPage.navigation, [], 'The success popup must stay on the current page');
   assert.deepEqual(formPage.storage, [], 'The send lock is document-scoped, not persisted');
