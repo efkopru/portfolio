@@ -1,6 +1,6 @@
 :root{color-scheme:light;--bg:#e0e9f0;--ink:#101126;--muted:#43505d;--accent:#ffa200;--line:#aebcc7;--content:1180px;font-family:Lato,Arial,sans-serif;font-size:16px;color:var(--ink);background:var(--bg)}
 :root{--surface:#f8fbfd;--surface-alt:#edf3f7;--control-border:#738493;--heading:#a45c00;--focus:#895100;--button-bg:#101126;--button-ink:#fff;--hover:#1011260d;--rule:#898989;--footer-overlay:#e0e9f0aa;--logo-bg:transparent}
-:root[data-theme="midnight"]{color-scheme:dark;--bg:#111c2b;--ink:#eef4fa;--muted:#b3c4d5;--accent:#73d4e6;--line:#465d73;--surface:#1b2b3e;--surface-alt:#1b2b3e;--control-border:#7890a8;--heading:#73d4e6;--focus:#ffc768;--button-bg:#73d4e6;--button-ink:#101d2c;--hover:#eef4fa12;--rule:#284257;--footer-overlay:#111c2bf2;--logo-bg:#e0e9f0}
+:root[data-theme="midnight"]{color-scheme:dark;--bg:#111c2b;--ink:#eef4fa;--muted:#b3c4d5;--accent:#73d4e6;--line:#465d73;--surface:#1b2b3e;--surface-alt:#1b2b3e;--control-border:#7890a8;--heading:#73d4e6;--focus:#ffc768;--button-bg:#73d4e6;--button-ink:#101d2c;--hover:#eef4fa12;--rule:#284257;--footer-overlay:#111c2bf2;--logo-bg:transparent}
 :root[data-theme="evergreen"]{color-scheme:light;--bg:#f3f7f2;--ink:#193b31;--muted:#4b6559;--accent:#246344;--line:#a8bcb0;--surface:#fff;--surface-alt:#e7efe8;--control-border:#708a7b;--heading:#246344;--focus:#8b4e00;--button-bg:#225d43;--button-ink:#fff;--hover:#225d4310;--rule:#6f9281;--footer-overlay:#f3f7f2eb;--logo-bg:transparent}
 :root[data-theme="sandstone"]{color-scheme:light;--bg:#f7f2ea;--ink:#49362a;--muted:#705d4e;--accent:#94502f;--line:#cbbdab;--surface:#fffcf7;--surface-alt:#eee4d6;--control-border:#947c67;--heading:#94502f;--focus:#8a4828;--button-bg:#7c422a;--button-ink:#fff;--hover:#7c422a10;--rule:#ae9176;--footer-overlay:#f7f2eaeb;--logo-bg:transparent}
 .contact-form{display:grid;gap:1.2rem;margin-block:2rem}.form-field{display:grid;gap:.5rem;min-width:0}.form-field label{font-weight:700}.form-field input,.form-field textarea{width:100%;min-width:0;border:1px solid #738493;border-radius:4px;padding:.75rem;font:inherit;line-height:1.5;color:var(--ink);background:#f8fbfd}.form-field textarea{min-height:12rem;resize:vertical}.form-field input:focus-visible,.form-field textarea:focus-visible{outline:3px solid #895100;outline-offset:3px}.contact-form .form-note{margin:0;font-size:.9rem;color:var(--muted);overflow-wrap:anywhere}.contact-form .button{justify-self:start}.contact-fallback{font-size:.95rem;overflow-wrap:anywhere;margin-block:1.5rem 2rem}
@@ -21,6 +21,8 @@
 .embed-host{background:var(--surface-alt)}
 .site-footer{background:linear-gradient(var(--footer-overlay),var(--footer-overlay)),url('./assets/gis-background.webp') center 65%/cover}
 .brand img{background:var(--logo-bg);border-radius:3px}
+/* Preserve the transparent original mark; brighten its blues and lettering only in Midnight. */
+:root[data-theme="midnight"] .brand img{filter:invert(1) hue-rotate(180deg) brightness(1.5)}
 .theme-toolbar{display:flex;justify-content:flex-end;align-items:center;gap:.4rem;padding-block:.25rem;font-size:.8125rem}
 .theme-toolbar label{font-weight:700}
 .theme-toolbar select{font:inherit;min-height:32px;min-width:7.75rem;max-width:100%;padding:.2rem .5rem;border:1px solid var(--control-border);border-radius:4px;background:var(--surface);color:var(--ink);cursor:pointer}

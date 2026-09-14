@@ -202,6 +202,53 @@ function attributes(tag) {
     .map(([, name, doubleQuoted, singleQuoted, unquoted]) => [name.toLowerCase(), doubleQuoted ?? singleQuoted ?? unquoted ?? '']));
 }
 
+test('Midnight recolors only the original brand image on a transparent backdrop', async () => {
+  const css = (await source('styles.css')).replace(/\/\*[\s\S]*?\*\//g, '');
+  const palette = css.match(/:root\[data-theme=["']midnight["']\]\s*\{([^}]+)\}/);
+  assert.ok(palette, 'Midnight must define its palette');
+  assert.match(palette[1], /(?:^|;)\s*--logo-bg\s*:\s*transparent\s*(?:;|$)/,
+    'Midnight must not add a light background behind the transparent logo');
+  assert.match(css, /\.brand\s+img\s*\{[^}]*\bbackground\s*:\s*var\(--logo-bg\)/,
+    'The brand image must use the theme-specific backdrop');
+
+  const filteredRules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
+    .filter(([, , declarations]) => /(?:^|;)\s*(?:-webkit-)?filter\s*:/.test(declarations));
+  assert.equal(filteredRules.length, 1, 'Recoloring must not filter other themes, page content, or screenshots');
+  const [, selector, declarations] = filteredRules[0];
+  assert.match(selector.trim(), /^:root\[data-theme=["']midnight["']\]\s+\.brand\s+img$/,
+    'The filter must target only the Midnight brand image, never a parent or broad image selector');
+  assert.match(declarations, /(?:^|;)\s*filter\s*:\s*invert\(1\)\s+hue-rotate\(180deg\)\s+brightness\(1\.5\)\s*(?:;|$)/,
+    'Preserve the logo details and alpha while adapting its original colors');
+});
+
+test('every generated page preserves the original accessible home logo and its dimensions', async () => {
+  const manifest = JSON.parse(await source('dist/build-manifest.json'));
+  assert.ok(manifest.pages.length > 0);
+  const logoPath = 'assets/efk-logo.avif';
+  assert.deepEqual(await readFile(new URL(`../dist/${logoPath}`, import.meta.url)),
+    await readFile(new URL(`../${logoPath}`, import.meta.url)), 'Publish the unchanged original logo asset');
+  for (const path of manifest.pages) {
+    const prefix = path.includes('/') ? '../' : './';
+    for (const location of [path, `dist/${path}`]) {
+      const html = await source(location);
+      const brands = [...html.matchAll(/<a\b[^>]*>[\s\S]*?<\/a>/gi)]
+        .filter(([anchor]) => (attributes(anchor.match(/^<a\b[^>]*>/i)[0]).get('class') || '').split(/\s+/).includes('brand'));
+      assert.equal(brands.length, 1, `${location}: exactly one brand home link`);
+      const brand = brands[0][0];
+      const link = attributes(brand.match(/^<a\b[^>]*>/i)[0]);
+      assert.equal(link.get('href'), `${prefix}index.html`, `${location}: preserve the home destination`);
+      assert.equal(link.get('aria-label'), 'Esad Kopru home', `${location}: preserve the accessible home link name`);
+      const images = [...brand.matchAll(/<img\b[^>]*>/gi)];
+      assert.equal(images.length, 1, `${location}: keep a single original logo image`);
+      const image = attributes(images[0][0]);
+      assert.equal(image.get('src'), `${prefix}${logoPath}`, `${location}: preserve the original source`);
+      assert.equal(image.get('width'), '101', `${location}: preserve the logo width`);
+      assert.equal(image.get('height'), '48', `${location}: preserve the logo height`);
+      assert.equal(image.get('alt'), 'EFK Portfolio', `${location}: preserve the logo alternative text`);
+    }
+  }
+});
+
 test('every generated page includes current versioned assets, an early initializer, and a labeled theme selector', async () => {
   const manifest = JSON.parse(await source('dist/build-manifest.json'));
   assert.ok(manifest.pages.length > 0);
