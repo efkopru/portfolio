@@ -1,0 +1,16 @@
+node_modules/
+dist/
+work/
+*.zip
+.env
+.env.*
+!.env.example
+
+# Local-only evidence, agent settings, and one-time image recovery tools.
+docs/
+.agents/
+.codex/
+scripts/restore-project-visuals.mjs
+scripts/restore-screenshots.mjs
+scripts/restore-screenshot-previews.mjs
+scripts/screenshot-metadata.mjs

@@ -1,0 +1,1012 @@
+{
+  "spatial-analysis": [
+    {
+      "src": "assets/screenshots/spatial-analysis-01.png",
+      "caption": "L-M Income And Attendance Zones",
+      "width": 1186,
+      "height": 943,
+      "sourcePage": "https://www.ekopru.com/spatial-analysis",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/LMI_exampMap-AVL9Mn7rM4uyvjKW.PNG",
+      "preview": "assets/screenshots/spatial-analysis-01-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/spatial-analysis-02.png",
+      "caption": "SF Homes Rental Vs Non-Rental Violations",
+      "width": 1491,
+      "height": 811,
+      "sourcePage": "https://www.ekopru.com/spatial-analysis",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/SFHomesCEVio-AQE1l0xn8kHGNyGJ.PNG",
+      "preview": "assets/screenshots/spatial-analysis-02-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/spatial-analysis-03.png",
+      "caption": "Vehicle History - Non Emergency Vehicles",
+      "width": 1678,
+      "height": 1020,
+      "sourcePage": "https://www.ekopru.com/spatial-analysis",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/img-A0xqRklDX0Fk61BJ.PNG",
+      "preview": "assets/screenshots/spatial-analysis-03-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/spatial-analysis-04.png",
+      "caption": "Tree Counts And Locations",
+      "width": 1166,
+      "height": 1070,
+      "sourcePage": "https://www.ekopru.com/spatial-analysis",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/treeCount-AMqGRr19gECNEkL7.PNG",
+      "preview": "assets/screenshots/spatial-analysis-04-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/spatial-analysis-05.png",
+      "caption": "Line Of Sight - Viewshed",
+      "width": 1424,
+      "height": 979,
+      "sourcePage": "https://www.ekopru.com/spatial-analysis",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/viewshed-YKbpR03Zj5UpvjpG.PNG",
+      "preview": "assets/screenshots/spatial-analysis-05-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/spatial-analysis-06.jpg",
+      "caption": "Sea Level Rise",
+      "width": 1283,
+      "height": 571,
+      "sourcePage": "https://www.ekopru.com/spatial-analysis",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/img-ALpvRV2kOyIlXKWK.jpg",
+      "preview": "assets/screenshots/spatial-analysis-06-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/spatial-analysis-07.jpg",
+      "caption": "Land Cover Change Detection",
+      "width": 1100,
+      "height": 850,
+      "sourcePage": "https://www.ekopru.com/spatial-analysis",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/img-ALpvRV29VLTjKW16.jpg",
+      "preview": "assets/screenshots/spatial-analysis-07-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/spatial-analysis-08.jpg",
+      "caption": "Suitable Parcels",
+      "width": 2100,
+      "height": 1500,
+      "sourcePage": "https://www.ekopru.com/spatial-analysis",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/img-dOqxR9ZBwkTLNL3W.jpg",
+      "preview": "assets/screenshots/spatial-analysis-08-preview.webp"
+    }
+  ],
+  "arcgis-enterprise-and-online": [
+    {
+      "src": "assets/screenshots/arcgis-enterprise-and-online-01.png",
+      "caption": "ArcGIS Server 10.8 setup",
+      "width": 514,
+      "height": 393,
+      "sourcePage": "https://www.ekopru.com/arcgis-enterprise-and-online",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/arcgis-server-installation-IRKqiSnbXXuBoM3n.png",
+      "preview": "assets/screenshots/arcgis-enterprise-and-online-01-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/arcgis-enterprise-and-online-02.png",
+      "caption": "ArcGIS Web Adaptor architecture diagram",
+      "width": 505,
+      "height": 428,
+      "sourcePage": "https://www.ekopru.com/arcgis-enterprise-and-online",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/web-adapter-xOljLlyUy8YdSZ1y.png",
+      "preview": "assets/screenshots/arcgis-enterprise-and-online-02-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/arcgis-enterprise-and-online-03.png",
+      "caption": "Web scene",
+      "width": 1750,
+      "height": 1011,
+      "sourcePage": "https://www.ekopru.com/arcgis-enterprise-and-online",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/webscene-mk3jb7vRG1iGrkkL.PNG",
+      "preview": "assets/screenshots/arcgis-enterprise-and-online-03-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/arcgis-enterprise-and-online-04.png",
+      "caption": "Web app",
+      "width": 1908,
+      "height": 947,
+      "sourcePage": "https://www.ekopru.com/arcgis-enterprise-and-online",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/webapp-YD09ROlJEXh5nyrz.PNG",
+      "preview": "assets/screenshots/arcgis-enterprise-and-online-04-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/arcgis-enterprise-and-online-05.png",
+      "caption": "Template app",
+      "width": 1831,
+      "height": 1022,
+      "sourcePage": "https://www.ekopru.com/arcgis-enterprise-and-online",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/img-AVL9Mn7r6Bu5DKzp.PNG",
+      "preview": "assets/screenshots/arcgis-enterprise-and-online-05-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/arcgis-enterprise-and-online-06.png",
+      "caption": "Dashboard",
+      "width": 1678,
+      "height": 1020,
+      "sourcePage": "https://www.ekopru.com/arcgis-enterprise-and-online",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/img-A0xqRklDX0Fk61BJ.PNG",
+      "preview": "assets/screenshots/arcgis-enterprise-and-online-06-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/arcgis-enterprise-and-online-07.png",
+      "caption": "Insights",
+      "width": 1369,
+      "height": 757,
+      "sourcePage": "https://www.ekopru.com/arcgis-enterprise-and-online",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/insights-Yyvn8B9pEBuNW42o.PNG",
+      "preview": "assets/screenshots/arcgis-enterprise-and-online-07-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/arcgis-enterprise-and-online-08.png",
+      "caption": "Related example: Special Event Maps layout in Experience Builder",
+      "width": 2546,
+      "height": 1229,
+      "sourcePage": "https://www.ekopru.com/arcgis-enterprise-and-online",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/special-events-expb-Dlkf4pXeTKe4wqRm.png",
+      "preview": "assets/screenshots/arcgis-enterprise-and-online-08-preview.webp"
+    }
+  ],
+  "qgis": [
+    {
+      "src": "assets/screenshots/qgis-01.png",
+      "caption": "QGIS Rhode Island",
+      "width": 1863,
+      "height": 1002,
+      "sourcePage": "https://www.ekopru.com/qgis",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/qgis-rhode-island-aUSxQMHVxmJtBLJv.png",
+      "preview": "assets/screenshots/qgis-01-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/qgis-02.png",
+      "caption": "QGIS export selected",
+      "width": 1823,
+      "height": 1032,
+      "sourcePage": "https://www.ekopru.com/qgis",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/qgis-export-selected-OkMW0zeuEIV2fuDu.png",
+      "preview": "assets/screenshots/qgis-02-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/qgis-03.png",
+      "caption": "Routing 1",
+      "width": 1913,
+      "height": 942,
+      "sourcePage": "https://www.ekopru.com/qgis",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/routing-1-yzJqEsqyWCrE8aB4.png",
+      "preview": "assets/screenshots/qgis-03-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/qgis-04.png",
+      "caption": "Routing 2",
+      "width": 1916,
+      "height": 1015,
+      "sourcePage": "https://www.ekopru.com/qgis",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/routing-2-ZgVZoJsodu0aNfAc.png",
+      "preview": "assets/screenshots/qgis-04-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/qgis-05.png",
+      "caption": "Routing 3",
+      "width": 1857,
+      "height": 1010,
+      "sourcePage": "https://www.ekopru.com/qgis",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/routing-3-KMq6KpYqqZ7Hq7wK.png",
+      "preview": "assets/screenshots/qgis-05-preview.webp"
+    }
+  ],
+  "building-footprint-extraction": [
+    {
+      "src": "assets/screenshots/building-footprint-extraction-01.png",
+      "caption": "Building extraction result 1",
+      "width": 1529,
+      "height": 657,
+      "sourcePage": "https://www.ekopru.com/building-footprint-extraction",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/building-results-with-text-2-YX4jZXee34Fvrzvj.png",
+      "preview": "assets/screenshots/building-footprint-extraction-01-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/building-footprint-extraction-02.png",
+      "caption": "Building extraction result 2",
+      "width": 1173,
+      "height": 509,
+      "sourcePage": "https://www.ekopru.com/building-footprint-extraction",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/building-results-with-text-1-AR01l788jru51eay.png",
+      "preview": "assets/screenshots/building-footprint-extraction-02-preview.webp"
+    }
+  ],
+  "traveling-salesman": [
+    {
+      "src": "assets/screenshots/traveling-salesman-01.png",
+      "caption": "Best tour figure",
+      "width": 1000,
+      "height": 800,
+      "sourcePage": "https://www.ekopru.com/traveling-salesman",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/best-tour-figure-1-AQEeV0GgzjtjvxEa.png",
+      "preview": "assets/screenshots/traveling-salesman-01-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/traveling-salesman-02.png",
+      "caption": "20 city example",
+      "width": 928,
+      "height": 523,
+      "sourcePage": "https://www.ekopru.com/traveling-salesman",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/20-city-example-AVLxNnGR9XIkPe4w.png",
+      "preview": "assets/screenshots/traveling-salesman-02-preview.webp"
+    }
+  ],
+  "water-conservation-routes": [
+    {
+      "src": "assets/screenshots/water-conservation-routes-01.png",
+      "caption": "Water conservation route 1",
+      "width": 1674,
+      "height": 874,
+      "sourcePage": "https://www.ekopru.com/water-conservation-routes",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/water-conservation-2-Yle45WqEG7ikxOKL.png",
+      "preview": "assets/screenshots/water-conservation-routes-01-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/water-conservation-routes-02.png",
+      "caption": "Water conservation route 2",
+      "width": 1281,
+      "height": 885,
+      "sourcePage": "https://www.ekopru.com/water-conservation-routes",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/water-conservation-1-AQEeVxD0D3i1DJlP.png",
+      "preview": "assets/screenshots/water-conservation-routes-02-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/water-conservation-routes-03.png",
+      "caption": "Water conservation route 3",
+      "width": 1277,
+      "height": 892,
+      "sourcePage": "https://www.ekopru.com/water-conservation-routes",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/water-conservation-1.5-mnl45WqNVySGM9Z3.png",
+      "preview": "assets/screenshots/water-conservation-routes-03-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/water-conservation-routes-04.png",
+      "caption": "Water conservation route 4",
+      "width": 1182,
+      "height": 889,
+      "sourcePage": "https://www.ekopru.com/water-conservation-routes",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/water-conservation-3-YD0EvlBO5LcQKLZ6.png",
+      "preview": "assets/screenshots/water-conservation-routes-04-preview.webp"
+    }
+  ],
+  "python-and-notebooks": [
+    {
+      "src": "assets/screenshots/python-and-notebooks-01.png",
+      "caption": "Flask map-service application setup",
+      "width": 944,
+      "height": 814,
+      "sourcePage": "https://www.ekopru.com/python-and-notebooks",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/img-AVL9Mn7KQvsBM0PR.PNG",
+      "preview": "assets/screenshots/python-and-notebooks-01-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/python-and-notebooks-02.png",
+      "caption": "Map-service creation and publication functions",
+      "width": 861,
+      "height": 562,
+      "sourcePage": "https://www.ekopru.com/python-and-notebooks",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/img-dOqxR9ao9PsNbJe8.PNG",
+      "preview": "assets/screenshots/python-and-notebooks-02-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/python-and-notebooks-03.png",
+      "caption": "Map Service Creator desktop interface",
+      "width": 314,
+      "height": 427,
+      "sourcePage": "https://www.ekopru.com/python-and-notebooks",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/img-Yyvn8B9WNXFXV3a9.PNG",
+      "preview": "assets/screenshots/python-and-notebooks-03-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/python-and-notebooks-extra-1.png",
+      "caption": "SQL table selection for a GIS publishing workflow",
+      "width": 317,
+      "height": 146,
+      "sourcePage": "https://www.ekopru.com/python-and-notebooks",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/img-AGB9Rp2D8Xfp1Rkx.PNG",
+      "preview": "assets/screenshots/python-and-notebooks-extra-1-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/python-and-notebooks-extra-2.png",
+      "caption": "Adding a published GIS service to an ArcGIS Online map",
+      "width": 655,
+      "height": 223,
+      "sourcePage": "https://www.ekopru.com/python-and-notebooks",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/img-ALpvRVeQlRs7pwDa.PNG",
+      "preview": "assets/screenshots/python-and-notebooks-extra-2-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/python-and-notebooks-extra-3.png",
+      "caption": "SQL geography and ObjectID requirements for the publishing workflow",
+      "width": 474,
+      "height": 153,
+      "sourcePage": "https://www.ekopru.com/python-and-notebooks",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/img-AoPl90WLpxS8bW77.PNG",
+      "preview": "assets/screenshots/python-and-notebooks-extra-3-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/python-and-notebooks-extra-4.png",
+      "caption": "Flask geocoder CSV upload configuration",
+      "width": 854,
+      "height": 680,
+      "sourcePage": "https://www.ekopru.com/python-and-notebooks",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/img-AGB9Rp2K3osxJ3g1.PNG",
+      "preview": "assets/screenshots/python-and-notebooks-extra-4-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/python-and-notebooks-extra-5.png",
+      "caption": "Geocoder functions and Flask application routes",
+      "width": 952,
+      "height": 817,
+      "sourcePage": "https://www.ekopru.com/python-and-notebooks",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/img-ALpvRVexp9u9gZkN.PNG",
+      "preview": "assets/screenshots/python-and-notebooks-extra-5-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/python-and-notebooks-extra-6.png",
+      "caption": "Historical CSV upload interface for the geocoding application",
+      "width": 814,
+      "height": 538,
+      "sourcePage": "https://www.ekopru.com/python-and-notebooks",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/img-mv0eg3WVe5h1p64x.PNG",
+      "preview": "assets/screenshots/python-and-notebooks-extra-6-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/python-and-notebooks-extra-7.png",
+      "caption": "Geocoding results and CSV download workflow",
+      "width": 752,
+      "height": 641,
+      "sourcePage": "https://www.ekopru.com/python-and-notebooks",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/img-YlejwEWVq1Ip7lMl.PNG",
+      "preview": "assets/screenshots/python-and-notebooks-extra-7-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/python-and-notebooks-04.png",
+      "caption": "Download from feature service",
+      "width": 639,
+      "height": 1004,
+      "sourcePage": "https://www.ekopru.com/python-and-notebooks",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/downloadFrmFS-mP49RDOKZEcVJjkw.PNG",
+      "preview": "assets/screenshots/python-and-notebooks-04-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/python-and-notebooks-05.png",
+      "caption": "Monitor SDE with Python",
+      "width": 408,
+      "height": 985,
+      "sourcePage": "https://www.ekopru.com/python-and-notebooks",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/monitorSDEpython-mP49RDOK3XH0n9x6.PNG",
+      "preview": "assets/screenshots/python-and-notebooks-05-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/python-and-notebooks-06.png",
+      "caption": "Jupyter zoning",
+      "width": 588,
+      "height": 701,
+      "sourcePage": "https://www.ekopru.com/python-and-notebooks",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/JupNote_zoning-Yyvn8B9OB2CXPVO9.PNG",
+      "preview": "assets/screenshots/python-and-notebooks-06-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/python-and-notebooks-07.png",
+      "caption": "Jupyter water",
+      "width": 436,
+      "height": 790,
+      "sourcePage": "https://www.ekopru.com/python-and-notebooks",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/JupNote_water-m5KyRjM5oBcLgQ79.PNG",
+      "preview": "assets/screenshots/python-and-notebooks-07-preview.webp"
+    }
+  ],
+  "sql-and-javascript-and-r": [
+    {
+      "src": "assets/screenshots/sql-and-javascript-and-r-01.png",
+      "caption": "SQL work",
+      "width": 540,
+      "height": 749,
+      "sourcePage": "https://www.ekopru.com/sql-and-javascript-and-r",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/img-A0xqRklp70cypZM3.PNG",
+      "preview": "assets/screenshots/sql-and-javascript-and-r-01-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/sql-and-javascript-and-r-02.png",
+      "caption": "SQL job",
+      "width": 272,
+      "height": 985,
+      "sourcePage": "https://www.ekopru.com/sql-and-javascript-and-r",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/img-YrD2KPWVXPT9OvRG.PNG",
+      "preview": "assets/screenshots/sql-and-javascript-and-r-02-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/sql-and-javascript-and-r-03.png",
+      "caption": "Legacy ArcGIS JavaScript module imports",
+      "width": 904,
+      "height": 757,
+      "sourcePage": "https://www.ekopru.com/sql-and-javascript-and-r",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/img-mxBQP34aBvUPx2Vl.PNG",
+      "preview": "assets/screenshots/sql-and-javascript-and-r-03-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/sql-and-javascript-and-r-04.png",
+      "caption": "Legacy map initialization and widget functions",
+      "width": 845,
+      "height": 947,
+      "sourcePage": "https://www.ekopru.com/sql-and-javascript-and-r",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/img-AE0eRVPKQ3U463O8.PNG",
+      "preview": "assets/screenshots/sql-and-javascript-and-r-04-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/sql-and-javascript-and-r-05.png",
+      "caption": "City of Lewisville public map interface",
+      "width": 936,
+      "height": 605,
+      "sourcePage": "https://www.ekopru.com/sql-and-javascript-and-r",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/img-A85NRaenqDcv7ew1.PNG",
+      "preview": "assets/screenshots/sql-and-javascript-and-r-05-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/sql-and-javascript-and-r-06.png",
+      "caption": "R set class",
+      "width": 1672,
+      "height": 1380,
+      "sourcePage": "https://www.ekopru.com/sql-and-javascript-and-r",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/r-set-class-AzGN52Wbp8iJ54yr.png",
+      "preview": "assets/screenshots/sql-and-javascript-and-r-06-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/sql-and-javascript-and-r-07.png",
+      "caption": "R example",
+      "width": 1858,
+      "height": 1312,
+      "sourcePage": "https://www.ekopru.com/sql-and-javascript-and-r",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/r-example-YbNJQEl8pxUZOODL.png",
+      "preview": "assets/screenshots/sql-and-javascript-and-r-07-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/sql-and-javascript-and-r-08.png",
+      "caption": "Normalize data",
+      "width": 657,
+      "height": 784,
+      "sourcePage": "https://www.ekopru.com/sql-and-javascript-and-r",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/normalizeData-mxBQP34pQXh82yLj.PNG",
+      "preview": "assets/screenshots/sql-and-javascript-and-r-08-preview.webp"
+    }
+  ],
+  "modelbuilder-and-arcmap-tool-in-vbnet": [
+    {
+      "src": "assets/screenshots/modelbuilder-and-arcmap-tool-in-vbnet-01.png",
+      "caption": "Model Builder",
+      "width": 1088,
+      "height": 508,
+      "sourcePage": "https://www.ekopru.com/modelbuilder-and-arcmap-tool-in-vbnet",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/img-AzG92RMZeKt3qKlP.png",
+      "preview": "assets/screenshots/modelbuilder-and-arcmap-tool-in-vbnet-01-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/modelbuilder-and-arcmap-tool-in-vbnet-02.jpg",
+      "caption": "ArcMap add-in 1",
+      "width": 1363,
+      "height": 726,
+      "sourcePage": "https://www.ekopru.com/modelbuilder-and-arcmap-tool-in-vbnet",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/img-AGB9RpzkGaSx1ObL.jpg",
+      "preview": "assets/screenshots/modelbuilder-and-arcmap-tool-in-vbnet-02-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/modelbuilder-and-arcmap-tool-in-vbnet-03.jpg",
+      "caption": "ArcMap add-in 2",
+      "width": 1346,
+      "height": 666,
+      "sourcePage": "https://www.ekopru.com/modelbuilder-and-arcmap-tool-in-vbnet",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/img-Aq2n4l4G3JF1K2gr.jpg",
+      "preview": "assets/screenshots/modelbuilder-and-arcmap-tool-in-vbnet-03-preview.webp"
+    }
+  ],
+  "doctoral-research": [
+    {
+      "src": "assets/screenshots/doctoral-research-01.png",
+      "caption": "Normal solution",
+      "width": 786,
+      "height": 629,
+      "sourcePage": "https://www.ekopru.com/doctoral-research",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/6_ring_normal_solution-mp8J2K6rK4IV3bOz.png",
+      "preview": "assets/screenshots/doctoral-research-01-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/doctoral-research-02.png",
+      "caption": "Convex hull map",
+      "width": 786,
+      "height": 629,
+      "sourcePage": "https://www.ekopru.com/doctoral-research",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/6_ring_ch_map-YrDJMG6r8ofREDk0.png",
+      "preview": "assets/screenshots/doctoral-research-02-preview.webp"
+    },
+    {
+      "src": "assets/screenshots/doctoral-research-03.png",
+      "caption": "Convex hull solution",
+      "width": 786,
+      "height": 629,
+      "sourcePage": "https://www.ekopru.com/doctoral-research",
+      "sourceUrl": "https://assets.zyrosite.com/OxfEwYkenXSi0gPe/6_ring_ch_solution-d954Bn3aQ0TZxo25.png",
+      "preview": "assets/screenshots/doctoral-research-03-preview.webp"
+    }
+  ],
+  "workforce-participation": [
+    {
+      "src": "assets/screenshots/workforce-participation-screenshot.png",
+      "preview": "assets/screenshots/workforce-participation-screenshot.png",
+      "caption": "Published U.S. workforce atlas, January 2020 to January 2026",
+      "width": 1440,
+      "height": 1100,
+      "sourcePage": "https://github.com/efkopru/workforce-participation",
+      "sourceUrl": "https://raw.githubusercontent.com/efkopru/workforce-participation/main/docs/screenshot.png"
+    }
+  ],
+  "s2s-transformer-bias-correction": [
+    {
+      "src": "assets/screenshots/s2s-transformer-bias-correction-example-maps.png",
+      "preview": "assets/screenshots/s2s-transformer-bias-correction-example-maps.png",
+      "caption": "Synthetic benchmark: forecast and reference maps",
+      "width": 1296,
+      "height": 404,
+      "sourcePage": "https://github.com/efkopru/s2s-transformer-bias-correction",
+      "sourceUrl": "https://raw.githubusercontent.com/efkopru/s2s-transformer-bias-correction/main/docs/figures/example_maps.png"
+    },
+    {
+      "src": "assets/screenshots/s2s-transformer-bias-correction-rmse-by-lead.png",
+      "preview": "assets/screenshots/s2s-transformer-bias-correction-rmse-by-lead.png",
+      "caption": "Synthetic benchmark: RMSE by forecast lead",
+      "width": 793,
+      "height": 506,
+      "sourcePage": "https://github.com/efkopru/s2s-transformer-bias-correction",
+      "sourceUrl": "https://raw.githubusercontent.com/efkopru/s2s-transformer-bias-correction/main/docs/figures/rmse_by_lead.png"
+    },
+    {
+      "src": "assets/screenshots/s2s-transformer-bias-correction-crpss-by-lead.png",
+      "preview": "assets/screenshots/s2s-transformer-bias-correction-crpss-by-lead.png",
+      "caption": "Synthetic benchmark: probabilistic skill by lead",
+      "width": 793,
+      "height": 506,
+      "sourcePage": "https://github.com/efkopru/s2s-transformer-bias-correction",
+      "sourceUrl": "https://raw.githubusercontent.com/efkopru/s2s-transformer-bias-correction/main/docs/figures/crpss_by_lead.png"
+    },
+    {
+      "src": "assets/screenshots/s2s-transformer-bias-correction-reliability.png",
+      "preview": "assets/screenshots/s2s-transformer-bias-correction-reliability.png",
+      "caption": "Synthetic benchmark: reliability diagram",
+      "width": 663,
+      "height": 663,
+      "sourcePage": "https://github.com/efkopru/s2s-transformer-bias-correction",
+      "sourceUrl": "https://raw.githubusercontent.com/efkopru/s2s-transformer-bias-correction/main/docs/figures/reliability.png"
+    },
+    {
+      "src": "assets/screenshots/s2s-transformer-bias-correction-rank-histogram.png",
+      "preview": "assets/screenshots/s2s-transformer-bias-correction-rank-histogram.png",
+      "caption": "Synthetic benchmark: ensemble rank histogram",
+      "width": 1027,
+      "height": 428,
+      "sourcePage": "https://github.com/efkopru/s2s-transformer-bias-correction",
+      "sourceUrl": "https://raw.githubusercontent.com/efkopru/s2s-transformer-bias-correction/main/docs/figures/rank_histogram.png"
+    },
+    {
+      "src": "assets/screenshots/s2s-transformer-bias-correction-spread-error.png",
+      "preview": "assets/screenshots/s2s-transformer-bias-correction-spread-error.png",
+      "caption": "Synthetic benchmark: ensemble spread and error",
+      "width": 793,
+      "height": 506,
+      "sourcePage": "https://github.com/efkopru/s2s-transformer-bias-correction",
+      "sourceUrl": "https://raw.githubusercontent.com/efkopru/s2s-transformer-bias-correction/main/docs/figures/spread_error.png"
+    },
+    {
+      "src": "assets/screenshots/s2s-transformer-bias-correction-training-curve.png",
+      "preview": "assets/screenshots/s2s-transformer-bias-correction-training-curve.png",
+      "caption": "Synthetic benchmark: training curve",
+      "width": 793,
+      "height": 506,
+      "sourcePage": "https://github.com/efkopru/s2s-transformer-bias-correction",
+      "sourceUrl": "https://raw.githubusercontent.com/efkopru/s2s-transformer-bias-correction/main/docs/figures/training_curve.png"
+    },
+    {
+      "src": "assets/screenshots/s2s-transformer-bias-correction-extreme-bss.png",
+      "preview": "assets/screenshots/s2s-transformer-bias-correction-extreme-bss.png",
+      "caption": "Synthetic benchmark: extreme-event Brier skill",
+      "width": 793,
+      "height": 506,
+      "sourcePage": "https://github.com/efkopru/s2s-transformer-bias-correction",
+      "sourceUrl": "https://raw.githubusercontent.com/efkopru/s2s-transformer-bias-correction/main/docs/figures/extreme_bss.png"
+    },
+    {
+      "src": "assets/screenshots/s2s-transformer-bias-correction-gpd-tail.png",
+      "preview": "assets/screenshots/s2s-transformer-bias-correction-gpd-tail.png",
+      "caption": "Synthetic benchmark: tail-distribution comparison",
+      "width": 793,
+      "height": 506,
+      "sourcePage": "https://github.com/efkopru/s2s-transformer-bias-correction",
+      "sourceUrl": "https://raw.githubusercontent.com/efkopru/s2s-transformer-bias-correction/main/docs/figures/gpd_tail.png"
+    }
+  ],
+  "dask-ensemble-calibration": [
+    {
+      "src": "assets/screenshots/dask-ensemble-calibration-timeseries-sample.png",
+      "preview": "assets/screenshots/dask-ensemble-calibration-timeseries-sample.png",
+      "caption": "Synthetic ensemble: example temperature time series",
+      "width": 1155,
+      "height": 546,
+      "sourcePage": "https://github.com/efkopru/dask-ensemble-calibration",
+      "sourceUrl": "https://raw.githubusercontent.com/efkopru/dask-ensemble-calibration/master/notebooks/assets/timeseries_sample.png"
+    },
+    {
+      "src": "assets/screenshots/dask-ensemble-calibration-rank-histograms.png",
+      "preview": "assets/screenshots/dask-ensemble-calibration-rank-histograms.png",
+      "caption": "Synthetic ensemble: rank histograms before and after calibration",
+      "width": 1311,
+      "height": 518,
+      "sourcePage": "https://github.com/efkopru/dask-ensemble-calibration",
+      "sourceUrl": "https://raw.githubusercontent.com/efkopru/dask-ensemble-calibration/master/notebooks/assets/rank_histograms.png"
+    },
+    {
+      "src": "assets/screenshots/dask-ensemble-calibration-spread-skill.png",
+      "preview": "assets/screenshots/dask-ensemble-calibration-spread-skill.png",
+      "caption": "Synthetic ensemble: spread and skill comparison",
+      "width": 1311,
+      "height": 518,
+      "sourcePage": "https://github.com/efkopru/dask-ensemble-calibration",
+      "sourceUrl": "https://raw.githubusercontent.com/efkopru/dask-ensemble-calibration/master/notebooks/assets/spread_skill.png"
+    }
+  ],
+  "vit-heatwave-calibration": [
+    {
+      "src": "assets/screenshots/vit-heatwave-calibration-spatial-comparison.png",
+      "preview": "assets/screenshots/vit-heatwave-calibration-spatial-comparison.png",
+      "caption": "Synthetic temperature fields: spatial correction comparison",
+      "width": 1293,
+      "height": 482,
+      "sourcePage": "https://github.com/efkopru/vit-heatwave-calibration",
+      "sourceUrl": "https://raw.githubusercontent.com/efkopru/vit-heatwave-calibration/master/notebooks/assets/spatial_comparison.png"
+    },
+    {
+      "src": "assets/screenshots/vit-heatwave-calibration-scatter-comparison.png",
+      "preview": "assets/screenshots/vit-heatwave-calibration-scatter-comparison.png",
+      "caption": "Synthetic temperature fields: prediction comparison",
+      "width": 800,
+      "height": 800,
+      "sourcePage": "https://github.com/efkopru/vit-heatwave-calibration",
+      "sourceUrl": "https://raw.githubusercontent.com/efkopru/vit-heatwave-calibration/master/notebooks/assets/scatter_comparison.png"
+    },
+    {
+      "src": "assets/screenshots/vit-heatwave-calibration-error-dist.png",
+      "preview": "assets/screenshots/vit-heatwave-calibration-error-dist.png",
+      "caption": "Synthetic temperature fields: error distributions",
+      "width": 1000,
+      "height": 500,
+      "sourcePage": "https://github.com/efkopru/vit-heatwave-calibration",
+      "sourceUrl": "https://raw.githubusercontent.com/efkopru/vit-heatwave-calibration/master/notebooks/assets/error_dist.png"
+    },
+    {
+      "src": "assets/screenshots/vit-heatwave-calibration-loss.png",
+      "preview": "assets/screenshots/vit-heatwave-calibration-loss.png",
+      "caption": "Synthetic temperature experiment: training loss",
+      "width": 800,
+      "height": 400,
+      "sourcePage": "https://github.com/efkopru/vit-heatwave-calibration",
+      "sourceUrl": "https://raw.githubusercontent.com/efkopru/vit-heatwave-calibration/master/notebooks/assets/loss.png"
+    }
+  ],
+  "transformer-bias-correction": [
+    {
+      "src": "assets/screenshots/transformer-bias-correction-results.png",
+      "preview": "assets/screenshots/transformer-bias-correction-results.png",
+      "caption": "Simulated time series: bias-correction results",
+      "width": 1400,
+      "height": 600,
+      "sourcePage": "https://github.com/efkopru/transformer-bias-correction",
+      "sourceUrl": "https://raw.githubusercontent.com/efkopru/transformer-bias-correction/master/assets/results.png"
+    },
+    {
+      "src": "assets/screenshots/transformer-bias-correction-data-sample.png",
+      "preview": "assets/screenshots/transformer-bias-correction-data-sample.png",
+      "caption": "Simulated time series: example forecast and target",
+      "width": 1200,
+      "height": 500,
+      "sourcePage": "https://github.com/efkopru/transformer-bias-correction",
+      "sourceUrl": "https://raw.githubusercontent.com/efkopru/transformer-bias-correction/master/assets/data_sample.png"
+    },
+    {
+      "src": "assets/screenshots/transformer-bias-correction-scatter.png",
+      "preview": "assets/screenshots/transformer-bias-correction-scatter.png",
+      "caption": "Simulated time series: prediction comparison",
+      "width": 800,
+      "height": 800,
+      "sourcePage": "https://github.com/efkopru/transformer-bias-correction",
+      "sourceUrl": "https://raw.githubusercontent.com/efkopru/transformer-bias-correction/master/assets/scatter.png"
+    },
+    {
+      "src": "assets/screenshots/transformer-bias-correction-error-dist.png",
+      "preview": "assets/screenshots/transformer-bias-correction-error-dist.png",
+      "caption": "Simulated time series: error distributions",
+      "width": 1000,
+      "height": 500,
+      "sourcePage": "https://github.com/efkopru/transformer-bias-correction",
+      "sourceUrl": "https://raw.githubusercontent.com/efkopru/transformer-bias-correction/master/assets/error_dist.png"
+    },
+    {
+      "src": "assets/screenshots/transformer-bias-correction-loss.png",
+      "preview": "assets/screenshots/transformer-bias-correction-loss.png",
+      "caption": "Simulated time-series experiment: training loss",
+      "width": 800,
+      "height": 400,
+      "sourcePage": "https://github.com/efkopru/transformer-bias-correction",
+      "sourceUrl": "https://raw.githubusercontent.com/efkopru/transformer-bias-correction/master/assets/loss.png"
+    }
+  ],
+  "income-level-prediction-using-r": [
+    {
+      "src": "assets/screenshots/income-classification-slide-01.png",
+      "preview": "assets/screenshots/income-classification-slide-01.png",
+      "caption": "Original R study, slide 1: Title and author",
+      "width": 1440,
+      "height": 810,
+      "sourcePage": "https://www.ekopru.com/income-level-prediction-using-r",
+      "sourceUrl": "https://docs.google.com/presentation/d/1TP-t51nEhcaOQrtdFjXIwcz5CdQMXi_Y/export/pdf"
+    },
+    {
+      "src": "assets/screenshots/income-classification-slide-02.png",
+      "preview": "assets/screenshots/income-classification-slide-02.png",
+      "caption": "Original R study, slide 2: Contents",
+      "width": 1440,
+      "height": 810,
+      "sourcePage": "https://www.ekopru.com/income-level-prediction-using-r",
+      "sourceUrl": "https://docs.google.com/presentation/d/1TP-t51nEhcaOQrtdFjXIwcz5CdQMXi_Y/export/pdf"
+    },
+    {
+      "src": "assets/screenshots/income-classification-slide-03.png",
+      "preview": "assets/screenshots/income-classification-slide-03.png",
+      "caption": "Original R study, slide 3: Dataset and provenance",
+      "width": 1440,
+      "height": 810,
+      "sourcePage": "https://www.ekopru.com/income-level-prediction-using-r",
+      "sourceUrl": "https://docs.google.com/presentation/d/1TP-t51nEhcaOQrtdFjXIwcz5CdQMXi_Y/export/pdf"
+    },
+    {
+      "src": "assets/screenshots/income-classification-slide-04.png",
+      "preview": "assets/screenshots/income-classification-slide-04.png",
+      "caption": "Original R study, slide 4: Data exploration",
+      "width": 1440,
+      "height": 810,
+      "sourcePage": "https://www.ekopru.com/income-level-prediction-using-r",
+      "sourceUrl": "https://docs.google.com/presentation/d/1TP-t51nEhcaOQrtdFjXIwcz5CdQMXi_Y/export/pdf",
+      "cover": true
+    },
+    {
+      "src": "assets/screenshots/income-classification-slide-05.png",
+      "preview": "assets/screenshots/income-classification-slide-05.png",
+      "caption": "Original R study, slide 5: Missing-value handling",
+      "width": 1440,
+      "height": 810,
+      "sourcePage": "https://www.ekopru.com/income-level-prediction-using-r",
+      "sourceUrl": "https://docs.google.com/presentation/d/1TP-t51nEhcaOQrtdFjXIwcz5CdQMXi_Y/export/pdf"
+    },
+    {
+      "src": "assets/screenshots/income-classification-slide-06.png",
+      "preview": "assets/screenshots/income-classification-slide-06.png",
+      "caption": "Original R study, slide 6: Income and predictor exploration",
+      "width": 1440,
+      "height": 810,
+      "sourcePage": "https://www.ekopru.com/income-level-prediction-using-r",
+      "sourceUrl": "https://docs.google.com/presentation/d/1TP-t51nEhcaOQrtdFjXIwcz5CdQMXi_Y/export/pdf"
+    },
+    {
+      "src": "assets/screenshots/income-classification-slide-07.png",
+      "preview": "assets/screenshots/income-classification-slide-07.png",
+      "caption": "Original R study, slide 7: Occupation and marital-status exploration",
+      "width": 1440,
+      "height": 810,
+      "sourcePage": "https://www.ekopru.com/income-level-prediction-using-r",
+      "sourceUrl": "https://docs.google.com/presentation/d/1TP-t51nEhcaOQrtdFjXIwcz5CdQMXi_Y/export/pdf"
+    },
+    {
+      "src": "assets/screenshots/income-classification-slide-08.png",
+      "preview": "assets/screenshots/income-classification-slide-08.png",
+      "caption": "Original R study, slide 8: Exploratory plots",
+      "width": 1440,
+      "height": 810,
+      "sourcePage": "https://www.ekopru.com/income-level-prediction-using-r",
+      "sourceUrl": "https://docs.google.com/presentation/d/1TP-t51nEhcaOQrtdFjXIwcz5CdQMXi_Y/export/pdf"
+    },
+    {
+      "src": "assets/screenshots/income-classification-slide-09.png",
+      "preview": "assets/screenshots/income-classification-slide-09.png",
+      "caption": "Original R study, slide 9: Race and gender exploration",
+      "width": 1440,
+      "height": 810,
+      "sourcePage": "https://www.ekopru.com/income-level-prediction-using-r",
+      "sourceUrl": "https://docs.google.com/presentation/d/1TP-t51nEhcaOQrtdFjXIwcz5CdQMXi_Y/export/pdf"
+    },
+    {
+      "src": "assets/screenshots/income-classification-slide-10.png",
+      "preview": "assets/screenshots/income-classification-slide-10.png",
+      "caption": "Original R study, slide 10: Train and test split",
+      "width": 1440,
+      "height": 810,
+      "sourcePage": "https://www.ekopru.com/income-level-prediction-using-r",
+      "sourceUrl": "https://docs.google.com/presentation/d/1TP-t51nEhcaOQrtdFjXIwcz5CdQMXi_Y/export/pdf"
+    },
+    {
+      "src": "assets/screenshots/income-classification-slide-11.png",
+      "preview": "assets/screenshots/income-classification-slide-11.png",
+      "caption": "Original R study, slide 11: Logistic regression setup",
+      "width": 1440,
+      "height": 810,
+      "sourcePage": "https://www.ekopru.com/income-level-prediction-using-r",
+      "sourceUrl": "https://docs.google.com/presentation/d/1TP-t51nEhcaOQrtdFjXIwcz5CdQMXi_Y/export/pdf"
+    },
+    {
+      "src": "assets/screenshots/income-classification-slide-12.png",
+      "preview": "assets/screenshots/income-classification-slide-12.png",
+      "caption": "Original R study, slide 12: Updated logistic regression",
+      "width": 1440,
+      "height": 810,
+      "sourcePage": "https://www.ekopru.com/income-level-prediction-using-r",
+      "sourceUrl": "https://docs.google.com/presentation/d/1TP-t51nEhcaOQrtdFjXIwcz5CdQMXi_Y/export/pdf"
+    },
+    {
+      "src": "assets/screenshots/income-classification-slide-13.png",
+      "preview": "assets/screenshots/income-classification-slide-13.png",
+      "caption": "Original R study, slide 13: Final logistic regression model",
+      "width": 1440,
+      "height": 810,
+      "sourcePage": "https://www.ekopru.com/income-level-prediction-using-r",
+      "sourceUrl": "https://docs.google.com/presentation/d/1TP-t51nEhcaOQrtdFjXIwcz5CdQMXi_Y/export/pdf"
+    },
+    {
+      "src": "assets/screenshots/income-classification-slide-14.png",
+      "preview": "assets/screenshots/income-classification-slide-14.png",
+      "caption": "Original R study, slide 14: Variance inflation factors",
+      "width": 1440,
+      "height": 810,
+      "sourcePage": "https://www.ekopru.com/income-level-prediction-using-r",
+      "sourceUrl": "https://docs.google.com/presentation/d/1TP-t51nEhcaOQrtdFjXIwcz5CdQMXi_Y/export/pdf"
+    },
+    {
+      "src": "assets/screenshots/income-classification-slide-15.png",
+      "preview": "assets/screenshots/income-classification-slide-15.png",
+      "caption": "Original R study, slide 15: Logistic regression evaluation",
+      "width": 1440,
+      "height": 810,
+      "sourcePage": "https://www.ekopru.com/income-level-prediction-using-r",
+      "sourceUrl": "https://docs.google.com/presentation/d/1TP-t51nEhcaOQrtdFjXIwcz5CdQMXi_Y/export/pdf"
+    },
+    {
+      "src": "assets/screenshots/income-classification-slide-16.png",
+      "preview": "assets/screenshots/income-classification-slide-16.png",
+      "caption": "Original R study, slide 16: Classification tree",
+      "width": 1440,
+      "height": 810,
+      "sourcePage": "https://www.ekopru.com/income-level-prediction-using-r",
+      "sourceUrl": "https://docs.google.com/presentation/d/1TP-t51nEhcaOQrtdFjXIwcz5CdQMXi_Y/export/pdf"
+    },
+    {
+      "src": "assets/screenshots/income-classification-slide-17.png",
+      "preview": "assets/screenshots/income-classification-slide-17.png",
+      "caption": "Original R study, slide 17: Tree pruning",
+      "width": 1440,
+      "height": 810,
+      "sourcePage": "https://www.ekopru.com/income-level-prediction-using-r",
+      "sourceUrl": "https://docs.google.com/presentation/d/1TP-t51nEhcaOQrtdFjXIwcz5CdQMXi_Y/export/pdf"
+    },
+    {
+      "src": "assets/screenshots/income-classification-slide-18.png",
+      "preview": "assets/screenshots/income-classification-slide-18.png",
+      "caption": "Original R study, slide 18: Tree evaluation",
+      "width": 1440,
+      "height": 810,
+      "sourcePage": "https://www.ekopru.com/income-level-prediction-using-r",
+      "sourceUrl": "https://docs.google.com/presentation/d/1TP-t51nEhcaOQrtdFjXIwcz5CdQMXi_Y/export/pdf"
+    },
+    {
+      "src": "assets/screenshots/income-classification-slide-19.png",
+      "preview": "assets/screenshots/income-classification-slide-19.png",
+      "caption": "Original R study, slide 19: Random forest",
+      "width": 1440,
+      "height": 810,
+      "sourcePage": "https://www.ekopru.com/income-level-prediction-using-r",
+      "sourceUrl": "https://docs.google.com/presentation/d/1TP-t51nEhcaOQrtdFjXIwcz5CdQMXi_Y/export/pdf"
+    },
+    {
+      "src": "assets/screenshots/income-classification-slide-20.png",
+      "preview": "assets/screenshots/income-classification-slide-20.png",
+      "caption": "Original R study, slide 20: Random-forest tuning",
+      "width": 1440,
+      "height": 810,
+      "sourcePage": "https://www.ekopru.com/income-level-prediction-using-r",
+      "sourceUrl": "https://docs.google.com/presentation/d/1TP-t51nEhcaOQrtdFjXIwcz5CdQMXi_Y/export/pdf"
+    },
+    {
+      "src": "assets/screenshots/income-classification-slide-21.png",
+      "preview": "assets/screenshots/income-classification-slide-21.png",
+      "caption": "Original R study, slide 21: Variable importance",
+      "width": 1440,
+      "height": 810,
+      "sourcePage": "https://www.ekopru.com/income-level-prediction-using-r",
+      "sourceUrl": "https://docs.google.com/presentation/d/1TP-t51nEhcaOQrtdFjXIwcz5CdQMXi_Y/export/pdf"
+    },
+    {
+      "src": "assets/screenshots/income-classification-slide-22.png",
+      "preview": "assets/screenshots/income-classification-slide-22.png",
+      "caption": "Original R study, slide 22: Random-forest evaluation",
+      "width": 1440,
+      "height": 810,
+      "sourcePage": "https://www.ekopru.com/income-level-prediction-using-r",
+      "sourceUrl": "https://docs.google.com/presentation/d/1TP-t51nEhcaOQrtdFjXIwcz5CdQMXi_Y/export/pdf"
+    },
+    {
+      "src": "assets/screenshots/income-classification-slide-23.png",
+      "preview": "assets/screenshots/income-classification-slide-23.png",
+      "caption": "Original R study, slide 23: Linear SVM",
+      "width": 1440,
+      "height": 810,
+      "sourcePage": "https://www.ekopru.com/income-level-prediction-using-r",
+      "sourceUrl": "https://docs.google.com/presentation/d/1TP-t51nEhcaOQrtdFjXIwcz5CdQMXi_Y/export/pdf"
+    },
+    {
+      "src": "assets/screenshots/income-classification-slide-24.png",
+      "preview": "assets/screenshots/income-classification-slide-24.png",
+      "caption": "Original R study, slide 24: Linear SVM evaluation",
+      "width": 1440,
+      "height": 810,
+      "sourcePage": "https://www.ekopru.com/income-level-prediction-using-r",
+      "sourceUrl": "https://docs.google.com/presentation/d/1TP-t51nEhcaOQrtdFjXIwcz5CdQMXi_Y/export/pdf"
+    },
+    {
+      "src": "assets/screenshots/income-classification-slide-25.png",
+      "preview": "assets/screenshots/income-classification-slide-25.png",
+      "caption": "Original R study, slide 25: Model comparison",
+      "width": 1440,
+      "height": 810,
+      "sourcePage": "https://www.ekopru.com/income-level-prediction-using-r",
+      "sourceUrl": "https://docs.google.com/presentation/d/1TP-t51nEhcaOQrtdFjXIwcz5CdQMXi_Y/export/pdf"
+    },
+    {
+      "src": "assets/screenshots/income-classification-slide-26.png",
+      "preview": "assets/screenshots/income-classification-slide-26.png",
+      "caption": "Original R study, slide 26: Discussion and conclusion",
+      "width": 1440,
+      "height": 810,
+      "sourcePage": "https://www.ekopru.com/income-level-prediction-using-r",
+      "sourceUrl": "https://docs.google.com/presentation/d/1TP-t51nEhcaOQrtdFjXIwcz5CdQMXi_Y/export/pdf"
+    }
+  ],
+  "lead-service-review-prototype": [
+    {
+      "src": "assets/screenshots/lead-service-review-workflow.png",
+      "preview": "assets/screenshots/lead-service-review-workflow.png",
+      "caption": "Synthetic prototype: evidence-to-review design; entity linking and snapshots remain separate controls",
+      "width": 2400,
+      "height": 1380,
+      "sourcePage": "",
+      "sourceUrl": "",
+      "sourceNote": "Existing user-authored synthetic prototype documentation figure. No municipal records included."
+    },
+    {
+      "src": "assets/screenshots/lead-service-review-banner.png",
+      "preview": "assets/screenshots/lead-service-review-banner.png",
+      "caption": "Synthetic lead-service review prototype overview",
+      "width": 2400,
+      "height": 560,
+      "sourcePage": "",
+      "sourceUrl": "",
+      "sourceNote": "Existing user-authored synthetic prototype documentation figure. No municipal records included."
+    },
+    {
+      "src": "assets/screenshots/lead-service-review-synthetic-results.png",
+      "preview": "assets/screenshots/lead-service-review-synthetic-results.png",
+      "caption": "Archived synthetic results, July 31, 2026; not field performance",
+      "width": 2400,
+      "height": 840,
+      "sourcePage": "",
+      "sourceUrl": "",
+      "sourceNote": "Existing user-authored synthetic prototype documentation figure. No municipal records included."
+    }
+  ]
+}
