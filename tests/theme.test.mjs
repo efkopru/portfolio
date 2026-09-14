@@ -3,7 +3,13 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { runInNewContext } from 'node:vm';
 
-const themes = ['classic', 'midnight', 'evergreen'];
+const themeColors = {
+  classic: '#e0e9f0',
+  midnight: '#111c2b',
+  evergreen: '#f3f7f2',
+  sandstone: '#f7f2ea'
+};
+const themes = Object.keys(themeColors);
 const storageKey = 'ekopru-theme';
 const source = name => readFile(new URL(`../${name}`, import.meta.url), 'utf8');
 
@@ -95,7 +101,7 @@ test('theme initializer restores only allowed preferences without writing storag
 test('theme initializer defaults to Classic for absent, invalid, or unavailable storage', async () => {
   const initializer = await source('theme.js');
   const cases = [
-    ...[null, '', 'unknown', 'MIDNIGHT', ' evergreen ', '__proto__', 'constructor'].map(saved => ({ saved })),
+    ...[null, '', 'unknown', 'MIDNIGHT', 'SANDSTONE', ' evergreen ', ' sandstone ', '__proto__', 'constructor'].map(saved => ({ saved })),
     { saved: 'midnight', blockedRead: true },
     { saved: 'evergreen', blockedAccess: true }
   ];
@@ -109,21 +115,23 @@ test('theme initializer defaults to Classic for absent, invalid, or unavailable 
 
 test('theme controls restore selection and persist only explicit changes', async () => {
   const [initializer, script] = await Promise.all([source('theme.js'), source('script.js')]);
-  const page = environment({ saved: 'midnight' });
-  page.run(initializer, 'theme.js');
-  page.run(script, 'script.js');
-  assert.equal(page.select.value, 'midnight');
-  assert.equal(page.toolbar.hidden, false, 'JavaScript reveals the theme control');
-  assert.deepEqual(page.writes, [], 'Loading the page must not write a preference');
-  assert.notEqual(page.meta.content, 'initial-theme-color');
-  for (const theme of ['evergreen', 'classic', 'midnight']) {
-    const previousColor = page.meta.content;
-    page.change(theme);
-    assert.equal(page.documentElement.dataset.theme, theme);
-    assert.deepEqual(page.writes.at(-1), [storageKey, theme]);
-    assert.notEqual(page.meta.content, previousColor, 'Browser theme color follows the selection');
+  for (const saved of themes) {
+    const page = environment({ saved });
+    page.run(initializer, 'theme.js');
+    page.run(script, 'script.js');
+    assert.equal(page.select.value, saved);
+    assert.equal(page.toolbar.hidden, false, 'JavaScript reveals the theme control');
+    assert.deepEqual(page.writes, [], 'Loading the page must not write a preference');
+    assert.equal(page.meta.content, themeColors[saved], 'Browser theme color restores the saved selection');
+    for (const theme of themes) {
+      page.change(theme);
+      assert.equal(page.documentElement.dataset.theme, theme);
+      assert.equal(page.select.value, theme);
+      assert.deepEqual(page.writes.at(-1), [storageKey, theme]);
+      assert.equal(page.meta.content, themeColors[theme], 'Browser theme color follows the selection');
+    }
+    assert.equal(page.writes.length, themes.length, 'One preference write per explicit selection');
   }
-  assert.equal(page.writes.length, 3, 'One preference write per explicit selection');
 });
 
 test('theme selection still works when preference storage is blocked', async () => {
@@ -133,14 +141,58 @@ test('theme selection still works when preference storage is blocked', async () 
     assert.doesNotThrow(() => {
       page.run(initializer, 'theme.js');
       page.run(script, 'script.js');
-      page.change('evergreen');
+      page.change('sandstone');
     });
-    assert.equal(page.documentElement.dataset.theme, 'evergreen');
-    assert.equal(page.select.value, 'evergreen');
+    assert.equal(page.documentElement.dataset.theme, 'sandstone');
+    assert.equal(page.select.value, 'sandstone');
     assert.equal(page.toolbar.hidden, false);
-    assert.notEqual(page.meta.content, 'initial-theme-color');
+    assert.equal(page.meta.content, themeColors.sandstone);
     assert.deepEqual(page.writes, []);
   }
+});
+
+test('theme controls safely fall back when given an unsupported selection', async () => {
+  const [initializer, script] = await Promise.all([source('theme.js'), source('script.js')]);
+  for (const invalid of ['unknown', 'Sandstone', '__proto__', 'constructor']) {
+    const page = environment({ saved: 'sandstone' });
+    page.run(initializer, 'theme.js');
+    page.run(script, 'script.js');
+    page.change(invalid);
+    assert.equal(page.documentElement.dataset.theme, 'classic');
+    assert.equal(page.select.value, 'classic');
+    assert.equal(page.meta.content, themeColors.classic);
+    assert.deepEqual(page.writes, [[storageKey, 'classic']]);
+  }
+});
+
+function luminance(color) {
+  assert.match(color, /^#(?:[\da-f]{3}|[\da-f]{6})$/i, 'Contrast checks require an opaque hex color');
+  const hex = color.length === 4 ? [...color.slice(1)].map(value => value.repeat(2)).join('') : color.slice(1);
+  const [r, g, b] = hex.match(/../g).map(value => {
+    const channel = parseInt(value, 16) / 255;
+    return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+test('Sandstone supplies a matching background and accessible text and control colors', async () => {
+  const css = await source('styles.css');
+  const rule = css.match(/:root\[data-theme=["']sandstone["']\]\s*\{([^}]+)\}/);
+  assert.ok(rule, 'Sandstone must have its own palette');
+  const tokens = new Map([...rule[1].matchAll(/(--[\w-]+)\s*:\s*([^;\s}]+)/g)]
+    .map(([, name, value]) => [name, value]));
+  assert.equal(tokens.get('--bg'), themeColors.sandstone, 'CSS and browser theme color agree');
+  const checkContrast = (foreground, background, threshold) => {
+    assert.ok(tokens.has(foreground) && tokens.has(background), `Palette supplies ${foreground} and ${background}`);
+    const values = [luminance(tokens.get(foreground)), luminance(tokens.get(background))].sort((a, b) => b - a);
+    const ratio = (values[0] + 0.05) / (values[1] + 0.05);
+    assert.ok(ratio >= threshold, `${foreground} on ${background}: ${ratio.toFixed(2)} must be at least ${threshold}`);
+  };
+  for (const background of ['--bg', '--surface']) {
+    for (const foreground of ['--ink', '--muted', '--heading']) checkContrast(foreground, background, 4.5);
+    checkContrast('--control-border', background, 3);
+  }
+  checkContrast('--button-ink', '--button-bg', 4.5);
 });
 
 function attributes(tag) {
