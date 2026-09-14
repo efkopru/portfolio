@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { runInNewContext } from 'node:vm';
 
@@ -201,23 +202,39 @@ function attributes(tag) {
     .map(([, name, doubleQuoted, singleQuoted, unquoted]) => [name.toLowerCase(), doubleQuoted ?? singleQuoted ?? unquoted ?? '']));
 }
 
-test('every generated page includes an early local initializer and a labeled theme selector', async () => {
+test('every generated page includes current versioned assets, an early initializer, and a labeled theme selector', async () => {
   const manifest = JSON.parse(await source('dist/build-manifest.json'));
   assert.ok(manifest.pages.length > 0);
-  assert.equal(await source('dist/theme.js'), await source('theme.js'), 'Publish the current initializer asset');
+  const versions = new Map();
+  for (const asset of ['theme.js', 'styles.css', 'script.js']) {
+    const text = await source(asset);
+    assert.equal(await source(`dist/${asset}`), text, `Publish the current ${asset} asset`);
+    versions.set(asset, createHash('sha256').update(text, 'utf8').digest('hex').slice(0, 12));
+  }
   for (const path of manifest.pages) {
     const html = await source(`dist/${path}`);
     const prefix = path.includes('/') ? '../' : './';
     const tags = [...html.matchAll(/<script\b[^>]*>|<link\b[^>]*>/gi)]
       .map(match => ({ position: match.index, tag: match[0], attrs: attributes(match[0]) }));
-    const initializers = tags.filter(({ attrs }) => attrs.get('src') === `${prefix}theme.js`);
+    const localAsset = (attribute, asset) => tags.filter(({ attrs }) => attrs.get(attribute)?.split(/[?#]/)[0] === `${prefix}${asset}`);
+    const versionedUrl = asset => `${prefix}${asset}?v=${versions.get(asset)}`;
+    const initializers = localAsset('src', 'theme.js');
     assert.equal(initializers.length, 1, `${path}: one local theme initializer`);
     const initializer = initializers[0];
+    assert.equal(initializer.attrs.get('src'), versionedUrl('theme.js'), `${path}: initializer URL matches its current source hash`);
     assert.ok(!initializer.attrs.has('async') && !initializer.attrs.has('defer'), `${path}: initialize before first paint`);
     assert.notEqual(initializer.attrs.get('type'), 'module', `${path}: initializer must not defer as a module`);
-    const stylesheet = tags.find(({ attrs }) => attrs.get('rel') === 'stylesheet' && attrs.get('href') === `${prefix}styles.css`);
-    assert.ok(stylesheet && initializer.position < stylesheet.position, `${path}: initializer precedes styles`);
+    const stylesheets = localAsset('href', 'styles.css').filter(({ attrs }) => attrs.get('rel') === 'stylesheet');
+    assert.equal(stylesheets.length, 1, `${path}: one local stylesheet`);
+    const stylesheet = stylesheets[0];
+    assert.equal(stylesheet.attrs.get('href'), versionedUrl('styles.css'), `${path}: stylesheet URL matches its current source hash`);
+    assert.ok(initializer.position < stylesheet.position, `${path}: initializer precedes styles`);
     assert.ok(initializer.position < html.indexOf('</head>'), `${path}: initialize in the document head`);
+    const mainScripts = localAsset('src', 'script.js');
+    assert.equal(mainScripts.length, 1, `${path}: one local main script`);
+    const mainScript = mainScripts[0];
+    assert.equal(mainScript.attrs.get('src'), versionedUrl('script.js'), `${path}: main script URL matches its current source hash`);
+    assert.ok(mainScript.attrs.has('defer') && !mainScript.attrs.has('async'), `${path}: main script waits for the document`);
 
     const selects = [...html.matchAll(/<select\b[^>]*>([\s\S]*?)<\/select>/gi)]
       .filter(match => attributes(match[0].match(/^<select\b[^>]*>/i)[0]).has('data-theme-select'));

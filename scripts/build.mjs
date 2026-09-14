@@ -7,6 +7,10 @@ import { collections, browseCollections, siteProjects, additionalProjects } from
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const output = resolve(root, 'dist');
+// New asset URLs prevent a fresh page from using cached styles or theme logic.
+const assetVersions = Object.fromEntries(await Promise.all(['theme.js', 'styles.css', 'script.js'].map(async file =>
+  [file, createHash('sha256').update(await readFile(resolve(root, file))).digest('hex').slice(0, 12)]
+)));
 const origin = new URL(process.env.SITE_URL || 'https://www.ekopru.com').origin;
 if (!/^https?:\/\//.test(origin)) throw new Error('SITE_URL must be an HTTP or HTTPS origin.');
 if (new Set(projects.map(project => project.id)).size !== projects.length) throw new Error('Duplicate project ID.');
@@ -36,7 +40,7 @@ ${noindex && !route ? `<base href="./"><script>${errorPageBaseScript}</script>` 
 <meta name="description" content="${esc(description)}"><meta name="theme-color" content="#e0e9f0"><meta name="referrer" content="strict-origin-when-cross-origin">
 ${noindex ? '<meta name="robots" content="noindex, follow">' : `<link rel="canonical" href="${canonical}">`}
 <meta property="og:type" content="website"><meta property="og:site_name" content="Esad Kopru"><meta property="og:title" content="${esc(title)} | Esad Kopru"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${canonical}"><meta name="twitter:card" content="summary">
-<link rel="icon" href="${prefix}assets/efk-logo.avif"><script src="${prefix}theme.js"></script><link rel="stylesheet" href="${prefix}styles.css"><script src="${prefix}script.js" defer></script>
+<link rel="icon" href="${prefix}assets/efk-logo.avif"><script src="${prefix}theme.js?v=${assetVersions['theme.js']}"></script><link rel="stylesheet" href="${prefix}styles.css?v=${assetVersions['styles.css']}"><script src="${prefix}script.js?v=${assetVersions['script.js']}" defer></script>
 <script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@type': 'ProfilePage', name: `${title} | Esad Kopru`, url: canonical, mainEntity: { '@type': 'Person', name: profile.name, url: origin, sameAs: [profile.github], knowsAbout: ['Geospatial data science', 'Geospatial data engineering', 'Geospatial software engineering'], alumniOf: [{ '@type': 'CollegeOrUniversity', name: 'The University of Texas at Dallas' }] } }).replaceAll('<','\\u003c')}</script>
 </head><body data-root="${prefix}"${redirect ? ` data-redirect="${esc(redirect)}"` : ''}><a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header"><div class="shell header-inner"><a class="brand" href="${prefix}index.html" aria-label="Esad Kopru home"><img src="${prefix}assets/efk-logo.avif" width="101" height="48" alt="EFK Portfolio"></a><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button><nav id="site-nav" class="site-nav" aria-label="Main navigation">${navigation}</nav></div></header><div class="rule" aria-hidden="true"></div>

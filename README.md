@@ -37,6 +37,8 @@ The compact Theme selector below the header offers Classic (the original palette
 
 This GitHub repository contains the editable source, tests, image assets, and generated pages. Pushing the repository does not configure website hosting or change the live domain.
 
+Generated pages use content-versioned CSS and JavaScript URLs so deployments do not reuse outdated browser-cached theme styles or controls.
+
 Upload only the contents of `dist/` to a static host that serves directory `index.html` files. Do not upload the workspace root, `content/`, `docs/`, `tests/`, or `work/`.
 
 The build defaults canonical URLs and the sitemap to `https://www.ekopru.com`. To deploy under a different origin, set `SITE_URL` before building. When staging privately, use the host's access controls; `robots.txt` is not authentication.
