@@ -20,6 +20,60 @@
       catch { /* Theme switching still works when storage is blocked. */ }
     });
   }
+
+  // Submit in place; only a positive provider response may clear the message.
+  const contactForm = document.querySelector('[data-contact-form]');
+  if (contactForm) {
+    const status = document.querySelector('[data-contact-status]');
+    const submit = contactForm.querySelector('[data-contact-submit]');
+    const fields = [...contactForm.querySelectorAll('.form-field input, .form-field textarea')];
+    let sending = false;
+    contactForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      if (sending || !contactForm.reportValidity()) return;
+      sending = true;
+      const originalLabel = submit.textContent;
+      const readOnly = fields.map(field => field.readOnly);
+      let timer;
+      submit.disabled = true;
+      submit.textContent = 'Sending...';
+      contactForm.setAttribute('aria-busy', 'true');
+      status.dataset.state = 'pending';
+      status.textContent = 'Sending your message...';
+      try {
+        const body = new FormData(contactForm);
+        fields.forEach(field => { field.readOnly = true; });
+        const controller = new AbortController();
+        timer = setTimeout(() => controller.abort(), 20000);
+        const response = await fetch(contactForm.dataset.contactEndpoint, {
+          method: 'POST',
+          body,
+          headers: { Accept: 'application/json' },
+          credentials: 'omit',
+          signal: controller.signal
+        });
+        const result = await response.json();
+        if (!response.ok || (result?.success !== true && result?.success !== 'true')) {
+          throw new Error('Submission was not confirmed.');
+        }
+        contactForm.reset();
+        status.dataset.state = 'success';
+        status.textContent = 'Thank you. Your message has been submitted successfully.';
+      } catch {
+        // A timeout can happen after acceptance, so never retry automatically.
+        status.dataset.state = 'error';
+        status.textContent = 'We could not confirm submission. Your message is still here. Please wait before trying again, or use the email link below.';
+      } finally {
+        clearTimeout(timer);
+        fields.forEach((field, index) => { field.readOnly = readOnly[index]; });
+        contactForm.removeAttribute('aria-busy');
+        submit.disabled = false;
+        submit.textContent = originalLabel;
+        sending = false;
+        status.focus();
+      }
+    });
+  }
   const root = document.body.dataset.root || './';
   const nav = document.querySelector('#site-nav');
   const toggle = document.querySelector('.menu-toggle');

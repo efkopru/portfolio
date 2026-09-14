@@ -23,6 +23,10 @@
 .brand img{background:var(--logo-bg);border-radius:3px}
 /* Preserve the transparent original mark; brighten its blues and lettering only in Midnight. */
 :root[data-theme="midnight"] .brand img{filter:invert(1) hue-rotate(180deg) brightness(1.5)}
+.form-status{margin-block:0 1.5rem;padding:1rem;border:1px solid var(--line);border-left:4px solid var(--heading);border-radius:4px;background:var(--surface);color:var(--ink);overflow-wrap:anywhere}
+.form-status:empty{display:none}
+.form-status[data-state="error"]{border-left-color:var(--focus)}
+.contact-form .button:disabled{opacity:.7;cursor:wait}
 .theme-toolbar{display:flex;justify-content:flex-end;align-items:center;gap:.4rem;padding-block:.25rem;font-size:.8125rem}
 .theme-toolbar label{font-weight:700}
 .theme-toolbar select{font:inherit;min-height:32px;min-width:7.75rem;max-width:100%;padding:.2rem .5rem;border:1px solid var(--control-border);border-radius:4px;background:var(--surface);color:var(--ink);cursor:pointer}
