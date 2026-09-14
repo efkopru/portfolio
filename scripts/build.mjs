@@ -102,6 +102,7 @@ function contact() {
 <noscript><p class="form-note">JavaScript is disabled. Sending will open FormSubmit's confirmation page. Use the email link below as an alternative.</p></noscript>
 <button class="button" type="submit" data-contact-submit>Send message</button></form>
 <p id="contact-status" class="form-status" role="status" aria-live="polite" aria-atomic="true" tabindex="-1" data-contact-status></p>
+<dialog class="contact-success" data-contact-success aria-labelledby="contact-success-title" aria-describedby="contact-success-description"><h2 id="contact-success-title">Message sent</h2><p id="contact-success-description">Thank you. Your message has been submitted successfully. Refresh this page to send another message.</p><button class="button" type="button" data-contact-success-close autofocus>Close</button></dialog>
 <p class="contact-fallback">You can also email <a href="mailto:${esc(profile.email)}">${esc(profile.email)}</a>.</p><div class="contact-block"><h2>Public work</h2><a class="text-link" href="${profile.github}">github.com/efkopru <span aria-hidden="true">↗</span></a><p>Based in ${esc(profile.location)}.</p></div></div>` });
 }
 

@@ -27,10 +27,16 @@
     const status = document.querySelector('[data-contact-status]');
     const submit = contactForm.querySelector('[data-contact-submit]');
     const fields = [...contactForm.querySelectorAll('.form-field input, .form-field textarea')];
+    const confirmation = document.querySelector('[data-contact-success]');
+    confirmation?.querySelector('[data-contact-success-close]')?.addEventListener('click', () => confirmation.close());
+    confirmation?.addEventListener('close', () => status.focus());
     let sending = false;
+    let sent = false;
+    // A fresh page permits sending again, including browsers that restore disabled buttons.
+    submit.disabled = false;
     contactForm.addEventListener('submit', async event => {
       event.preventDefault();
-      if (sending || !contactForm.reportValidity()) return;
+      if (sending || sent || !contactForm.reportValidity()) return;
       sending = true;
       const originalLabel = submit.textContent;
       const readOnly = fields.map(field => field.readOnly);
@@ -56,22 +62,27 @@
         if (!response.ok || (result?.success !== true && result?.success !== 'true')) {
           throw new Error('Submission was not confirmed.');
         }
+        sent = true;
         contactForm.reset();
         status.dataset.state = 'success';
-        status.textContent = 'Thank you. Your message has been submitted successfully.';
+        status.textContent = 'Message sent. Refresh this page to send another message.';
       } catch {
         // A timeout can happen after acceptance, so never retry automatically.
         status.dataset.state = 'error';
         status.textContent = 'We could not confirm submission. Your message is still here. Please wait before trying again, or use the email link below.';
       } finally {
         clearTimeout(timer);
-        fields.forEach((field, index) => { field.readOnly = readOnly[index]; });
+        fields.forEach((field, index) => { field.readOnly = sent || readOnly[index]; });
         contactForm.removeAttribute('aria-busy');
-        submit.disabled = false;
-        submit.textContent = originalLabel;
+        submit.disabled = sent;
+        submit.textContent = sent ? 'Message sent' : originalLabel;
         sending = false;
-        status.focus();
       }
+      // Popup failures must never turn an accepted submission into a retryable error.
+      if (sent && typeof confirmation?.showModal === 'function') {
+        try { confirmation.showModal(); }
+        catch { status.focus(); }
+      } else status.focus();
     });
   }
   const root = document.body.dataset.root || './';

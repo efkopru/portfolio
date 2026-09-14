@@ -42,3 +42,23 @@ test('contact delivery permission and privacy disclosure match the form', async 
   assert.ok(privacy.includes('https://formsubmit.co/privacy.pdf'));
   assert.ok(!privacy.includes('No contact form collects or submits'));
 });
+
+test('contact success popup is accessible, initially closed, and independent of form submission', async () => {
+  const html = await readFile(new URL('../dist/contact/index.html', import.meta.url), 'utf8');
+  const form = html.match(/<form\b[^]*?<\/form>/)?.[0];
+  const dialog = html.match(/<dialog\b[^]*?<\/dialog>/)?.[0];
+  assert.ok(dialog, 'Render a native dialog for the success confirmation');
+  const startTag = dialog.match(/^<dialog\b[^>]*>/)[0];
+  assert.match(startTag, /\bclass="[^"]*\bcontact-success\b[^"]*"/);
+  assert.match(startTag, /\bdata-contact-success(?:\s|>)/);
+  assert.match(startTag, /\baria-labelledby="contact-success-title"/);
+  assert.match(startTag, /\baria-describedby="contact-success-description"/);
+  assert.doesNotMatch(startTag, /\sopen(?:\s|=|>)/, 'Only a confirmed submission may open the modal');
+  assert.match(dialog, /<h2\b[^>]*\bid="contact-success-title"[^>]*>Message sent<\/h2>/);
+  assert.match(dialog, /<p\b[^>]*\bid="contact-success-description"[^>]*>[^<]+<\/p>/);
+  assert.match(dialog, /<button\b(?=[^>]*\btype="button")(?=[^>]*\bdata-contact-success-close(?:\s|>))(?=[^>]*\bautofocus(?:\s|>))[^>]*>Close<\/button>/);
+  assert.ok(!form.includes('data-contact-success'), 'The confirmation cannot resubmit or sit inside the busy form');
+  const submit = form.match(/<button\b[^>]*\bdata-contact-submit[^>]*>/)?.[0];
+  assert.ok(submit);
+  assert.doesNotMatch(submit, /\sdisabled(?:\s|=|>)/, 'A fresh page starts with an available submit control');
+});

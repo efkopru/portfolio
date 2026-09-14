@@ -14,7 +14,12 @@ function deferred() {
   return { promise, resolve, reject };
 }
 
-function page({ valid = true, request = async () => ({ ok: true, json: async () => ({ success: true }) }) } = {}) {
+function page({
+  valid = true,
+  dialog = 'supported',
+  initialSubmitDisabled = false,
+  request = async () => ({ ok: true, json: async () => ({ success: true }) })
+} = {}) {
   const listeners = new Map();
   const attributes = new Map();
   const timers = new Map();
@@ -35,7 +40,7 @@ function page({ valid = true, request = async () => ({ ok: true, json: async () 
     { name: '_url', type: 'hidden', value: 'https://www.ekopru.com/contact/', defaultValue: 'https://www.ekopru.com/contact/', disabled: false }
   ];
   const button = {
-    disabled: false, textContent: 'Send message', dataset: {},
+    disabled: initialSubmitDisabled, textContent: 'Send message', dataset: {},
     setAttribute(name, value) { this[name] = String(value); },
     removeAttribute(name) { delete this[name]; }
   };
@@ -47,6 +52,31 @@ function page({ valid = true, request = async () => ({ ok: true, json: async () 
     set innerHTML(_) { assert.fail('Contact status must not interpret provider HTML'); },
     classList: { add() {}, remove() {}, toggle() {} }
   };
+  const dialogListeners = new Map();
+  const closeListeners = new Map();
+  const closeButton = {
+    focused: false,
+    addEventListener(name, listener) { closeListeners.set(name, listener); },
+    focus() { this.focused = true; }
+  };
+  const popup = dialog === 'missing' ? null : {
+    open: false, showCount: 0, closeCount: 0,
+    querySelector(selector) { return selector === '[data-contact-success-close]' ? closeButton : null; },
+    addEventListener(name, listener) { dialogListeners.set(name, listener); },
+    showModal() {
+      this.showCount++;
+      if (dialog === 'throwing') throw new Error('Dialog could not be opened');
+      this.open = true;
+      closeButton.focus();
+    },
+    close() {
+      if (!this.open) return;
+      this.open = false;
+      this.closeCount++;
+      dialogListeners.get('close')?.call(this, { target: this });
+    }
+  };
+  if (dialog === 'unsupported') popup.showModal = undefined;
   const form = {
     dataset: { contactEndpoint: endpoint },
     elements: [...fields, ...hidden, button],
@@ -91,6 +121,7 @@ function page({ valid = true, request = async () => ({ ok: true, json: async () 
     if (selector === '[data-contact-form]') return form;
     if (selector === '[data-contact-status]' || selector === '#contact-status') return status;
     if (selector === '[data-contact-submit]') return button;
+    if (selector === '[data-contact-success]') return popup;
     return null;
   };
   const context = {
@@ -125,7 +156,7 @@ function page({ valid = true, request = async () => ({ ok: true, json: async () 
   runInNewContext(script, context, { filename: 'script.js', timeout: 1000 });
   assert.equal(typeof listeners.get('submit'), 'function', 'Contact submission must have a same-page handler');
   return {
-    form, fields, button, status, attributes, requests, timers, navigation, storage, context,
+    form, fields, button, status, popup, closeButton, attributes, requests, timers, navigation, storage, context,
     get resetCount() { return resetCount; },
     get validationCount() { return validationCount; },
     get preventedCount() { return preventedCount; },
@@ -134,6 +165,17 @@ function page({ valid = true, request = async () => ({ ok: true, json: async () 
         currentTarget: form, target: form,
         preventDefault() { preventedCount++; }
       }));
+    },
+    closePopup() {
+      assert.equal(typeof closeListeners.get('click'), 'function', 'Wire the popup close control');
+      closeListeners.get('click').call(closeButton, { target: closeButton });
+    },
+    escapePopup() {
+      // Native dialog Escape dismisses the modal, then dispatches its close event.
+      assert.equal(popup.open, true);
+      let prevented = false;
+      dialogListeners.get('cancel')?.call(popup, { preventDefault() { prevented = true; } });
+      if (!prevented) popup.close();
     },
     expire() {
       const timer = [...timers.entries()].find(([, value]) => value.delay === 20_000);
@@ -153,6 +195,19 @@ function assertIdle(formPage, expectedReadOnly = [false, false, false]) {
   assert.equal(formPage.timers.size, 0, 'Clear the timeout after settlement');
   assert.deepEqual(formPage.navigation, [], 'Never navigate to a provider confirmation or open another window');
   assert.deepEqual(formPage.storage, [], 'Never persist or read contact data in browser storage');
+}
+
+function assertSent(formPage) {
+  assert.equal(formPage.button.disabled, true, 'Keep sending disabled until the document is refreshed');
+  assert.equal(formPage.button.textContent, 'Message sent');
+  assert.notEqual(formPage.attributes.get('aria-busy'), 'true', 'A confirmed submission is no longer busy');
+  assert.ok(formPage.fields.every(field => field.readOnly && !field.disabled), 'Keep the completed form read-only');
+  assert.equal(formPage.status.dataset.state, 'success');
+  assert.match(formPage.status.textContent, /message sent/i);
+  assert.match(formPage.status.textContent, /refresh this page/i, 'Explain how another message can be sent');
+  assert.equal(formPage.timers.size, 0);
+  assert.deepEqual(formPage.navigation, [], 'The success popup must stay on the current page');
+  assert.deepEqual(formPage.storage, [], 'The send lock is document-scoped, not persisted');
 }
 
 for (const success of [true, 'true']) {
@@ -184,9 +239,11 @@ for (const success of [true, 'true']) {
     assert.ok(formPage.fields.every(field => field.value === ''));
     assert.match(formPage.status.textContent, /submitted|sent|received/i);
     assert.equal(formPage.status.dataset.state, 'success');
-    assert.equal(formPage.status.focused, true, 'Bring the completed status into view');
+    assert.equal(formPage.popup.open, true, 'Show confirmation in a modal popup');
+    assert.equal(formPage.popup.showCount, 1);
+    assert.equal(formPage.closeButton.focused, true, 'The modal close control receives focus');
     assert.ok(!formPage.status.textContent.includes('<img'), 'Use a local acknowledgement, not provider output');
-    assertIdle(formPage);
+    assertSent(formPage);
   });
 }
 
@@ -213,6 +270,7 @@ for (const [label, request] of failures) {
     assert.deepEqual(formPage.fields.map(field => field.value), original);
     assert.match(formPage.status.textContent, /could not|couldn't|unable|not confirm|unconfirmed|failed|try again/i);
     assert.equal(formPage.status.dataset.state, 'error');
+    assert.equal(formPage.popup.showCount, 0, 'Never show success for an unconfirmed delivery');
     assertIdle(formPage);
   });
 }
@@ -227,7 +285,7 @@ test('contact ignores duplicate submissions while the current request is pending
   response.resolve({ ok: true, json: async () => ({ success: true }) });
   await first;
   assert.equal(formPage.resetCount, 1);
-  assertIdle(formPage);
+  assertSent(formPage);
 });
 
 test('contact sends nothing when browser validation fails', async () => {
@@ -271,7 +329,8 @@ test('contact allows another explicit submission after a failed attempt', async 
   await formPage.submit();
   assert.equal(formPage.requests.length, 2);
   assert.equal(formPage.resetCount, 1);
-  assertIdle(formPage);
+  assert.equal(formPage.popup.showCount, 1, 'Only the confirmed retry opens the popup');
+  assertSent(formPage);
 });
 
 for (const unavailable of ['fetch', 'FormData', 'AbortController']) {
@@ -288,10 +347,69 @@ for (const unavailable of ['fetch', 'FormData', 'AbortController']) {
   });
 }
 
-test('contact restores preexisting read-only fields after completion', async () => {
-  const formPage = page();
+test('contact restores preexisting read-only fields after failure', async () => {
+  const formPage = page({ request: async () => ({ ok: true, json: async () => ({ success: false }) }) });
   formPage.fields[1].readOnly = true;
   await formPage.submit();
-  assert.equal(formPage.resetCount, 1);
+  assert.equal(formPage.resetCount, 0);
   assertIdle(formPage, [false, true, false]);
 });
+
+for (const dismiss of ['closePopup', 'escapePopup']) {
+  test(`contact ${dismiss} dismisses confirmation without unlocking another submission`, async () => {
+    const formPage = page();
+    assert.equal(formPage.popup.open, false, 'Do not open a popup before submission');
+    assert.equal(formPage.popup.showCount, 0);
+    await formPage.submit();
+    assert.equal(formPage.popup.open, true);
+    formPage[dismiss]();
+    assert.equal(formPage.popup.open, false);
+    assert.equal(formPage.popup.closeCount, 1);
+    assert.equal(formPage.status.focused, true, 'Return focus to the success status, not the disabled submit control');
+    const validationCount = formPage.validationCount;
+    await formPage.submit();
+    await formPage.submit();
+    assert.equal(formPage.requests.length, 1, 'Enter and synthetic submit events cannot bypass the completed-send guard');
+    assert.equal(formPage.resetCount, 1, 'Repeated events do not clear form state again');
+    assert.equal(formPage.validationCount, validationCount, 'Check the completed-send guard before browser validation');
+    assert.equal(formPage.popup.showCount, 1, 'Do not reopen the success popup on duplicate events');
+    assertSent(formPage);
+  });
+}
+
+test('contact blocks duplicate submissions even while the success popup is still open', async () => {
+  const formPage = page();
+  await formPage.submit();
+  await formPage.submit();
+  assert.equal(formPage.requests.length, 1);
+  assert.equal(formPage.resetCount, 1);
+  assert.equal(formPage.popup.showCount, 1);
+  assert.equal(formPage.popup.open, true);
+  assertSent(formPage);
+});
+
+test('a refreshed contact page starts unlocked even if the browser restores a disabled submit control', async () => {
+  const beforeRefresh = page();
+  await beforeRefresh.submit();
+  assertSent(beforeRefresh);
+  const afterRefresh = page({ initialSubmitDisabled: true });
+  assertIdle(afterRefresh);
+  assert.equal(afterRefresh.popup.open, false);
+  assert.equal(afterRefresh.status.textContent, '');
+  await afterRefresh.submit();
+  assert.equal(afterRefresh.requests.length, 1, 'A new document permits a new explicit message');
+  assertSent(afterRefresh);
+});
+
+for (const dialog of ['missing', 'unsupported', 'throwing']) {
+  test(`contact remains successfully locked with a ${dialog} confirmation dialog`, async () => {
+    const formPage = page({ dialog });
+    await formPage.submit();
+    assert.equal(formPage.resetCount, 1);
+    assert.equal(formPage.status.focused, true, 'Use the inline status when a modal cannot open');
+    assert.equal(formPage.popup?.open ?? false, false);
+    await formPage.submit();
+    assert.equal(formPage.requests.length, 1, 'Dialog presentation failure must not enable a duplicate send');
+    assertSent(formPage);
+  });
+}

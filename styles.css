@@ -26,7 +26,14 @@
 .form-status{margin-block:0 1.5rem;padding:1rem;border:1px solid var(--line);border-left:4px solid var(--heading);border-radius:4px;background:var(--surface);color:var(--ink);overflow-wrap:anywhere}
 .form-status:empty{display:none}
 .form-status[data-state="error"]{border-left-color:var(--focus)}
-.contact-form .button:disabled{opacity:.7;cursor:wait}
+.contact-form .button:disabled{opacity:.7;cursor:not-allowed}
+.contact-form[aria-busy="true"] .button:disabled{cursor:wait}
+.contact-success{width:min(440px,calc(100% - 2rem));max-height:calc(100dvh - 2rem);overflow:auto;padding:1.75rem;border:1px solid var(--line);border-top:4px solid var(--heading);border-radius:10px;background:var(--surface);color:var(--ink);box-shadow:0 20px 60px #0005}
+.contact-success::backdrop{background:#0009}
+.contact-success:not([open]){display:none}
+.contact-success h2{font-size:1.5rem;margin-bottom:.8rem}
+.contact-success p{color:var(--muted)}
+.contact-success .button{min-width:88px}
 .theme-toolbar{display:flex;justify-content:flex-end;align-items:center;gap:.4rem;padding-block:.25rem;font-size:.8125rem}
 .theme-toolbar label{font-weight:700}
 .theme-toolbar select{font:inherit;min-height:32px;min-width:7.75rem;max-width:100%;padding:.2rem .5rem;border:1px solid var(--control-border);border-radius:4px;background:var(--surface);color:var(--ink);cursor:pointer}
