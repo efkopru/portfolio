@@ -5,6 +5,8 @@ import { profile } from '../content/portfolio.mjs';
 
 test('contact form supports same-page delivery only to the configured FormSubmit recipient', async () => {
   const html = await readFile(new URL('../dist/contact/index.html', import.meta.url), 'utf8');
+  assert.ok(html.includes('<p class="detail-lead">I welcome any comments or feedback and would be happy to discuss your project requirements.</p>'));
+  assert.ok(!html.includes('For geospatial data science, data engineering, and software engineering roles or project work.'));
   const form = html.match(/<form\b[^]*?<\/form>/)?.[0];
   assert.ok(form);
   assert.ok(form.includes(`action="https://formsubmit.co/${profile.email}" method="POST"`));

@@ -92,7 +92,7 @@ function about() {
 }
 
 function contact() {
-  return layout({ title: 'Contact', description: 'Contact Esad Kopru about geospatial data science, data engineering, or software engineering roles and projects.', route: 'contact', current: 'contact', body: `<div class="shell text-page contact-page"><header class="page-heading"><h1>Contact me</h1><p class="detail-lead">For geospatial data science, data engineering, and software engineering roles or project work.</p></header>
+  return layout({ title: 'Contact', description: 'Contact Esad Kopru about geospatial data science, data engineering, or software engineering roles and projects.', route: 'contact', current: 'contact', body: `<div class="shell text-page contact-page"><header class="page-heading"><h1>Contact me</h1><p class="detail-lead">I welcome any comments or feedback and would be happy to discuss your project requirements.</p></header>
 <form class="contact-form" action="https://formsubmit.co/${esc(profile.email)}" method="POST" data-contact-form data-contact-endpoint="https://formsubmit.co/ajax/${esc(profile.email)}" aria-label="Contact Esad Kopru">
 <input type="hidden" name="_url" value="${origin}/contact/"><input type="hidden" name="_template" value="table"><input type="text" name="_honey" tabindex="-1" autocomplete="off" hidden aria-label="Leave this field empty">
 <div class="form-field"><label for="contact-email">Your email</label><input id="contact-email" name="email" type="email" autocomplete="email" maxlength="254" required></div>
