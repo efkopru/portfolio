@@ -7,6 +7,10 @@ import { profile } from '../content/portfolio.mjs';
 const script = await readFile(new URL('../script.js', import.meta.url), 'utf8');
 const endpoint = `https://formsubmit.co/ajax/${profile.email}`;
 
+test('contact script does not refer to the removed email fallback', () => {
+  assert.doesNotMatch(script, /email link below/i);
+});
+
 function deferred() {
   let resolve;
   let reject;
@@ -268,7 +272,7 @@ for (const [label, request] of failures) {
     assert.equal(formPage.requests.length, 1, 'Never retry an uncertain delivery automatically');
     assert.equal(formPage.resetCount, 0);
     assert.deepEqual(formPage.fields.map(field => field.value), original);
-    assert.match(formPage.status.textContent, /could not|couldn't|unable|not confirm|unconfirmed|failed|try again/i);
+    assert.equal(formPage.status.textContent, 'We could not confirm submission. Your message is still here. Please wait before trying again.');
     assert.equal(formPage.status.dataset.state, 'error');
     assert.equal(formPage.popup.showCount, 0, 'Never show success for an unconfirmed delivery');
     assertIdle(formPage);

@@ -69,7 +69,7 @@
       } catch {
         // A timeout can happen after acceptance, so never retry automatically.
         status.dataset.state = 'error';
-        status.textContent = 'We could not confirm submission. Your message is still here. Please wait before trying again, or use the email link below.';
+        status.textContent = 'We could not confirm submission. Your message is still here. Please wait before trying again.';
       } finally {
         clearTimeout(timer);
         fields.forEach((field, index) => { field.readOnly = sent || readOnly[index]; });

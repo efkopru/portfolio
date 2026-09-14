@@ -33,7 +33,20 @@ test('contact form supports same-page delivery only to the configured FormSubmit
   assert.match(status, /\baria-atomic="true"/);
   assert.match(status, /\btabindex="-1"/, 'Completion status supports programmatic focus');
   assert.ok(!form.includes('id="contact-status"'), 'Announcements stay outside the busy form');
-  assert.ok(html.includes(`href="mailto:${profile.email}"`), 'Keep direct email fallback');
+});
+
+test('contact pages omit direct email, public work, and location sections', async () => {
+  for (const path of ['../contact/index.html', '../dist/contact/index.html']) {
+    const html = await readFile(new URL(path, import.meta.url), 'utf8');
+    const main = html.match(/<main\b[^]*?<\/main>/)?.[0];
+    assert.ok(main, `${path}: retain the Contact content region`);
+    assert.doesNotMatch(main, /\bcontact-(?:fallback|block)\b/, `${path}: remove the former supplemental sections`);
+    assert.doesNotMatch(main, /You can also email|Based in Dallas, Texas\./i);
+    assert.doesNotMatch(main, /<h[1-6]\b[^>]*>\s*Public work\s*<\/h[1-6]>/i);
+    assert.doesNotMatch(main, /<a\b[^>]*\bhref="(?:mailto:|https?:\/\/(?:www\.)?github\.com\/efkopru(?:[/?#"]))/i,
+      `${path}: keep removed direct email and GitHub links out of the visible Contact content`);
+    assert.doesNotMatch(main, /email link below/i, `${path}: do not refer to a removed fallback link`);
+  }
 });
 
 test('contact delivery permission and privacy disclosure match the form', async () => {
