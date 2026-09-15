@@ -8,7 +8,8 @@ const themeColors = {
   classic: '#e0e9f0',
   midnight: '#111c2b',
   evergreen: '#f3f7f2',
-  sandstone: '#f7f2ea'
+  sandstone: '#f7f2ea',
+  coastal: '#edf6fa'
 };
 const themes = Object.keys(themeColors);
 const storageKey = 'ekopru-theme';
@@ -102,9 +103,11 @@ test('theme initializer restores only allowed preferences without writing storag
 test('theme initializer defaults to Classic for absent, invalid, or unavailable storage', async () => {
   const initializer = await source('theme.js');
   const cases = [
-    ...[null, '', 'unknown', 'MIDNIGHT', 'SANDSTONE', ' evergreen ', ' sandstone ', '__proto__', 'constructor'].map(saved => ({ saved })),
+    ...[null, '', 'unknown', 'MIDNIGHT', 'SANDSTONE', 'COASTAL', ' evergreen ', ' sandstone ', ' coastal ', '__proto__', 'constructor'].map(saved => ({ saved })),
     { saved: 'midnight', blockedRead: true },
-    { saved: 'evergreen', blockedAccess: true }
+    { saved: 'evergreen', blockedAccess: true },
+    { saved: 'coastal', blockedRead: true },
+    { saved: 'coastal', blockedAccess: true }
   ];
   for (const options of cases) {
     const page = environment(options);
@@ -142,20 +145,20 @@ test('theme selection still works when preference storage is blocked', async () 
     assert.doesNotThrow(() => {
       page.run(initializer, 'theme.js');
       page.run(script, 'script.js');
-      page.change('sandstone');
+      page.change('coastal');
     });
-    assert.equal(page.documentElement.dataset.theme, 'sandstone');
-    assert.equal(page.select.value, 'sandstone');
+    assert.equal(page.documentElement.dataset.theme, 'coastal');
+    assert.equal(page.select.value, 'coastal');
     assert.equal(page.toolbar.hidden, false);
-    assert.equal(page.meta.content, themeColors.sandstone);
+    assert.equal(page.meta.content, themeColors.coastal);
     assert.deepEqual(page.writes, []);
   }
 });
 
 test('theme controls safely fall back when given an unsupported selection', async () => {
   const [initializer, script] = await Promise.all([source('theme.js'), source('script.js')]);
-  for (const invalid of ['unknown', 'Sandstone', '__proto__', 'constructor']) {
-    const page = environment({ saved: 'sandstone' });
+  for (const invalid of ['unknown', 'Sandstone', 'COASTAL', ' coastal ', '__proto__', 'constructor']) {
+    const page = environment({ saved: 'coastal' });
     page.run(initializer, 'theme.js');
     page.run(script, 'script.js');
     page.change(invalid);
@@ -192,6 +195,27 @@ test('Sandstone supplies a matching background and accessible text and control c
   for (const background of ['--bg', '--surface']) {
     for (const foreground of ['--ink', '--muted', '--heading']) checkContrast(foreground, background, 4.5);
     checkContrast('--control-border', background, 3);
+  }
+  checkContrast('--button-ink', '--button-bg', 4.5);
+});
+
+test('Coastal supplies accessible text, controls, and focus on every content surface', async () => {
+  const css = await source('styles.css');
+  const rule = css.match(/:root\[data-theme=["']coastal["']\]\s*\{([^}]+)\}/);
+  assert.ok(rule, 'Coastal must have its own palette');
+  const tokens = new Map([...rule[1].matchAll(/(--[\w-]+)\s*:\s*([^;\s}]+)/g)]
+    .map(([, name, value]) => [name, value]));
+  assert.equal(tokens.get('--bg'), themeColors.coastal, 'CSS and browser theme color agree');
+  assert.equal(tokens.get('--logo-bg'), 'transparent', 'Preserve the original logo without a colored backdrop');
+  const checkContrast = (foreground, background, threshold) => {
+    assert.ok(tokens.has(foreground) && tokens.has(background), `Palette supplies ${foreground} and ${background}`);
+    const values = [luminance(tokens.get(foreground)), luminance(tokens.get(background))].sort((a, b) => b - a);
+    const ratio = (values[0] + 0.05) / (values[1] + 0.05);
+    assert.ok(ratio >= threshold, `${foreground} on ${background}: ${ratio.toFixed(2)} must be at least ${threshold}`);
+  };
+  for (const background of ['--bg', '--surface', '--surface-alt']) {
+    for (const foreground of ['--ink', '--muted', '--heading', '--accent']) checkContrast(foreground, background, 4.5);
+    for (const foreground of ['--control-border', '--focus']) checkContrast(foreground, background, 3);
   }
   checkContrast('--button-ink', '--button-bg', 4.5);
 });

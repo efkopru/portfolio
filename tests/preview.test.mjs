@@ -75,7 +75,7 @@ test('preview case studies explain the contribution and result before screenshot
   assert.match(prototype, /synthetic/i, 'The prototype must not be mistaken for production work');
 });
 
-test('preview keeps all four themes, versioned assets, and the accessible image viewer', async () => {
+test('preview keeps all five themes, versioned assets, and the accessible image viewer', async () => {
   const previewManifest = await manifest('dist-preview');
   const versions = new Map();
   for (const asset of ['theme.js', 'script.js', 'styles.css', 'preview.css']) {
@@ -85,7 +85,7 @@ test('preview keeps all four themes, versioned assets, and the accessible image 
   for (const path of previewManifest.pages) {
     const html = await read('dist-preview', path);
     assert.match(html, /data-theme-select/);
-    for (const theme of ['classic', 'midnight', 'evergreen', 'sandstone']) assert.match(html, new RegExp(`<option\\b[^>]*value=["']${theme}["']`), `${path}: ${theme}`);
+    for (const theme of ['classic', 'midnight', 'evergreen', 'sandstone', 'coastal']) assert.match(html, new RegExp(`<option\\b[^>]*value=["']${theme}["']`), `${path}: ${theme}`);
     for (const [asset, version] of versions) assert.ok(html.includes(`${asset}?v=${version}`), `${path}: use the actual preview ${asset} hash`);
     assert.match(html, /Skip to content/);
   }

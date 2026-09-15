@@ -79,10 +79,10 @@ for (const id of flagshipIds) {
   });
 }
 
-test('all four themes work without filtering screenshots and persist after reload', async ({ page }) => {
+test('all five themes work without filtering screenshots and persist after reload', async ({ page }) => {
   await page.goto('/preview/spatial-analysis/index.html');
   const select = page.getByLabel('Theme', { exact: true });
-  for (const theme of ['classic', 'midnight', 'evergreen', 'sandstone']) {
+  for (const theme of ['classic', 'midnight', 'evergreen', 'sandstone', 'coastal']) {
     await select.selectOption(theme);
     await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
     await expect(select).toHaveValue(theme);
@@ -98,8 +98,8 @@ test('all four themes work without filtering screenshots and persist after reloa
     await expectNoOverflow(page);
   }
   await page.reload();
-  await expect(select).toHaveValue('sandstone');
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'sandstone');
+  await expect(select).toHaveValue('coastal');
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'coastal');
 });
 
 test('mobile menu and category disclosure support keyboard close and local navigation', async ({ page, isMobile }) => {

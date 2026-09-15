@@ -1,7 +1,7 @@
 (() => {
   'use strict';
   document.documentElement.classList.add('js');
-  const themeColors = { classic: '#e0e9f0', midnight: '#111c2b', evergreen: '#f3f7f2', sandstone: '#f7f2ea' };
+  const themeColors = { classic: '#e0e9f0', midnight: '#111c2b', evergreen: '#f3f7f2', sandstone: '#f7f2ea', coastal: '#edf6fa' };
   const themeSelect = document.querySelector('[data-theme-select]');
   if (themeSelect) {
     const applyTheme = value => {
