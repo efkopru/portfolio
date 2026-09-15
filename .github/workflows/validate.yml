@@ -1,0 +1,71 @@
+name: Validate portfolio
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      check_external_links:
+        description: Read public project links; authentication or bot challenges require manual review
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      # This is validation only. No files are deployed by this workflow.
+      SITE_URL: ${{ vars.PRODUCTION_SITE_URL || 'https://portfolio-validation.example' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate the unchanged main layout
+        run: |
+          npm run build
+          npm run check
+      - name: Validate the isolated preview
+        run: |
+          npm run build:preview
+          npm run check:preview
+      - name: Validate the production candidate without deploying
+        run: |
+          npm run build:candidate
+          npm run check:candidate
+      - name: Run regression tests
+        run: npm test
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test the synthetic educational companion
+        working-directory: examples/lead-pipe-synthetic
+        run: |
+          python demo.py
+          python -m unittest -v test_demo.py
+      - name: Install the pinned CI-only browser test runner
+        run: npm install --no-save --package-lock=false @playwright/test@1.63.0
+      - name: Install Chromium and its system dependencies
+        run: npx playwright install --with-deps chromium
+      - name: Run local-only desktop and mobile browser smoke tests
+        run: npx playwright test
+      - name: Keep browser failure screenshots and traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-smoke-failures
+          path: test-results/
+          if-no-files-found: ignore
+          retention-days: 7
+      - name: Check public external project links when explicitly requested
+        if: github.event_name == 'workflow_dispatch' && inputs.check_external_links
+        run: node scripts/check-external-links.mjs --run

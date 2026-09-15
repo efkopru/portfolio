@@ -1,5 +1,11 @@
 node_modules/
 dist/
+dist-preview/
+dist-candidate/
+preview/
+__pycache__/
+test-results/
+playwright-report/
 work/
 *.zip
 .env

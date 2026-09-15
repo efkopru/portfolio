@@ -2,7 +2,7 @@ import { projects } from './portfolio.mjs';
 import screenshots from './screenshots.json' with { type: 'json' };
 
 // Remove these from collection indexes and menus without deleting their pages or assets.
-const unlistedProjectIds = new Set([
+export const unlistedProjectIds = new Set([
   'lead-service-line-ocr',
   's2s-transformer-bias-correction',
   'dask-ensemble-calibration',

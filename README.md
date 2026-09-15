@@ -7,13 +7,56 @@ Static portfolio using the original ekopru.com navigation, three-category projec
 Requires Node.js 22 or newer. There are no dependencies to install.
 
 ```powershell
-npm run build
-npm run check
-npm test
+npm run validate
 npm run dev
 ```
 
 Open `http://127.0.0.1:4173/`. The development server binds only to this computer. Rebuild and reload after editing; it is intentionally not an HMR server.
+
+## Alternate design for review
+
+The `codex/portfolio-preview` branch adds a separate site at `preview/index.html`. It does not replace the current root homepage, project pages, Contact form, navigation, themes, or image controls. Nothing is deployed by creating this branch or building locally.
+
+```powershell
+npm run build:preview
+npm run check:preview
+npm run dev
+```
+
+Open `http://127.0.0.1:4173/preview/index.html`, or open `preview/index.html` directly from the project folder. The preview has its own relative links, pages, and copied assets. Its banner links back to the current homepage. All preview HTML is marked `noindex`; its sitemap is empty. This is an indexing preference, not access protection.
+
+The alternate design adds:
+
+- Three flagship projects, while retaining the original project collections.
+- Visible problem, contribution, result, tools, and project status before images.
+- Three opening gallery images, with the remaining images in an expandable section.
+- Clearly labeled explanatory ETL/accessibility diagrams and a newly authored, synthetic-only Python companion. These are not recovered employer artifacts or measured field results.
+- Four checked-in 1200×630 PNG sharing covers. Regeneration is optional through `scripts/create-social-previews.ps1` on Windows; normal builds need only Node.
+
+Edit the alternative templates in `scripts/preview-pages.mjs`, its isolated styles in `preview.css`, and evidence descriptors in `content/preview-evidence.mjs`. Source facts remain in `content/portfolio.mjs`. Generated `preview/`, `dist-preview/`, and `dist-candidate/` are ignored by Git and excluded from the current site's `dist/`.
+
+`npm run validate` builds and checks the unchanged site, the preview, and a non-deployed candidate using a reserved example origin, then runs the Node regression suite. The synthetic example has its own standard-library tests:
+
+```powershell
+py -3 examples/lead-pipe-synthetic/demo.py
+py -3 -m unittest discover -s examples/lead-pipe-synthetic -p test_demo.py -v
+```
+
+`npm run check:external` is an explicit, read-only network check of public project URLs. It never submits forms. It reports authentication, anti-bot, timeout, and uncertain responses as needing manual review, and exits nonzero for unresolved results. An HTTP response does not prove that an external map's layers or tools work.
+
+The GitHub validation workflow does not deploy. It checks both designs, the Python companion, and desktop/mobile browser smoke tests when this branch is pushed. Hostinger's existing automatic deployment is **not** gated by that workflow merely because the workflow exists. Connecting deployment to successful checks remains part of a later approved promotion.
+
+### After the alternative is approved
+
+Do not copy only `preview/index.html` over the homepage: the revised project pages and assets belong together. A production candidate is generated separately, with an explicitly selected origin:
+
+```powershell
+$env:SITE_URL = 'https://www.ekopru.com'
+npm run build:candidate
+npm run check:candidate
+```
+
+This creates `dist-candidate/` only; it does not change the root site or publish anything. Unlike the review preview, the candidate removes the review banner, enables canonical URLs on indexable pages, and excludes the five intentionally unlisted projects from its sitemap while retaining their routes with `noindex`. Use the actual approved production origin for `SITE_URL`. The default `npm run build` still produces the original design in `dist/` until a separate promotion changes that choice.
 
 ## Where to edit
 
@@ -66,6 +109,6 @@ Project galleries use local images recovered from the original portfolio, public
 
 ## Validation
 
-`npm run check` verifies page structure, source-data completeness, all local links and anchors, preservation of old routes, metadata, and the publication file allowlist. `npm test` protects the important factual distinctions between consultant work, automated execution, historical program outcomes, and synthetic experiments.
+`npm run check` verifies page structure, source-data completeness, all local links and anchors, preservation of old routes, metadata, and the publication file allowlist. `npm run validate` builds all outputs required by `npm test`. The tests protect factual distinctions between consultant work, automated execution, historical program outcomes, and synthetic experiments, plus preview isolation and indexing rules.
 
 Image captions, dimensions, and available public source URLs are recorded in `content/screenshots.json`. Internal audit and publication-planning notes remain outside the public repository.

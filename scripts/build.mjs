@@ -3,12 +3,20 @@ import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import { profile, projects } from '../content/portfolio.mjs';
-import { collections, browseCollections, siteProjects, additionalProjects } from '../content/site-structure.mjs';
+import { collections, browseCollections, siteProjects, additionalProjects, unlistedProjectIds } from '../content/site-structure.mjs';
+import { previewHome, previewProject, previewSource, sourceRoute } from './preview-pages.mjs';
+import { previewCompanionFiles } from '../content/preview-evidence.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const output = resolve(root, 'dist');
+const mode = process.argv.includes('--preview') ? 'preview' : process.argv.includes('--candidate') ? 'candidate' : 'classic';
+if (process.argv.slice(2).some(arg => !['--preview', '--candidate'].includes(arg)) || process.argv.includes('--preview') && process.argv.includes('--candidate')) throw new Error('Use --preview or --candidate, not both.');
+const alternate = mode !== 'classic';
+const preview = mode === 'preview';
+const output = resolve(root, mode === 'classic' ? 'dist' : `dist-${mode}`);
+const localOutput = preview ? resolve(root, 'preview') : mode === 'classic' ? root : null;
+if (mode === 'candidate' && !process.env.SITE_URL) throw new Error('Set SITE_URL explicitly before building a production candidate.');
 // New asset URLs prevent a fresh page from using cached styles or theme logic.
-const assetVersions = Object.fromEntries(await Promise.all(['theme.js', 'styles.css', 'script.js'].map(async file =>
+const assetVersions = Object.fromEntries(await Promise.all(['theme.js', 'styles.css', 'script.js', ...(alternate ? ['preview.css'] : [])].map(async file =>
   [file, createHash('sha256').update(await readFile(resolve(root, file))).digest('hex').slice(0, 12)]
 )));
 const origin = new URL(process.env.SITE_URL || 'https://www.ekopru.com').origin;
@@ -18,7 +26,9 @@ for (const slug of [...siteProjects.map(project => project.id), ...collections.m
   if (!/^[a-z0-9-]+$/.test(slug)) throw new Error('Page IDs must contain only lowercase letters, digits, and hyphens.');
 }
 const year = new Date().getUTCFullYear();
-const errorPageBaseScript = "if(location.protocol!=='file:')document.querySelector('base').href='/';";
+const errorPageBaseScript = preview
+  ? "if(location.protocol!=='file:')document.querySelector('base').href=new URL('./',location.href).href;"
+  : "if(location.protocol!=='file:')document.querySelector('base').href='/';";
 const errorPageScriptHash = createHash('sha256').update(errorPageBaseScript).digest('base64');
 const esc = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
 const links = items => items.map(item => `<a class="text-link" href="${esc(item.url)}" rel="noopener noreferrer">${esc(item.label)} <span aria-hidden="true">↗</span></a>`).join('');
@@ -28,6 +38,8 @@ const list = items => `<ul>${items.map(item => `<li>${esc(item)}</li>`).join('')
 function layout({ title, description, body, route = '', current = '', noindex = false, redirect = '' }) {
   const prefix = route ? '../' : './';
   const canonical = `${origin}/${route ? route + '/' : ''}`;
+  const excluded = noindex || preview;
+  const shareImage = `assets/social/${['utility-inspection-etl', 'accessibility-analysis', 'interactive-maps-a-custom-js-app'].includes(route) ? route : 'portfolio'}.png`;
   const navLink = (label, path) => `<a href="${prefix}${path}"${(route ? path === route + '/index.html' : path === 'index.html') ? ' aria-current="page"' : ''}>${esc(label)}</a>`;
   const navGroup = c => `<div class="nav-group"><div class="nav-heading">${navLink(c.title, c.id + '/index.html')}<button type="button" class="nav-disclosure" aria-label="Toggle ${esc(c.title)} project menu" aria-expanded="false" aria-controls="nav-${c.id}"><span aria-hidden="true">▾</span></button></div><div class="dropdown" id="nav-${c.id}">${navLink('Overview', c.id + '/index.html')}${c.entries.map(([id, title]) => navLink(title, id + '/index.html')).join('')}</div></div>`;
   const additionalNav = { id: 'additional-projects', title: 'Additional projects', entries: additionalProjects.map(project => [project.id, project.title]) };
@@ -38,26 +50,27 @@ ${noindex && !route ? `<base href="./"><script>${errorPageBaseScript}</script>` 
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)} | Esad Kopru</title>
 <meta name="description" content="${esc(description)}"><meta name="theme-color" content="#e0e9f0"><meta name="referrer" content="strict-origin-when-cross-origin">
-${noindex ? '<meta name="robots" content="noindex, follow">' : `<link rel="canonical" href="${canonical}">`}
-<meta property="og:type" content="website"><meta property="og:site_name" content="Esad Kopru"><meta property="og:title" content="${esc(title)} | Esad Kopru"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${canonical}"><meta name="twitter:card" content="summary">
-<link rel="icon" href="${prefix}assets/efk-logo.avif"><script src="${prefix}theme.js?v=${assetVersions['theme.js']}"></script><link rel="stylesheet" href="${prefix}styles.css?v=${assetVersions['styles.css']}"><script src="${prefix}script.js?v=${assetVersions['script.js']}" defer></script>
+${excluded ? '<meta name="robots" content="noindex, follow">' : `<link rel="canonical" href="${canonical}">`}
+<meta property="og:type" content="website"><meta property="og:site_name" content="Esad Kopru"><meta property="og:title" content="${esc(title)} | Esad Kopru"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${canonical}"><meta name="twitter:card" content="${alternate ? 'summary_large_image' : 'summary'}">${alternate ? `<meta property="og:image" content="${origin}/${shareImage}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="${esc(title)} | Esad Kopru"><meta name="twitter:image" content="${origin}/${shareImage}">` : ''}
+<link rel="icon" href="${prefix}assets/efk-logo.avif"><script src="${prefix}theme.js?v=${assetVersions['theme.js']}"></script><link rel="stylesheet" href="${prefix}styles.css?v=${assetVersions['styles.css']}"><script src="${prefix}script.js?v=${assetVersions['script.js']}" defer></script>${alternate ? `\n<link rel="stylesheet" href="${prefix}preview.css?v=${assetVersions['preview.css']}">` : ''}
 <script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@type': 'ProfilePage', name: `${title} | Esad Kopru`, url: canonical, mainEntity: { '@type': 'Person', name: profile.name, url: origin, sameAs: [profile.github], knowsAbout: ['Geospatial data science', 'Geospatial data engineering', 'Geospatial software engineering'], alumniOf: [{ '@type': 'CollegeOrUniversity', name: 'The University of Texas at Dallas' }] } }).replaceAll('<','\\u003c')}</script>
-</head><body data-root="${prefix}"${redirect ? ` data-redirect="${esc(redirect)}"` : ''}><a class="skip-link" href="#main">Skip to content</a>
+</head><body data-root="${prefix}"${alternate ? ' data-preview="true"' : ''}${redirect ? ` data-redirect="${esc(redirect)}"` : ''}><a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header"><div class="shell header-inner"><a class="brand" href="${prefix}index.html" aria-label="Esad Kopru home"><img src="${prefix}assets/efk-logo.avif" width="101" height="48" alt="EFK Portfolio"></a><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button><nav id="site-nav" class="site-nav" aria-label="Main navigation">${navigation}</nav></div></header><div class="rule" aria-hidden="true"></div>
 <div class="theme-toolbar shell" data-theme-toolbar hidden><label for="theme-select">Theme</label><select id="theme-select" data-theme-select><option value="classic">Classic</option><option value="midnight">Midnight</option><option value="evergreen">Evergreen</option><option value="sandstone">Sandstone</option></select></div>
-<main id="main" tabindex="-1">${body}</main>
+<main id="main" tabindex="-1">${preview ? `<div class="shell preview-notice"><p>Alternate design preview. The current site is unchanged.</p><a href="${prefix}../index.html">View current version</a></div>` : ''}${body}</main>
 <div class="rule" aria-hidden="true"></div><footer class="site-footer"><div class="shell footer-inner"><p>All rights reserved © EK ${year}</p></div></footer>
 <dialog class="image-viewer" aria-labelledby="viewer-title"><div class="viewer-header"><h2 id="viewer-title">Image viewer</h2><button type="button" data-viewer-close autofocus>Close <span aria-hidden="true">×</span></button></div><div class="viewer-controls" role="group" aria-label="Image controls"><div class="viewer-zoom-controls" role="group" aria-label="Zoom"><button type="button" data-zoom-out aria-label="Zoom out">− Zoom out</button><output class="zoom-level" aria-live="polite">100%</output><button type="button" data-zoom-in aria-label="Zoom in">+ Zoom in</button></div><div class="viewer-fit-controls"><button type="button" data-zoom-reset><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 3H3v6m12-6h6v6M3 15v6h6m12-6v6h-6"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>Fit to screen</button></div></div><p class="viewer-status" role="status"></p><div class="viewer-viewport" tabindex="0" aria-label="Image; scroll to pan when zoomed"><img class="viewer-image" alt=""></div><p class="viewer-caption"></p></dialog></body></html>`;
 }
 
 
-function gallery(project) {
+function gallery(project, suffix = '') {
   if (!project.gallery.length) return '';
   const names = { 'spatial-analysis': 'Spatial analysis', qgis: 'QGIS', 'arcgis-enterprise-and-online': 'ArcGIS Enterprise and Online', 'python-and-notebooks': 'Python applications and notebooks', 'sql-and-javascript-and-r': 'SQL, JavaScript, and R', 'modelbuilder-and-arcmap-tool-in-vbnet': 'ModelBuilder and VB.NET' };
   const groups = Map.groupBy(project.gallery, image => image.group);
   const note = project.id === 'income-level-prediction-using-r' ? 'Original historical presentation; exploratory results, not a validated benchmark.' : project.type?.includes('Synthetic') ? 'Synthetic demonstration figures; these do not show field performance.' : project.id === 'workforce-participation' ? 'Screenshot from the published workforce atlas.' : 'Historical portfolio screenshots.';
   const figure = image => `<figure id="screenshot-${esc(image.src.split('/').pop().split('.')[0])}"><a data-image-viewer href="../${esc(image.src)}" data-caption="${esc(image.caption)}" aria-label="Open image: ${esc(image.caption)}"><img src="../${esc(image.preview)}" width="${image.width}" height="${image.height}" alt="${esc(image.caption)}" loading="lazy" decoding="async"></a><figcaption>${esc(image.caption)}</figcaption></figure>`;
-  return `<section class="project-gallery" aria-labelledby="screenshots-heading"><div class="gallery-heading"><h2 id="screenshots-heading">Project gallery</h2><p>${esc(note)} ${project.gallery.length} images. Select an image to view it full size.</p></div>${[...groups].map(([group, images]) => `<section class="gallery-group" id="gallery-${esc(group)}">${groups.size > 1 ? `<h3>${esc(names[group] || 'Related examples')}</h3>` : ''}<div class="screenshot-grid">${images.map(figure).join('')}</div></section>`).join('')}</section>`;
+  const key = suffix ? `-${suffix}` : '';
+  return `<section class="project-gallery" aria-labelledby="screenshots-heading${key}"><div class="gallery-heading"><h2 id="screenshots-heading${key}">${suffix ? 'More project images' : 'Project gallery'}</h2><p>${esc(note)} ${project.gallery.length} images. Select an image to view it full size.</p></div>${[...groups].map(([group, images]) => `<section class="gallery-group" id="gallery-${esc(group)}${key}">${groups.size > 1 ? `<h3>${esc(names[group] || 'Related examples')}</h3>` : ''}<div class="screenshot-grid">${images.map(figure).join('')}</div></section>`).join('')}</section>`;
 }
 
 
@@ -66,6 +79,7 @@ function projectList(entries, prefix = '../') {
 }
 
 function home() {
+  if (alternate) return previewHome({ layout, esc, chips, projectList });
   return layout({ title: 'Geospatial Data Science & GIS Development', description: profile.description, body: `<section class="home-intro"><h1>Hello!</h1><p>Geospatial Data Scientist with 10+ years specializing in data analytics, spatial optimization, ETL automation, and GIS development using Python, SQL, JavaScript, and R. I build GIS systems, analytical models, and automated data pipelines that turn location information into decisions.</p><p>Python · ArcGIS Enterprise · QGIS · Deep Learning · ETL Automation · Custom JS</p><p class="signature">Esad</p><a class="project-button" href="#projects">Breakdown of the Projects</a></section><section class="shell project-index" id="projects" aria-label="Breakdown of the Projects">${browseCollections.map(c => `<section><h2>${esc(c.heading)}</h2>${projectList(c.entries, './')}</section>`).join('')}</section>` });
 }
 
@@ -75,6 +89,7 @@ function embeddedApp(embed) {
 }
 
 function projectPage(project) {
+  if (alternate) return previewProject(project, { layout, esc, chips, links, list, gallery, embeddedApp }, unlistedProjectIds.has(project.id));
   const parent = project.collection;
   return layout({ title: project.title, description: project.summary, route: project.id, body: `<div class="shell detail"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="../index.html#projects">Projects</a>${parent ? `<span aria-hidden="true">/</span><a href="../${parent.id}/index.html">${esc(parent.title)}</a>` : ''}</nav><header class="project-heading"><h1>${esc(project.title)}</h1><p>${esc(project.summary)}</p>${project.links?.length ? `<div class="project-links">${links(project.links)}</div>` : ''}</header>${embeddedApp(project.embed)}${gallery(project)}${project.contribution ? `<section class="project-description"><h2>About this work</h2><p>${esc(project.contribution)}</p>${project.result ? `<p>${esc(project.result)}</p>` : ''}<details class="project-details"><summary>Methods and project context</summary>${chips(project.tools)}<p>${esc(project.problem)}</p>${list(project.approach)}<p>${esc(project.context)}</p><p>${esc(project.boundary)}</p></details>${project.type?.includes('Synthetic') ? `<p class="evidence-note">${esc(project.boundary)}</p>` : ''}</section>` : ''}<p class="back-link"><a href="../index.html#projects">← Back to projects</a></p></div>` });
 }
@@ -111,6 +126,7 @@ const pages = new Map([
   ['404.html', layout({ title: 'Page not found', description: 'This portfolio page could not be found.', noindex: true, body: '<div class="shell text-page"><p class="eyebrow">404</p><h1>Page not found.</h1><p>The page may have moved. Browse the project library to find the work you are looking for.</p><a class="button" href="./index.html#projects">Browse projects</a></div>' })]
 ]);
 for (const project of siteProjects) pages.set(`${project.id}/index.html`, projectPage(project));
+if (alternate) for (const path of previewCompanionFiles.filter(path => /\.(md|py)$/.test(path))) pages.set(`${sourceRoute(path)}/index.html`, previewSource(path, await readFile(resolve(root, path), 'utf8'), { layout, esc }));
 for (const collection of browseCollections) pages.set(`${collection.id}/index.html`, collectionPage(collection));
 pages.set('additional-projects/index.html', layout({ title: 'Additional projects', description: 'More geospatial case studies, public software, and synthetic-data demonstrations.', route: 'additional-projects', body: `<div class="shell text-page"><h1>Additional projects</h1><p>More recent case studies, public tools, and experiments.</p>${projectList(additionalProjects.map(p => [p.id, p.title]))}<p class="back-link"><a href="../index.html#projects">← All project collections</a></p></div>` }));
 
@@ -121,26 +137,29 @@ let previous;
 try { previous = JSON.parse(await readFile(resolve(output, 'build-manifest.json'), 'utf8')); }
 catch (error) { if (error.code !== 'ENOENT') throw error; }
 for (const oldPage of previous?.pages || []) {
-  if (!/^(?:index\.html|404\.html|[a-z0-9-]+\/index\.html)$/.test(oldPage)) throw new Error('Invalid previous build manifest path.');
+  if (!/^(?:index\.html|404\.html|[a-zA-Z0-9-]+\/index\.html)$/.test(oldPage)) throw new Error('Invalid previous build manifest path.');
   if (!pages.has(oldPage)) {
     try { await unlink(resolve(output, oldPage)); } catch (error) { if (error.code !== 'ENOENT') throw error; }
   }
 }
 for (const [path, html] of pages) {
-  for (const destination of [resolve(root, path), resolve(output, path)]) {
+  for (const destination of [resolve(output, path), ...(localOutput ? [resolve(localOutput, path)] : [])]) {
     await mkdir(resolve(destination, '..'), { recursive: true });
     await writeFile(destination, html);
   }
 }
-const screenshotAssets = [...new Set(siteProjects.flatMap(project => project.gallery.flatMap(image => [image.src, image.preview])))];
-for (const path of ['styles.css', 'script.js', 'theme.js', 'assets/efk-logo.avif', 'assets/gis-background.webp', ...screenshotAssets]) {
-  await mkdir(resolve(output, path, '..'), { recursive: true });
-  await copyFile(resolve(root, path), resolve(output, path));
+const screenshotAssets = [...new Set([...siteProjects, ...(alternate ? projects : [])].flatMap(project => project.gallery.flatMap(image => [image.src, image.preview])))];
+const assets = ['styles.css', 'script.js', 'theme.js', 'assets/efk-logo.avif', 'assets/gis-background.webp', ...screenshotAssets, ...(alternate ? ['preview.css', ...previewCompanionFiles, ...['portfolio', 'utility-inspection-etl', 'accessibility-analysis', 'interactive-maps-a-custom-js-app'].map(name => `assets/social/${name}.png`)] : [])];
+for (const path of assets) {
+  for (const destination of [output, ...(preview ? [localOutput] : [])]) {
+    await mkdir(resolve(destination, path, '..'), { recursive: true });
+    await copyFile(resolve(root, path), resolve(destination, path));
+  }
 }
-const urls = ['', 'about/', 'resume/', 'contact/', 'additional-projects/', ...collections.map(c => c.id + '/'), ...siteProjects.map(project => project.id + '/')];
+const urls = preview ? [] : ['', 'about/', 'resume/', 'contact/', 'additional-projects/', ...collections.map(c => c.id + '/'), ...siteProjects.filter(project => !alternate || !unlistedProjectIds.has(project.id)).map(project => project.id + '/')];
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map(path => `<url><loc>${origin}/${path}</loc></url>`).join('')}</urlset>`;
-for (const [path, content] of [['sitemap.xml', sitemap], ['robots.txt', `User-agent: *\nAllow: /\nSitemap: ${origin}/sitemap.xml\n`], ['_headers', "/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  X-Frame-Options: DENY\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-"+errorPageScriptHash+"'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://formsubmit.co; frame-src https://maps.cityoflewisville.com https://experience.arcgis.com https://lewisville.maps.arcgis.com https://www.arcgis.com; object-src 'none'; base-uri 'self'; form-action https://formsubmit.co; frame-ancestors 'none'\n"]]) {
-  await writeFile(resolve(root, path), content); await writeFile(resolve(output, path), content);
+for (const [path, content] of [['sitemap.xml', sitemap], ['robots.txt', `User-agent: *\nAllow: /\n${preview ? '# Review pages use HTML noindex; do not publish this preview as production.\n' : `Sitemap: ${origin}/sitemap.xml\n`}`], ['_headers', "/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  X-Frame-Options: DENY\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-"+errorPageScriptHash+"'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://formsubmit.co; frame-src https://maps.cityoflewisville.com https://experience.arcgis.com https://lewisville.maps.arcgis.com https://www.arcgis.com; object-src 'none'; base-uri 'self'; form-action https://formsubmit.co; frame-ancestors 'none'\n"]]) {
+  if (localOutput) await writeFile(resolve(localOutput, path), content); await writeFile(resolve(output, path), content);
 }
-await writeFile(resolve(output, 'build-manifest.json'), JSON.stringify({ pages: [...pages.keys()], origin, projects: projects.length }, null, 2));
+await writeFile(resolve(output, 'build-manifest.json'), JSON.stringify({ pages: [...pages.keys()], origin, projects: projects.length, mode, assets }, null, 2));
 console.log(`Built ${pages.size} static pages with ${projects.length} projects into ${output}`);
