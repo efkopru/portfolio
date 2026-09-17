@@ -6,12 +6,10 @@ import { runInNewContext } from 'node:vm';
 
 const themeColors = {
   classic: '#e0e9f0',
-  midnight: '#111c2b',
-  evergreen: '#f3f7f2',
-  sandstone: '#f7f2ea',
-  coastal: '#edf6fa'
+  midnight: '#111c2b'
 };
 const themes = Object.keys(themeColors);
+const removedThemes = ['evergreen', 'sandstone', 'coastal'];
 const storageKey = 'ekopru-theme';
 const source = name => readFile(new URL(`../${name}`, import.meta.url), 'utf8');
 
@@ -103,17 +101,36 @@ test('theme initializer restores only allowed preferences without writing storag
 test('theme initializer defaults to Classic for absent, invalid, or unavailable storage', async () => {
   const initializer = await source('theme.js');
   const cases = [
-    ...[null, '', 'unknown', 'MIDNIGHT', 'SANDSTONE', 'COASTAL', ' evergreen ', ' sandstone ', ' coastal ', '__proto__', 'constructor'].map(saved => ({ saved })),
+    ...[null, '', 'unknown', 'MIDNIGHT', ' classic ', ' midnight ', '__proto__', 'constructor'].map(saved => ({ saved })),
     { saved: 'midnight', blockedRead: true },
-    { saved: 'evergreen', blockedAccess: true },
-    { saved: 'coastal', blockedRead: true },
-    { saved: 'coastal', blockedAccess: true }
+    { saved: 'midnight', blockedAccess: true }
   ];
   for (const options of cases) {
     const page = environment(options);
     assert.doesNotThrow(() => page.run(initializer, 'theme.js'), JSON.stringify(options));
     assert.equal(page.documentElement.dataset.theme, 'classic', JSON.stringify(options));
     assert.deepEqual(page.writes, [], 'Defaulting must not create or repair stored preferences');
+  }
+});
+
+test('removed saved themes fall back to Classic without writing storage and can switch to Midnight', async () => {
+  const [initializer, script] = await Promise.all([source('theme.js'), source('script.js')]);
+  for (const saved of removedThemes) {
+    const page = environment({ saved });
+    page.run(initializer, 'theme.js');
+    assert.equal(page.documentElement.dataset.theme, 'classic', `${saved}: fall back before first paint`);
+    assert.deepEqual(page.writes, [], `${saved}: initialization must not repair stored preferences`);
+    page.run(script, 'script.js');
+    assert.equal(page.documentElement.dataset.theme, 'classic', `${saved}: runtime preserves the fallback`);
+    assert.equal(page.select.value, 'classic');
+    assert.equal(page.meta.content, themeColors.classic);
+    assert.equal(page.toolbar.hidden, false);
+    assert.deepEqual(page.writes, [], `${saved}: loading controls must not repair stored preferences`);
+    page.change('midnight');
+    assert.equal(page.documentElement.dataset.theme, 'midnight');
+    assert.equal(page.select.value, 'midnight');
+    assert.equal(page.meta.content, themeColors.midnight);
+    assert.deepEqual(page.writes, [[storageKey, 'midnight']], `${saved}: persist only the explicit new choice`);
   }
 });
 
@@ -145,20 +162,20 @@ test('theme selection still works when preference storage is blocked', async () 
     assert.doesNotThrow(() => {
       page.run(initializer, 'theme.js');
       page.run(script, 'script.js');
-      page.change('coastal');
+      page.change('midnight');
     });
-    assert.equal(page.documentElement.dataset.theme, 'coastal');
-    assert.equal(page.select.value, 'coastal');
+    assert.equal(page.documentElement.dataset.theme, 'midnight');
+    assert.equal(page.select.value, 'midnight');
     assert.equal(page.toolbar.hidden, false);
-    assert.equal(page.meta.content, themeColors.coastal);
+    assert.equal(page.meta.content, themeColors.midnight);
     assert.deepEqual(page.writes, []);
   }
 });
 
 test('theme controls safely fall back when given an unsupported selection', async () => {
   const [initializer, script] = await Promise.all([source('theme.js'), source('script.js')]);
-  for (const invalid of ['unknown', 'Sandstone', 'COASTAL', ' coastal ', '__proto__', 'constructor']) {
-    const page = environment({ saved: 'coastal' });
+  for (const invalid of [...removedThemes, 'unknown', 'MIDNIGHT', ' midnight ', '__proto__', 'constructor']) {
+    const page = environment({ saved: 'midnight' });
     page.run(initializer, 'theme.js');
     page.run(script, 'script.js');
     page.change(invalid);
@@ -179,33 +196,23 @@ function luminance(color) {
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
 
-test('Sandstone supplies a matching background and accessible text and control colors', async () => {
-  const css = await source('styles.css');
-  const rule = css.match(/:root\[data-theme=["']sandstone["']\]\s*\{([^}]+)\}/);
-  assert.ok(rule, 'Sandstone must have its own palette');
-  const tokens = new Map([...rule[1].matchAll(/(--[\w-]+)\s*:\s*([^;\s}]+)/g)]
-    .map(([, name, value]) => [name, value]));
-  assert.equal(tokens.get('--bg'), themeColors.sandstone, 'CSS and browser theme color agree');
-  const checkContrast = (foreground, background, threshold) => {
-    assert.ok(tokens.has(foreground) && tokens.has(background), `Palette supplies ${foreground} and ${background}`);
-    const values = [luminance(tokens.get(foreground)), luminance(tokens.get(background))].sort((a, b) => b - a);
-    const ratio = (values[0] + 0.05) / (values[1] + 0.05);
-    assert.ok(ratio >= threshold, `${foreground} on ${background}: ${ratio.toFixed(2)} must be at least ${threshold}`);
-  };
-  for (const background of ['--bg', '--surface']) {
-    for (const foreground of ['--ink', '--muted', '--heading']) checkContrast(foreground, background, 4.5);
-    checkContrast('--control-border', background, 3);
+test('removed themes have no CSS palettes', async () => {
+  const css = (await source('styles.css')).replace(/\/\*[\s\S]*?\*\//g, '');
+  const selectors = [...css.matchAll(/\[data-theme\s*=\s*["']?([\w-]+)["']?\s*\]/g)]
+    .map(([, name]) => name);
+  for (const theme of removedThemes) {
+    assert.ok(!selectors.includes(theme), `${theme}: removed themes must have no remaining CSS rules`);
   }
-  checkContrast('--button-ink', '--button-bg', 4.5);
+  assert.ok(selectors.every(theme => themes.includes(theme)), 'Only supported themes may have CSS selectors');
 });
 
-test('Coastal supplies accessible text, controls, and focus on every content surface', async () => {
+test('Midnight supplies accessible text, controls, and focus on every content surface', async () => {
   const css = await source('styles.css');
-  const rule = css.match(/:root\[data-theme=["']coastal["']\]\s*\{([^}]+)\}/);
-  assert.ok(rule, 'Coastal must have its own palette');
+  const rule = css.match(/:root\[data-theme=["']midnight["']\]\s*\{([^}]+)\}/);
+  assert.ok(rule, 'Midnight must have its own palette');
   const tokens = new Map([...rule[1].matchAll(/(--[\w-]+)\s*:\s*([^;\s}]+)/g)]
     .map(([, name, value]) => [name, value]));
-  assert.equal(tokens.get('--bg'), themeColors.coastal, 'CSS and browser theme color agree');
+  assert.equal(tokens.get('--bg'), themeColors.midnight, 'CSS and browser theme color agree');
   assert.equal(tokens.get('--logo-bg'), 'transparent', 'Preserve the original logo without a colored backdrop');
   const checkContrast = (foreground, background, threshold) => {
     assert.ok(tokens.has(foreground) && tokens.has(background), `Palette supplies ${foreground} and ${background}`);
@@ -284,6 +291,7 @@ test('every generated page includes current versioned assets, an early initializ
   }
   for (const path of manifest.pages) {
     const html = await source(`dist/${path}`);
+    assert.equal(await source(path), html, `${path}: root and published pages contain the same assets and theme choices`);
     const prefix = path.includes('/') ? '../' : './';
     const tags = [...html.matchAll(/<script\b[^>]*>|<link\b[^>]*>/gi)]
       .map(match => ({ position: match.index, tag: match[0], attrs: attributes(match[0]) }));
