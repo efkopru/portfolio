@@ -2,20 +2,23 @@
   'use strict';
   document.documentElement.classList.add('js');
   const themeColors = { classic: '#e0e9f0', midnight: '#111c2b' };
-  const themeSelect = document.querySelector('[data-theme-select]');
-  if (themeSelect) {
+  const themeToggle = document.querySelector('[data-theme-toggle]');
+  if (themeToggle) {
+    const themeState = themeToggle.querySelector('[data-theme-state]');
     const applyTheme = value => {
       const theme = Object.hasOwn(themeColors, value) ? value : 'classic';
       document.documentElement.dataset.theme = theme;
-      themeSelect.value = theme;
+      const dark = theme === 'midnight';
+      themeToggle.setAttribute('aria-checked', String(dark));
+      if (themeState) themeState.textContent = dark ? 'On' : 'Off';
       document.querySelector('meta[name="theme-color"]')?.setAttribute('content', themeColors[theme]);
       return theme;
     };
     applyTheme(document.documentElement.dataset.theme);
     const themeToolbar = document.querySelector('[data-theme-toolbar]');
     if (themeToolbar) themeToolbar.hidden = false;
-    themeSelect.addEventListener('change', () => {
-      const theme = applyTheme(themeSelect.value);
+    themeToggle.addEventListener('click', () => {
+      const theme = applyTheme(document.documentElement.dataset.theme === 'midnight' ? 'classic' : 'midnight');
       try { localStorage.setItem('ekopru-theme', theme); }
       catch { /* Theme switching still works when storage is blocked. */ }
     });

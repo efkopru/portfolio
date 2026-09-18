@@ -13,14 +13,18 @@ const removedThemes = ['evergreen', 'sandstone', 'coastal'];
 const storageKey = 'ekopru-theme';
 const source = name => readFile(new URL(`../${name}`, import.meta.url), 'utf8');
 
-function environment({ saved = null, blockedRead = false, blockedAccess = false, blockedWrite = false } = {}) {
+function environment({ saved = null, blockedRead = false, blockedAccess = false, blockedWrite = false, missingControl = false, missingState = false } = {}) {
   const reads = [];
   const writes = [];
   const listeners = new Map();
   const documentElement = { dataset: {}, style: {}, classList: { add() {} } };
   const toolbar = { hidden: true, removeAttribute(name) { if (name === 'hidden') this.hidden = false; } };
-  const select = {
-    value: 'classic',
+  const state = { textContent: 'Off' };
+  const controlAttributes = new Map([['aria-checked', 'false']]);
+  const toggle = {
+    setAttribute(name, value) { controlAttributes.set(name, String(value)); },
+    getAttribute(name) { return controlAttributes.get(name) ?? null; },
+    querySelector(selector) { return selector === '[data-theme-state]' && !missingState ? state : null; },
     addEventListener(name, callback) {
       const callbacks = listeners.get(name) || [];
       callbacks.push(callback);
@@ -34,7 +38,8 @@ function environment({ saved = null, blockedRead = false, blockedAccess = false,
     getAttribute(name) { return this[name]; }
   };
   const querySelector = selector => {
-    if (selector === '[data-theme-select]') return select;
+    if (selector === '[data-theme-toggle]') return missingControl ? null : toggle;
+    if (selector === '[data-theme-state]') return missingState ? null : state;
     if (selector === '.theme-toolbar' || selector === '[data-theme-toolbar]') return toolbar;
     if (/^meta\[name=['"]?theme-color['"]?\]$/.test(selector)) return meta;
     return null;
@@ -75,15 +80,21 @@ function environment({ saved = null, blockedRead = false, blockedAccess = false,
   });
   context.window = context;
   return {
-    context, documentElement, toolbar, select, meta, reads, writes,
+    context, documentElement, toolbar, toggle, state, meta, reads, writes, listeners,
     run(code, filename) { runInNewContext(code, context, { filename, timeout: 1000 }); },
-    change(value) {
-      select.value = value;
-      const callbacks = listeners.get('change') || [];
-      assert.ok(callbacks.length, 'Theme selector must handle change events');
-      for (const callback of callbacks) callback.call(select, { target: select, currentTarget: select });
+    click() {
+      const callbacks = listeners.get('click') || [];
+      assert.ok(callbacks.length, 'The theme switch must handle click events');
+      for (const callback of callbacks) callback.call(toggle, { target: toggle, currentTarget: toggle });
     }
   };
+}
+
+function assertTheme(page, theme) {
+  assert.equal(page.documentElement.dataset.theme, theme);
+  assert.equal(page.toggle.getAttribute('aria-checked'), String(theme === 'midnight'));
+  assert.equal(page.state.textContent, theme === 'midnight' ? 'On' : 'Off');
+  assert.equal(page.meta.content, themeColors[theme]);
 }
 
 test('theme initializer restores only allowed preferences without writing storage', async () => {
@@ -121,69 +132,98 @@ test('removed saved themes fall back to Classic without writing storage and can 
     assert.equal(page.documentElement.dataset.theme, 'classic', `${saved}: fall back before first paint`);
     assert.deepEqual(page.writes, [], `${saved}: initialization must not repair stored preferences`);
     page.run(script, 'script.js');
-    assert.equal(page.documentElement.dataset.theme, 'classic', `${saved}: runtime preserves the fallback`);
-    assert.equal(page.select.value, 'classic');
-    assert.equal(page.meta.content, themeColors.classic);
+    assertTheme(page, 'classic');
     assert.equal(page.toolbar.hidden, false);
     assert.deepEqual(page.writes, [], `${saved}: loading controls must not repair stored preferences`);
-    page.change('midnight');
-    assert.equal(page.documentElement.dataset.theme, 'midnight');
-    assert.equal(page.select.value, 'midnight');
-    assert.equal(page.meta.content, themeColors.midnight);
+    page.click();
+    assertTheme(page, 'midnight');
     assert.deepEqual(page.writes, [[storageKey, 'midnight']], `${saved}: persist only the explicit new choice`);
   }
 });
 
-test('theme controls restore selection and persist only explicit changes', async () => {
+test('theme switch restores both preferences and persists exactly one change per repeated click', async () => {
   const [initializer, script] = await Promise.all([source('theme.js'), source('script.js')]);
   for (const saved of themes) {
     const page = environment({ saved });
     page.run(initializer, 'theme.js');
     page.run(script, 'script.js');
-    assert.equal(page.select.value, saved);
+    assertTheme(page, saved);
     assert.equal(page.toolbar.hidden, false, 'JavaScript reveals the theme control');
     assert.deepEqual(page.writes, [], 'Loading the page must not write a preference');
-    assert.equal(page.meta.content, themeColors[saved], 'Browser theme color restores the saved selection');
-    for (const theme of themes) {
-      page.change(theme);
-      assert.equal(page.documentElement.dataset.theme, theme);
-      assert.equal(page.select.value, theme);
-      assert.deepEqual(page.writes.at(-1), [storageKey, theme]);
-      assert.equal(page.meta.content, themeColors[theme], 'Browser theme color follows the selection');
+    let expected = saved;
+    const expectedWrites = [];
+    for (let click = 0; click < 6; click++) {
+      expected = expected === 'midnight' ? 'classic' : 'midnight';
+      page.click();
+      assertTheme(page, expected);
+      expectedWrites.push([storageKey, expected]);
+      assert.deepEqual(page.writes, expectedWrites, 'Write only the theme preference once per explicit click');
     }
-    assert.equal(page.writes.length, themes.length, 'One preference write per explicit selection');
+    assert.equal(page.listeners.get('click')?.length, 1, 'Register one click handler');
+    assert.ok(!page.listeners.has('keydown') && !page.listeners.has('keyup'), 'Native button activation handles keyboard input without duplicate toggles');
   }
 });
 
-test('theme selection still works when preference storage is blocked', async () => {
+test('theme switch still works when preference storage access, reads, or writes are blocked', async () => {
   const [initializer, script] = await Promise.all([source('theme.js'), source('script.js')]);
-  for (const options of [{ blockedWrite: true }, { blockedAccess: true }]) {
+  for (const options of [{ blockedWrite: true }, { blockedAccess: true }, { blockedRead: true, saved: 'midnight' }]) {
     const page = environment(options);
     assert.doesNotThrow(() => {
       page.run(initializer, 'theme.js');
       page.run(script, 'script.js');
-      page.change('midnight');
+      assertTheme(page, 'classic');
+      assert.deepEqual(page.writes, [], 'Loading a blocked preference does not write it');
+      page.click();
     });
-    assert.equal(page.documentElement.dataset.theme, 'midnight');
-    assert.equal(page.select.value, 'midnight');
+    assertTheme(page, 'midnight');
     assert.equal(page.toolbar.hidden, false);
-    assert.equal(page.meta.content, themeColors.midnight);
-    assert.deepEqual(page.writes, []);
+    page.click();
+    assertTheme(page, 'classic');
+    assert.deepEqual(page.writes, options.blockedRead ? [[storageKey, 'midnight'], [storageKey, 'classic']] : []);
   }
 });
 
-test('theme controls safely fall back when given an unsupported selection', async () => {
+test('theme switch safely normalizes an absent or invalid root theme without writing a preference', async () => {
   const [initializer, script] = await Promise.all([source('theme.js'), source('script.js')]);
-  for (const invalid of [...removedThemes, 'unknown', 'MIDNIGHT', ' midnight ', '__proto__', 'constructor']) {
+  for (const invalid of [undefined, '', ...removedThemes, 'unknown', 'MIDNIGHT', ' midnight ', '__proto__', 'constructor']) {
     const page = environment({ saved: 'midnight' });
     page.run(initializer, 'theme.js');
+    page.documentElement.dataset.theme = invalid;
     page.run(script, 'script.js');
-    page.change(invalid);
-    assert.equal(page.documentElement.dataset.theme, 'classic');
-    assert.equal(page.select.value, 'classic');
-    assert.equal(page.meta.content, themeColors.classic);
-    assert.deepEqual(page.writes, [[storageKey, 'classic']]);
+    assertTheme(page, 'classic');
+    assert.deepEqual(page.writes, [], 'Invalid markup must not rewrite the stored preference');
+    page.click();
+    assertTheme(page, 'midnight');
+    assert.deepEqual(page.writes, [[storageKey, 'midnight']]);
   }
+});
+
+test('missing theme control leaves the initializer preference intact and its toolbar hidden', async () => {
+  const [initializer, script] = await Promise.all([source('theme.js'), source('script.js')]);
+  const page = environment({ saved: 'midnight', missingControl: true });
+  assert.doesNotThrow(() => {
+    page.run(initializer, 'theme.js');
+    page.run(script, 'script.js');
+  });
+  assert.equal(page.documentElement.dataset.theme, 'midnight');
+  assert.equal(page.toolbar.hidden, true);
+  assert.deepEqual(page.writes, []);
+  assert.equal(page.listeners.size, 0);
+});
+
+test('missing decorative state label does not prevent accessible theme switching', async () => {
+  const [initializer, script] = await Promise.all([source('theme.js'), source('script.js')]);
+  const page = environment({ missingState: true });
+  assert.doesNotThrow(() => {
+    page.run(initializer, 'theme.js');
+    page.run(script, 'script.js');
+    page.click();
+  });
+  assert.equal(page.documentElement.dataset.theme, 'midnight');
+  assert.equal(page.toggle.getAttribute('aria-checked'), 'true');
+  assert.equal(page.meta.content, themeColors.midnight);
+  assert.equal(page.toolbar.hidden, false);
+  assert.deepEqual(page.writes, [[storageKey, 'midnight']]);
 });
 
 function luminance(color) {
@@ -280,7 +320,7 @@ test('every generated page preserves the original accessible home logo and its d
   }
 });
 
-test('every generated page includes current versioned assets, an early initializer, and a labeled theme selector', async () => {
+test('every generated page includes current versioned assets, an early initializer, and an accessible dark-mode switch', async () => {
   const manifest = JSON.parse(await source('dist/build-manifest.json'));
   assert.ok(manifest.pages.length > 0);
   const versions = new Map();
@@ -291,7 +331,7 @@ test('every generated page includes current versioned assets, an early initializ
   }
   for (const path of manifest.pages) {
     const html = await source(`dist/${path}`);
-    assert.equal(await source(path), html, `${path}: root and published pages contain the same assets and theme choices`);
+    assert.equal(await source(path), html, `${path}: root and published pages contain the same assets and theme switch`);
     const prefix = path.includes('/') ? '../' : './';
     const tags = [...html.matchAll(/<script\b[^>]*>|<link\b[^>]*>/gi)]
       .map(match => ({ position: match.index, tag: match[0], attrs: attributes(match[0]) }));
@@ -315,20 +355,33 @@ test('every generated page includes current versioned assets, an early initializ
     assert.equal(mainScript.attrs.get('src'), versionedUrl('script.js'), `${path}: main script URL matches its current source hash`);
     assert.ok(mainScript.attrs.has('defer') && !mainScript.attrs.has('async'), `${path}: main script waits for the document`);
 
-    const selects = [...html.matchAll(/<select\b[^>]*>([\s\S]*?)<\/select>/gi)]
-      .filter(match => attributes(match[0].match(/^<select\b[^>]*>/i)[0]).has('data-theme-select'));
-    assert.equal(selects.length, 1, `${path}: one theme selector`);
-    const select = selects[0];
-    const selectId = attributes(select[0].match(/^<select\b[^>]*>/i)[0]).get('id');
-    assert.ok(selectId, `${path}: theme selector has a label target`);
-    const labels = [...html.matchAll(/<label\b([^>]*)>([\s\S]*?)<\/label>/gi)];
-    assert.ok(labels.some(([, attrs, text]) => attributes(`<label${attrs}>`).get('for') === selectId && /theme/i.test(text)), `${path}: visible associated theme label`);
-    const options = [...select[1].matchAll(/<option\b([^>]*)>([\s\S]*?)<\/option>/gi)]
-      .map(([, attrs, text]) => [attributes(`<option${attrs}>`).get('value'), text.replace(/<[^>]*>/g, '').trim()]);
-    assert.deepEqual(options, themes.map(theme => [theme, theme[0].toUpperCase() + theme.slice(1)]), `${path}: supported choices`);
+    assert.doesNotMatch(html, /data-theme-select|id=["']theme-select["']/i, `${path}: remove the old theme dropdown`);
+    const switches = [...html.matchAll(/<button\b[^>]*>([\s\S]*?)<\/button>/gi)]
+      .filter(match => attributes(match[0].match(/^<button\b[^>]*>/i)[0]).has('data-theme-toggle'));
+    assert.equal(switches.length, 1, `${path}: one theme switch`);
+    const control = attributes(switches[0][0].match(/^<button\b[^>]*>/i)[0]);
+    const content = switches[0][1];
+    assert.equal(control.get('type'), 'button', `${path}: theme changes never submit a form`);
+    assert.equal(control.get('role'), 'switch', `${path}: expose on/off semantics`);
+    assert.equal(control.get('aria-checked'), 'false', `${path}: Classic starts with dark mode off`);
+    assert.ok((control.get('class') || '').split(/\s+/).includes('theme-toggle'), `${path}: use the styled switch control`);
+    assert.ok(!control.has('aria-label') && !control.has('aria-labelledby'), `${path}: the visible Dark mode text names the switch`);
+    const spans = [...content.matchAll(/<span\b([^>]*)>([^<>]*)<\/span>/gi)];
+    const label = spans.find(([, , text]) => text.trim() === 'Dark mode');
+    assert.ok(label, `${path}: stable visible Dark mode label`);
+    assert.notEqual(attributes(`<span${label[1]}>`).get('aria-hidden'), 'true', `${path}: expose the visible switch name`);
+    const state = spans.filter(([, attrs]) => attributes(`<span${attrs}>`).has('data-theme-state'));
+    assert.equal(state.length, 1, `${path}: one visible on/off state`);
+    assert.equal(state[0][2].trim(), 'Off', `${path}: Classic starts with the Off label`);
+    assert.equal(attributes(`<span${state[0][1]}>`).get('aria-hidden'), 'true', `${path}: state text must not change the switch accessible name`);
+    assert.ok([...content.matchAll(/<span\b[^>]*>/gi)].some(([tag]) => {
+      const attrs = attributes(tag);
+      return attrs.get('aria-hidden') === 'true' && !attrs.has('data-theme-state');
+    }), `${path}: decorative switch track is hidden from assistive technology`);
     const toolbar = [...html.matchAll(/<[a-z][\w:-]*\b[^>]*>/gi)]
       .map(match => attributes(match[0]))
       .find(attrs => (attrs.get('class') || '').split(/\s+/).includes('theme-toolbar'));
-    assert.ok(toolbar?.has('hidden'), `${path}: hide the nonfunctional selector until JavaScript runs`);
+    assert.ok(toolbar?.has('hidden'), `${path}: hide the nonfunctional switch until JavaScript runs`);
+    assert.ok(toolbar?.has('data-theme-toolbar'), `${path}: JavaScript can reveal the switch toolbar`);
   }
 });
