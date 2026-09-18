@@ -1,0 +1,390 @@
+{
+  "title": "Lead pipe prediction: synthetic evaluation",
+  "disclosure": "Entirely synthetic educational companion, not the original TF-IDF/gradient-boosting prototype, field validation, verified material classifications, or evidence of savings.",
+  "metrics": [
+    {
+      "label": "Held-out properties",
+      "value": 200
+    },
+    {
+      "label": "Held-out groups",
+      "value": 40
+    },
+    {
+      "label": "Shared groups",
+      "value": 0
+    },
+    {
+      "label": "Model Brier score",
+      "value": "0.1238"
+    }
+  ],
+  "tables": [
+    {
+      "heading": "Held-out model comparison (lower loss is better)",
+      "headers": [
+        "Predictor",
+        "Brier score",
+        "Log loss",
+        "Accuracy at 0.5"
+      ],
+      "rows": [
+        [
+          "Logistic model",
+          "0.1238",
+          "0.3951",
+          "0.8300"
+        ],
+        [
+          "Training-prevalence baseline",
+          "0.2387",
+          "0.6705",
+          "0.6350"
+        ]
+      ]
+    },
+    {
+      "heading": "Confusion counts at illustrative threshold 0.5",
+      "headers": [
+        "Predictor",
+        "True negative",
+        "False positive",
+        "False negative",
+        "True positive"
+      ],
+      "rows": [
+        [
+          "Logistic model",
+          110,
+          17,
+          17,
+          56
+        ],
+        [
+          "Prevalence baseline",
+          127,
+          0,
+          73,
+          0
+        ]
+      ]
+    },
+    {
+      "heading": "Reliability bins (descriptive, not fitted calibration)",
+      "headers": [
+        "Probability interval",
+        "Records",
+        "Mean prediction",
+        "Observed positive fraction"
+      ],
+      "rows": [
+        [
+          "[0.0, 0.2)",
+          66,
+          "0.0873",
+          "0.0455"
+        ],
+        [
+          "[0.2, 0.4)",
+          48,
+          "0.2935",
+          "0.1458"
+        ],
+        [
+          "[0.4, 0.6)",
+          23,
+          "0.4977",
+          "0.4783"
+        ],
+        [
+          "[0.6, 0.8)",
+          35,
+          "0.7119",
+          "0.7714"
+        ],
+        [
+          "[0.8, 1.0]",
+          28,
+          "0.9084",
+          "0.8929"
+        ]
+      ]
+    },
+    {
+      "heading": "Error slices (overlapping, descriptive)",
+      "headers": [
+        "Slice",
+        "Records",
+        "Brier score",
+        "False positive",
+        "False negative"
+      ],
+      "rows": [
+        [
+          "Age present",
+          178,
+          "0.1194",
+          15,
+          15
+        ],
+        [
+          "Age missing",
+          22,
+          "0.1588",
+          2,
+          2
+        ],
+        [
+          "No conflicting record",
+          168,
+          "0.1170",
+          13,
+          14
+        ],
+        [
+          "Conflicting record",
+          32,
+          "0.1590",
+          4,
+          3
+        ]
+      ]
+    },
+    {
+      "heading": "Five largest probability errors (invented held-out properties)",
+      "headers": [
+        "Synthetic property",
+        "Simulated target",
+        "Prediction",
+        "Age missing",
+        "Record conflict"
+      ],
+      "rows": [
+        [
+          "synthetic-group-120-property-001",
+          0,
+          "0.8983",
+          "No",
+          "No"
+        ],
+        [
+          "synthetic-group-049-property-002",
+          0,
+          "0.8978",
+          "No",
+          "No"
+        ],
+        [
+          "synthetic-group-099-property-003",
+          0,
+          "0.8853",
+          "No",
+          "No"
+        ],
+        [
+          "synthetic-group-117-property-000",
+          1,
+          "0.1313",
+          "No",
+          "No"
+        ],
+        [
+          "synthetic-group-078-property-004",
+          1,
+          "0.1372",
+          "No",
+          "No"
+        ]
+      ]
+    }
+  ],
+  "notes": [
+    "All 800 records, group IDs, evidence and target labels are invented; signal is intentionally learnable.",
+    "Fixed seeds: data 2026, split 4173. Whole-group 75/25 split; no shared groups or properties.",
+    "Features and training settings were fixed before evaluation. No tuning, threshold choice or calibration uses test labels.",
+    "Reliability bins describe this one synthetic holdout; they do not establish calibrated probabilities.",
+    "The 0.5 threshold is illustrative, not an approved material classification or inspection rule.",
+    "Age and record-conflict slices overlap; small slices have unstable estimates. No confidence intervals are claimed.",
+    "Real evaluation needs verified labels and spatial, temporal and cross-utility holdouts; this example has none.",
+    "This companion is separate from the original professional OCR effort and any historical cost savings."
+  ],
+  "seed": 2026,
+  "settings": {
+    "split_seed": 4173,
+    "test_fraction": 0.25,
+    "threshold": 0.5,
+    "epochs": 900,
+    "learning_rate": 0.4,
+    "l2_penalty": 0.002,
+    "calibration_bins": 5,
+    "optimizer": "Full-batch gradient descent"
+  },
+  "split": {
+    "train_properties": 600,
+    "test_properties": 200,
+    "train_groups": 120,
+    "test_groups": 40,
+    "shared_groups": 0,
+    "shared_properties": 0
+  },
+  "learned_weights": [
+    -1.1638613469617853,
+    2.7739912035756786,
+    1.7700839139114222,
+    -0.2605514407532509,
+    0.32528095372108057
+  ],
+  "training_prevalence": 0.4483333333333333,
+  "logistic_model": {
+    "n": 200,
+    "positive_labels": 73,
+    "threshold": 0.5,
+    "log_loss": 0.39511840052845654,
+    "brier_score": 0.12375291512034797,
+    "accuracy": 0.83,
+    "confusion": {
+      "true_negative": 110,
+      "false_positive": 17,
+      "false_negative": 17,
+      "true_positive": 56
+    }
+  },
+  "training_prevalence_baseline": {
+    "n": 200,
+    "positive_labels": 73,
+    "threshold": 0.5,
+    "log_loss": 0.6705148332970401,
+    "brier_score": 0.23871944444444446,
+    "accuracy": 0.635,
+    "confusion": {
+      "true_negative": 127,
+      "false_positive": 0,
+      "false_negative": 73,
+      "true_positive": 0
+    }
+  },
+  "reliability_bins": [
+    {
+      "interval": "[0.0, 0.2)",
+      "count": 66,
+      "mean_prediction": 0.08734186430693329,
+      "observed_fraction": 0.045454545454545456
+    },
+    {
+      "interval": "[0.2, 0.4)",
+      "count": 48,
+      "mean_prediction": 0.2934780683864117,
+      "observed_fraction": 0.14583333333333334
+    },
+    {
+      "interval": "[0.4, 0.6)",
+      "count": 23,
+      "mean_prediction": 0.4976776023475952,
+      "observed_fraction": 0.4782608695652174
+    },
+    {
+      "interval": "[0.6, 0.8)",
+      "count": 35,
+      "mean_prediction": 0.7118684299124317,
+      "observed_fraction": 0.7714285714285715
+    },
+    {
+      "interval": "[0.8, 1.0]",
+      "count": 28,
+      "mean_prediction": 0.9084274883767868,
+      "observed_fraction": 0.8928571428571429
+    }
+  ],
+  "error_slices": [
+    {
+      "slice": "Age present",
+      "metrics": {
+        "n": 178,
+        "positive_labels": 64,
+        "threshold": 0.5,
+        "log_loss": 0.3819383630596792,
+        "brier_score": 0.11942469900760805,
+        "accuracy": 0.8314606741573034,
+        "confusion": {
+          "true_negative": 99,
+          "false_positive": 15,
+          "false_negative": 15,
+          "true_positive": 49
+        }
+      }
+    },
+    {
+      "slice": "Age missing",
+      "metrics": {
+        "n": 22,
+        "positive_labels": 9,
+        "threshold": 0.5,
+        "log_loss": 0.5017568855031094,
+        "brier_score": 0.15877211821433457,
+        "accuracy": 0.8181818181818182,
+        "confusion": {
+          "true_negative": 11,
+          "false_positive": 2,
+          "false_negative": 2,
+          "true_positive": 7
+        }
+      }
+    },
+    {
+      "slice": "No conflicting record",
+      "metrics": {
+        "n": 168,
+        "positive_labels": 62,
+        "threshold": 0.5,
+        "log_loss": 0.3784695502280945,
+        "brier_score": 0.11703884072778709,
+        "accuracy": 0.8392857142857143,
+        "confusion": {
+          "true_negative": 93,
+          "false_positive": 13,
+          "false_negative": 14,
+          "true_positive": 48
+        }
+      }
+    },
+    {
+      "slice": "Conflicting record",
+      "metrics": {
+        "n": 32,
+        "positive_labels": 11,
+        "threshold": 0.5,
+        "log_loss": 0.4825248646053572,
+        "brier_score": 0.15900180568129257,
+        "accuracy": 0.78125,
+        "confusion": {
+          "true_negative": 17,
+          "false_positive": 4,
+          "false_negative": 3,
+          "true_positive": 8
+        }
+      }
+    }
+  ],
+  "illustrative_uncertainty_review": [
+    {
+      "property_id": "synthetic-group-006-property-002",
+      "synthetic_probability": 0.5012977819626833
+    },
+    {
+      "property_id": "synthetic-group-052-property-003",
+      "synthetic_probability": 0.4922135614909196
+    },
+    {
+      "property_id": "synthetic-group-119-property-003",
+      "synthetic_probability": 0.510542859327147
+    },
+    {
+      "property_id": "synthetic-group-114-property-003",
+      "synthetic_probability": 0.4829728812623101
+    },
+    {
+      "property_id": "synthetic-group-119-property-000",
+      "synthetic_probability": 0.4828112862424084
+    }
+  ]
+}

@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en"><head>
+
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inspect the synthetic ML evaluation: source code | Esad Kopru</title>
+<meta name="description" content="Inspect the public-safe educational companion demo.py. Synthetic example, separate from the original professional or research implementation."><meta name="theme-color" content="#e0e9f0"><meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="canonical" href="https://www.ekopru.com/example-lead-pipe-synthetic-code/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Esad Kopru"><meta property="og:title" content="Inspect the synthetic ML evaluation: source code | Esad Kopru"><meta property="og:description" content="Inspect the public-safe educational companion demo.py. Synthetic example, separate from the original professional or research implementation."><meta property="og:url" content="https://www.ekopru.com/example-lead-pipe-synthetic-code/"><meta property="og:image" content="https://www.ekopru.com/assets/social/lead-service-review-prototype.png?v=060bab72c44c"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:type" content="image/png"><meta property="og:image:alt" content="Inspect the synthetic ML evaluation: source code | Esad Kopru portfolio"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://www.ekopru.com/assets/social/lead-service-review-prototype.png?v=060bab72c44c"><meta name="twitter:image:alt" content="Inspect the synthetic ML evaluation: source code | Esad Kopru portfolio">
+<link rel="icon" href="../assets/efk-logo.avif"><script src="../theme.js?v=5218a73bfc30"></script><link rel="stylesheet" href="../styles.css?v=e1254d9cef71"><script src="../script.js?v=e48c5a6c7147" defer></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfilePage","name":"Inspect the synthetic ML evaluation: source code | Esad Kopru","url":"https://www.ekopru.com/example-lead-pipe-synthetic-code/","mainEntity":{"@type":"Person","name":"Esad Kopru","url":"https://www.ekopru.com","sameAs":["https://github.com/efkopru"],"knowsAbout":["Geospatial data science","Geospatial data engineering","Geospatial software engineering"],"alumniOf":[{"@type":"CollegeOrUniversity","name":"The University of Texas at Dallas"}]}}</script>
+</head><body data-root="../"><a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header"><div class="shell header-inner"><a class="brand" href="../index.html" aria-label="Esad Kopru home"><img src="../assets/efk-logo.avif" width="101" height="48" alt="EFK Portfolio"></a><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button><nav id="site-nav" class="site-nav" aria-label="Main navigation"><a href="../index.html">Home</a><a href="../contact/index.html">Contact</a><a href="../resume/index.html">Resume</a><div class="nav-group"><div class="nav-heading"><a href="../spatial-and-data-analysis/index.html">Spatial &amp; Data Analysis</a><button type="button" class="nav-disclosure" aria-label="Toggle Spatial &amp; Data Analysis project menu" aria-expanded="false" aria-controls="nav-spatial-and-data-analysis"><span aria-hidden="true">▾</span></button></div><div class="dropdown" id="nav-spatial-and-data-analysis"><a href="../spatial-and-data-analysis/index.html">Overview</a><a href="../spatial-analysis/index.html">Spatial Analysis</a><a href="../arcgis-enterprise-and-online/index.html">ArcGIS Enterprise and Online</a><a href="../qgis/index.html">QGIS</a><a href="../code-enforcement-violations/index.html">Code Enforcement Violations</a><a href="../crime-analysis/index.html">Crime Analysis</a><a href="../accessibility-analysis/index.html">Measuring access to community amenities</a></div></div><div class="nav-group"><div class="nav-heading"><a href="../ml-optimization/index.html">ML / Optimization</a><button type="button" class="nav-disclosure" aria-label="Toggle ML / Optimization project menu" aria-expanded="false" aria-controls="nav-ml-optimization"><span aria-hidden="true">▾</span></button></div><div class="dropdown" id="nav-ml-optimization"><a href="../ml-optimization/index.html">Overview</a><a href="../income-level-prediction-using-r/index.html">Income Level Prediction using R</a><a href="../building-footprint-extraction/index.html">Building Footprint Extraction</a><a href="../traveling-salesman/index.html">Traveling Salesman</a><a href="../water-conservation-routes/index.html">Water Conservation Routes</a><a href="../lead-service-review-prototype/index.html">Lead pipe prediction prototype</a></div></div><div class="nav-group"><div class="nav-heading"><a href="../development-and-etl/index.html">Development &amp; ETL</a><button type="button" class="nav-disclosure" aria-label="Toggle Development &amp; ETL project menu" aria-expanded="false" aria-controls="nav-development-and-etl"><span aria-hidden="true">▾</span></button></div><div class="dropdown" id="nav-development-and-etl"><a href="../development-and-etl/index.html">Overview</a><a href="../python-and-notebooks/index.html">Python Scripts &amp; Notebooks</a><a href="../sql-and-javascript-and-r/index.html">SQL &amp; JavaScript &amp; R</a><a href="../modelbuilder-and-arcmap-tool-in-vbnet/index.html">ModelBuilder &amp; ArcMap tool in VB.NET</a><a href="../interactive-maps-a-custom-js-app/index.html">Interactive Maps - A custom JS App</a><a href="../interactive-maps-experience-builder/index.html">Interactive Maps - Experience Builder</a><a href="../utility-inspection-etl/index.html">Utility inspection data pipeline</a><a href="../workforce-participation/index.html">An interactive workforce atlas</a><a href="../geospatial-processing-tools/index.html">Raster and document processing utilities</a></div></div><div class="nav-group"><div class="nav-heading"><a href="../additional-projects/index.html">Additional projects</a><button type="button" class="nav-disclosure" aria-label="Toggle Additional projects project menu" aria-expanded="false" aria-controls="nav-additional-projects"><span aria-hidden="true">▾</span></button></div><div class="dropdown" id="nav-additional-projects"><a href="../additional-projects/index.html">Overview</a><a href="../utility-inspection-etl/index.html">Utility inspection data pipeline</a><a href="../accessibility-analysis/index.html">Measuring access to community amenities</a><a href="../lead-service-review-prototype/index.html">Lead pipe prediction prototype</a><a href="../workforce-participation/index.html">An interactive workforce atlas</a><a href="../geospatial-processing-tools/index.html">Raster and document processing utilities</a></div></div><a href="../doctoral-research/index.html">Doctoral Research</a></nav></div></header><div class="rule" aria-hidden="true"></div>
+<div class="theme-toolbar shell" data-theme-toolbar hidden><button class="theme-toggle" type="button" role="switch" aria-checked="false" data-theme-toggle><span class="theme-toggle-label">Dark mode</span><span class="theme-toggle-track" aria-hidden="true"><span class="theme-toggle-thumb"></span></span><span class="theme-toggle-state" data-theme-state aria-hidden="true">Off</span></button></div>
+<main id="main" tabindex="-1"><div class="shell source-page"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="../example-lead-pipe-synthetic/index.html">Educational companion</a><span aria-hidden="true">/</span><span>demo.py</span></nav><h1>Inspect the synthetic ML evaluation: source code</h1><p>This source belongs to the new teaching example, not a recovered employer artifact or the original research implementation.</p><a class="text-link" href="../examples/lead-pipe-synthetic/demo.py">Open raw demo.py</a><pre class="code-block" tabindex="0" aria-label="demo.py"><code>&quot;&quot;&quot;Synthetic lead-pipe evaluation companion, Python 3.10+, standard library only.
+
+Newly authored educational code, not the original utility implementation or
+field performance. Never use its outputs for material or public-health decisions.
+&quot;&quot;&quot;
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import math
+import random
+from dataclasses import dataclass
+from html import escape
+from pathlib import Path
+
+DATA_SEED = 2026
+SPLIT_SEED = 4173
+THRESHOLD = 0.5
+EPOCHS = 900
+RATE = 0.4
+PENALTY = 0.002
+DISCLOSURE = (
+    &quot;Entirely synthetic educational companion, not the original TF-IDF/gradient-boosting &quot;
+    &quot;prototype, field validation, verified material classifications, or evidence of savings.&quot;
+)
+
+
+@dataclass(frozen=True)
+class Record:
+    property_id: str
+    group_id: str
+    installation_age: float | None
+    keyword_evidence: int
+    conflicting_records: int
+    target: int
+
+
+def sigmoid(value: float) -&gt; float:
+    if value &gt;= 0:
+        return 1.0 / (1.0 + math.exp(-value))
+    exp_value = math.exp(value)
+    return exp_value / (1.0 + exp_value)
+
+
+def make_records(seed: int = DATA_SEED, groups: int = 160, per_group: int = 5) -&gt; list[Record]:
+    &quot;&quot;&quot;Invent records with noisy evidence and an intentionally learnable signal.&quot;&quot;&quot;
+    if groups &lt; 4 or per_group &lt; 1:
+        raise ValueError(&quot;Use at least four groups and one property per group.&quot;)
+    rng = random.Random(seed)
+    records = []
+    for group in range(groups):
+        group_id = f&quot;synthetic-group-{group:03d}&quot;
+        cohort_age = rng.uniform(10, 110)
+        unobserved_group_effect = rng.gauss(0, 0.6)
+        for property_number in range(per_group):
+            age = min(120, max(0, cohort_age + rng.gauss(0, 12)))
+            material_probability = sigmoid(-3.5 + age / 19 + unobserved_group_effect)
+            target = int(rng.random() &lt; material_probability)
+            # Simulated evidence observes the state noisily; it is not a label rule.
+            keyword = int(rng.random() &lt; (0.72 if target else 0.23))
+            conflict = int(rng.random() &lt; 0.15)
+            if conflict:
+                keyword = int(rng.random() &lt; 0.5)
+            observed_age = None if rng.random() &lt; 0.12 else round(age, 1)
+            records.append(Record(
+                f&quot;{group_id}-property-{property_number:03d}&quot;, group_id,
+                observed_age, keyword, conflict, target
+            ))
+    return records
+
+
+def grouped_split(records: list[Record], seed: int = SPLIT_SEED,
+                  test_fraction: float = 0.25) -&gt; tuple[list[Record], list[Record]]:
+    &quot;&quot;&quot;Whole groups held out by stable hash, without inspecting predictors or labels.&quot;&quot;&quot;
+    if not 0 &lt; test_fraction &lt; 1:
+        raise ValueError(&quot;test_fraction must lie strictly between zero and one.&quot;)
+    if len({row.property_id for row in records}) != len(records):
+        raise ValueError(&quot;Expected exactly one prepared row per property.&quot;)
+    groups = sorted({row.group_id for row in records}, key=lambda group: (
+        hashlib.sha256(f&quot;{seed}:{group}&quot;.encode(&quot;utf-8&quot;)).hexdigest(), group
+    ))
+    if len(groups) &lt; 2:
+        raise ValueError(&quot;At least two groups are required.&quot;)
+    count = min(len(groups) - 1, max(1, round(len(groups) * test_fraction)))
+    held_out = set(groups[:count])
+    train = sorted((row for row in records if row.group_id not in held_out),
+                   key=lambda row: row.property_id)
+    test = sorted((row for row in records if row.group_id in held_out),
+                  key=lambda row: row.property_id)
+    return train, test
+
+
+def features(record: Record) -&gt; tuple[float, ...]:
+    &quot;&quot;&quot;Fixed transforms; no test-fitted scaling, identifiers, or target features.&quot;&quot;&quot;
+    age = record.installation_age if record.installation_age is not None else 60.0
+    return (1.0, (age - 60.0) / 60.0, float(record.keyword_evidence),
+            float(record.conflicting_records), float(record.installation_age is None))
+
+
+def predict(weights: list[float], record: Record) -&gt; float:
+    if len(weights) != len(features(record)):
+        raise ValueError(&quot;Expected one weight per feature.&quot;)
+    return sigmoid(sum(weight * value for weight, value in zip(weights, features(record))))
+
+
+def fit(train: list[Record], epochs: int = EPOCHS, rate: float = RATE,
+        penalty: float = PENALTY) -&gt; list[float]:
+    &quot;&quot;&quot;Full-batch L2 logistic regression; no test-driven tuning or calibration.&quot;&quot;&quot;
+    if not train or epochs &lt; 1 or rate &lt;= 0 or penalty &lt; 0:
+        raise ValueError(&quot;Training data and positive optimization settings are required.&quot;)
+    if not math.isfinite(rate) or not math.isfinite(penalty):
+        raise ValueError(&quot;Optimization settings must be finite.&quot;)
+    weights = [0.0] * 5
+    matrix = [(features(row), row.target) for row in train]
+    for _ in range(epochs):
+        gradient = [0.0] * len(weights)
+        for values, target in matrix:
+            error = sigmoid(sum(w * x for w, x in zip(weights, values))) - target
+            for index, value in enumerate(values):
+                gradient[index] += error * value
+        weights = [weight - rate * (gradient[index] / len(train) +
+                   (penalty * weight if index else 0.0))
+                   for index, weight in enumerate(weights)]
+    return weights
+
+
+def validate_predictions(targets: list[int], probabilities: list[float]) -&gt; None:
+    if not targets or len(targets) != len(probabilities):
+        raise ValueError(&quot;Provide equally sized nonempty target and probability lists.&quot;)
+    if any(target not in (0, 1) for target in targets):
+        raise ValueError(&quot;Targets must be binary.&quot;)
+    if any(not math.isfinite(p) or not 0 &lt;= p &lt;= 1 for p in probabilities):
+        raise ValueError(&quot;Probabilities must be finite and between zero and one.&quot;)
+
+
+def evaluate(targets: list[int], probabilities: list[float], threshold: float = THRESHOLD) -&gt; dict:
+    validate_predictions(targets, probabilities)
+    if not math.isfinite(threshold) or not 0 &lt;= threshold &lt;= 1:
+        raise ValueError(&quot;Threshold must lie between zero and one.&quot;)
+    clipped = [min(1 - 1e-12, max(1e-12, p)) for p in probabilities]
+    confusion = {&quot;true_negative&quot;: 0, &quot;false_positive&quot;: 0,
+                 &quot;false_negative&quot;: 0, &quot;true_positive&quot;: 0}
+    names = {(0, False): &quot;true_negative&quot;, (0, True): &quot;false_positive&quot;,
+             (1, False): &quot;false_negative&quot;, (1, True): &quot;true_positive&quot;}
+    for target, probability in zip(targets, probabilities):
+        confusion[names[target, probability &gt;= threshold]] += 1
+    size = len(targets)
+    return {
+        &quot;n&quot;: size, &quot;positive_labels&quot;: sum(targets), &quot;threshold&quot;: threshold,
+        &quot;log_loss&quot;: sum(-y * math.log(p) - (1 - y) * math.log(1 - p)
+                        for y, p in zip(targets, clipped)) / size,
+        &quot;brier_score&quot;: sum((y - p) ** 2 for y, p in zip(targets, probabilities)) / size,
+        &quot;accuracy&quot;: (confusion[&quot;true_positive&quot;] + confusion[&quot;true_negative&quot;]) / size,
+        &quot;confusion&quot;: confusion,
+    }
+
+
+def calibration_bins(targets: list[int], probabilities: list[float], bins: int = 5) -&gt; list[dict]:
+    &quot;&quot;&quot;Descriptive equal-width reliability bins, not fitted probability calibration.&quot;&quot;&quot;
+    validate_predictions(targets, probabilities)
+    if not isinstance(bins, int) or bins &lt; 1:
+        raise ValueError(&quot;Use a positive integer number of bins.&quot;)
+    grouped = [[] for _ in range(bins)]
+    for target, probability in zip(targets, probabilities):
+        grouped[min(bins - 1, int(probability * bins))].append((target, probability))
+    return [{
+        &quot;interval&quot;: f&quot;[{i / bins:.1f}, {(i + 1) / bins:.1f}{&#39;]&#39; if i == bins - 1 else &#39;)&#39;}&quot;,
+        &quot;count&quot;: len(items),
+        &quot;mean_prediction&quot;: sum(p for _, p in items) / len(items) if items else None,
+        &quot;observed_fraction&quot;: sum(y for y, _ in items) / len(items) if items else None,
+    } for i, items in enumerate(grouped)]
+
+
+def error_slices(records: list[Record], probabilities: list[float]) -&gt; list[dict]:
+    validate_predictions([row.target for row in records], probabilities)
+    predicates = [
+        (&quot;Age present&quot;, lambda row: row.installation_age is not None),
+        (&quot;Age missing&quot;, lambda row: row.installation_age is None),
+        (&quot;No conflicting record&quot;, lambda row: row.conflicting_records == 0),
+        (&quot;Conflicting record&quot;, lambda row: row.conflicting_records == 1),
+    ]
+    results = []
+    for name, predicate in predicates:
+        selected = [(row.target, p) for row, p in zip(records, probabilities) if predicate(row)]
+        metrics = evaluate([y for y, _ in selected], [p for _, p in selected]) if selected else None
+        results.append({&quot;slice&quot;: name, &quot;metrics&quot;: metrics})
+    return results
+
+
+def fmt(value: float | None) -&gt; str:
+    return &quot;n/a&quot; if value is None else f&quot;{value:.4f}&quot;
+
+
+def run(seed: int = DATA_SEED) -&gt; dict:
+    train, test = grouped_split(make_records(seed=seed))
+    shared_groups = {row.group_id for row in train} &amp; {row.group_id for row in test}
+    shared_properties = {row.property_id for row in train} &amp; {row.property_id for row in test}
+    assert not shared_groups and not shared_properties
+    weights = fit(train)
+    probabilities = [predict(weights, row) for row in test]
+    prevalence = sum(row.target for row in train) / len(train)
+    targets = [row.target for row in test]
+    model = evaluate(targets, probabilities)
+    baseline = evaluate(targets, [prevalence] * len(test))
+    reliability = calibration_bins(targets, probabilities)
+    slices = error_slices(test, probabilities)
+    errors = sorted(((row, p) for row, p in zip(test, probabilities)
+                     if (p &gt;= THRESHOLD) != bool(row.target)), key=lambda item: (
+                         -abs(item[1] - item[0].target), item[0].property_id
+                     ))[:5]
+    review = sorted(zip(test, probabilities), key=lambda item: (
+        abs(item[1] - THRESHOLD), item[0].property_id
+    ))[:5]
+    notes = [
+        &quot;All 800 records, group IDs, evidence and target labels are invented; signal is intentionally learnable.&quot;,
+        &quot;Fixed seeds: data &quot; + str(seed) + &quot;, split 4173. Whole-group 75/25 split; no shared groups or properties.&quot;,
+        &quot;Features and training settings were fixed before evaluation. No tuning, threshold choice or calibration uses test labels.&quot;,
+        &quot;Reliability bins describe this one synthetic holdout; they do not establish calibrated probabilities.&quot;,
+        &quot;The 0.5 threshold is illustrative, not an approved material classification or inspection rule.&quot;,
+        &quot;Age and record-conflict slices overlap; small slices have unstable estimates. No confidence intervals are claimed.&quot;,
+        &quot;Real evaluation needs verified labels and spatial, temporal and cross-utility holdouts; this example has none.&quot;,
+        &quot;This companion is separate from the original professional OCR effort and any historical cost savings.&quot;,
+    ]
+    tables = [
+        {&quot;heading&quot;: &quot;Held-out model comparison (lower loss is better)&quot;,
+         &quot;headers&quot;: [&quot;Predictor&quot;, &quot;Brier score&quot;, &quot;Log loss&quot;, &quot;Accuracy at 0.5&quot;],
+         &quot;rows&quot;: [[&quot;Logistic model&quot;, fmt(model[&quot;brier_score&quot;]), fmt(model[&quot;log_loss&quot;]), fmt(model[&quot;accuracy&quot;])],
+                  [&quot;Training-prevalence baseline&quot;, fmt(baseline[&quot;brier_score&quot;]), fmt(baseline[&quot;log_loss&quot;]), fmt(baseline[&quot;accuracy&quot;])]]},
+        {&quot;heading&quot;: &quot;Confusion counts at illustrative threshold 0.5&quot;,
+         &quot;headers&quot;: [&quot;Predictor&quot;, &quot;True negative&quot;, &quot;False positive&quot;, &quot;False negative&quot;, &quot;True positive&quot;],
+         &quot;rows&quot;: [[name, *[metrics[&quot;confusion&quot;][key] for key in (
+             &quot;true_negative&quot;, &quot;false_positive&quot;, &quot;false_negative&quot;, &quot;true_positive&quot;)]]
+                  for name, metrics in ((&quot;Logistic model&quot;, model), (&quot;Prevalence baseline&quot;, baseline))]},
+        {&quot;heading&quot;: &quot;Reliability bins (descriptive, not fitted calibration)&quot;,
+         &quot;headers&quot;: [&quot;Probability interval&quot;, &quot;Records&quot;, &quot;Mean prediction&quot;, &quot;Observed positive fraction&quot;],
+         &quot;rows&quot;: [[item[&quot;interval&quot;], item[&quot;count&quot;], fmt(item[&quot;mean_prediction&quot;]),
+                   fmt(item[&quot;observed_fraction&quot;])] for item in reliability]},
+        {&quot;heading&quot;: &quot;Error slices (overlapping, descriptive)&quot;,
+         &quot;headers&quot;: [&quot;Slice&quot;, &quot;Records&quot;, &quot;Brier score&quot;, &quot;False positive&quot;, &quot;False negative&quot;],
+         &quot;rows&quot;: [[item[&quot;slice&quot;], item[&quot;metrics&quot;][&quot;n&quot;] if item[&quot;metrics&quot;] else 0,
+                   fmt(item[&quot;metrics&quot;][&quot;brier_score&quot;]) if item[&quot;metrics&quot;] else &quot;n/a&quot;,
+                   item[&quot;metrics&quot;][&quot;confusion&quot;][&quot;false_positive&quot;] if item[&quot;metrics&quot;] else &quot;n/a&quot;,
+                   item[&quot;metrics&quot;][&quot;confusion&quot;][&quot;false_negative&quot;] if item[&quot;metrics&quot;] else &quot;n/a&quot;] for item in slices]},
+        {&quot;heading&quot;: &quot;Five largest probability errors (invented held-out properties)&quot;,
+         &quot;headers&quot;: [&quot;Synthetic property&quot;, &quot;Simulated target&quot;, &quot;Prediction&quot;, &quot;Age missing&quot;, &quot;Record conflict&quot;],
+         &quot;rows&quot;: [[row.property_id, row.target, fmt(p), &quot;Yes&quot; if row.installation_age is None else &quot;No&quot;,
+                   &quot;Yes&quot; if row.conflicting_records else &quot;No&quot;] for row, p in errors]},
+    ]
+    return {
+        &quot;title&quot;: &quot;Lead pipe prediction: synthetic evaluation&quot;,
+        &quot;disclosure&quot;: DISCLOSURE,
+        &quot;metrics&quot;: [{&quot;label&quot;: &quot;Held-out properties&quot;, &quot;value&quot;: len(test)},
+                    {&quot;label&quot;: &quot;Held-out groups&quot;, &quot;value&quot;: len({row.group_id for row in test})},
+                    {&quot;label&quot;: &quot;Shared groups&quot;, &quot;value&quot;: len(shared_groups)},
+                    {&quot;label&quot;: &quot;Model Brier score&quot;, &quot;value&quot;: fmt(model[&quot;brier_score&quot;])}],
+        &quot;tables&quot;: tables, &quot;notes&quot;: notes, &quot;seed&quot;: seed,
+        &quot;settings&quot;: {&quot;split_seed&quot;: SPLIT_SEED, &quot;test_fraction&quot;: 0.25, &quot;threshold&quot;: THRESHOLD,
+                     &quot;epochs&quot;: EPOCHS, &quot;learning_rate&quot;: RATE, &quot;l2_penalty&quot;: PENALTY,
+                     &quot;calibration_bins&quot;: 5, &quot;optimizer&quot;: &quot;Full-batch gradient descent&quot;},
+        &quot;split&quot;: {&quot;train_properties&quot;: len(train), &quot;test_properties&quot;: len(test),
+                  &quot;train_groups&quot;: len({row.group_id for row in train}),
+                  &quot;test_groups&quot;: len({row.group_id for row in test}),
+                  &quot;shared_groups&quot;: len(shared_groups), &quot;shared_properties&quot;: len(shared_properties)},
+        &quot;learned_weights&quot;: weights, &quot;training_prevalence&quot;: prevalence,
+        &quot;logistic_model&quot;: model, &quot;training_prevalence_baseline&quot;: baseline,
+        &quot;reliability_bins&quot;: reliability, &quot;error_slices&quot;: slices,
+        &quot;illustrative_uncertainty_review&quot;: [
+            {&quot;property_id&quot;: row.property_id, &quot;synthetic_probability&quot;: p} for row, p in review
+        ],
+    }
+
+
+def chart_svg(report: dict) -&gt; str:
+    &quot;&quot;&quot;Produce a self-contained, accessible vector chart from the run&#39;s raw metrics.&quot;&quot;&quot;
+    model = report[&quot;logistic_model&quot;]
+    baseline = report[&quot;training_prevalence_baseline&quot;]
+    parts = [
+        &#39;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;1100&quot; height=&quot;730&quot; viewBox=&quot;0 0 1100 730&quot; role=&quot;img&quot; aria-labelledby=&quot;title desc&quot;&gt;&#39;,
+        &#39;&lt;title id=&quot;title&quot;&gt;Synthetic lead-pipe model evaluation&lt;/title&gt;&#39;,
+        &#39;&lt;desc id=&quot;desc&quot;&gt;Brier and log-loss comparison against training prevalence, plus a reliability plot. &#39;
+        &#39;Generated from 200 held-out invented records in 40 disjoint groups. Not real-world performance.&lt;/desc&gt;&#39;,
+        &#39;&lt;rect width=&quot;1100&quot; height=&quot;730&quot; rx=&quot;18&quot; fill=&quot;#edf6fa&quot;/&gt;&#39;,
+        &#39;&lt;g font-family=&quot;Arial, sans-serif&quot; fill=&quot;#163447&quot;&gt;&#39;,
+        &#39;&lt;text x=&quot;44&quot; y=&quot;49&quot; font-size=&quot;16&quot; font-weight=&quot;700&quot;&gt;REPRODUCIBLE EDUCATIONAL EXAMPLE&lt;/text&gt;&#39;,
+        &#39;&lt;text x=&quot;44&quot; y=&quot;94&quot; font-size=&quot;30&quot; font-weight=&quot;700&quot;&gt;Inspect the errors, not just the score&lt;/text&gt;&#39;,
+        f&#39;&lt;text x=&quot;44&quot; y=&quot;127&quot; font-size=&quot;17&quot;&gt;Synthetic data seed {report[&quot;seed&quot;]} | 200 held-out properties | 40 groups | no shared groups&lt;/text&gt;&#39;,
+        &#39;&lt;rect x=&quot;34&quot; y=&quot;160&quot; width=&quot;1032&quot; height=&quot;446&quot; rx=&quot;12&quot; fill=&quot;#fff&quot;/&gt;&#39;,
+        &#39;&lt;text x=&quot;58&quot; y=&quot;198&quot; font-size=&quot;20&quot; font-weight=&quot;700&quot;&gt;Held-out losses&lt;/text&gt;&#39;,
+        &#39;&lt;text x=&quot;58&quot; y=&quot;224&quot; font-size=&quot;15&quot;&gt;Lower is better; bars share a 0 to 1 scale.&lt;/text&gt;&#39;,
+    ]
+    for block, (key, label) in enumerate(((&quot;brier_score&quot;, &quot;Brier score&quot;), (&quot;log_loss&quot;, &quot;Log loss&quot;))):
+        y = 268 + block * 126
+        parts.append(f&#39;&lt;text x=&quot;58&quot; y=&quot;{y}&quot; font-size=&quot;17&quot; font-weight=&quot;700&quot;&gt;{label}&lt;/text&gt;&#39;)
+        for index, (metrics, color, name) in enumerate(((model, &quot;#176285&quot;, &quot;Logistic&quot;), (baseline, &quot;#a34422&quot;, &quot;Prevalence&quot;))):
+            line_y = y + 16 + index * 39
+            parts.append(f&#39;&lt;text x=&quot;58&quot; y=&quot;{line_y + 17}&quot; font-size=&quot;15&quot;&gt;{name}&lt;/text&gt;&#39;)
+            parts.append(f&#39;&lt;rect x=&quot;151&quot; y=&quot;{line_y}&quot; width=&quot;{metrics[key] * 330:.3f}&quot; height=&quot;25&quot; rx=&quot;4&quot; fill=&quot;{color}&quot;/&gt;&#39;)
+            parts.append(f&#39;&lt;text x=&quot;{158 + metrics[key] * 330:.3f}&quot; y=&quot;{line_y + 18}&quot; font-size=&quot;15&quot;&gt;{metrics[key]:.4f}&lt;/text&gt;&#39;)
+    parts.extend([
+        &#39;&lt;text x=&quot;603&quot; y=&quot;198&quot; font-size=&quot;20&quot; font-weight=&quot;700&quot;&gt;Reliability by probability bin&lt;/text&gt;&#39;,
+        &#39;&lt;text x=&quot;603&quot; y=&quot;224&quot; font-size=&quot;15&quot;&gt;Descriptive check; no calibrator was fitted.&lt;/text&gt;&#39;,
+    ])
+    for tick in range(6):
+        x = 660 + tick * 61
+        y = 525 - tick * 53
+        parts.extend([
+            f&#39;&lt;line x1=&quot;660&quot; y1=&quot;{y}&quot; x2=&quot;965&quot; y2=&quot;{y}&quot; stroke=&quot;#d5e2e9&quot;/&gt;&#39;,
+            f&#39;&lt;text x=&quot;644&quot; y=&quot;{y + 5}&quot; text-anchor=&quot;end&quot; font-size=&quot;13&quot;&gt;{tick / 5:.1f}&lt;/text&gt;&#39;,
+            f&#39;&lt;text x=&quot;{x}&quot; y=&quot;548&quot; text-anchor=&quot;middle&quot; font-size=&quot;13&quot;&gt;{tick / 5:.1f}&lt;/text&gt;&#39;,
+        ])
+    parts.append(&#39;&lt;line x1=&quot;660&quot; y1=&quot;525&quot; x2=&quot;965&quot; y2=&quot;260&quot; stroke=&quot;#667785&quot; stroke-width=&quot;2&quot; stroke-dasharray=&quot;6 5&quot;/&gt;&#39;)
+    for item in report[&quot;reliability_bins&quot;]:
+        if not item[&quot;count&quot;]:
+            continue
+        x = 660 + item[&quot;mean_prediction&quot;] * 305
+        y = 525 - item[&quot;observed_fraction&quot;] * 265
+        label = escape(f&#39;{item[&quot;interval&quot;]}: n={item[&quot;count&quot;]}, mean prediction {item[&quot;mean_prediction&quot;]:.4f}, observed {item[&quot;observed_fraction&quot;]:.4f}&#39;)
+        parts.append(f&#39;&lt;circle cx=&quot;{x:.3f}&quot; cy=&quot;{y:.3f}&quot; r=&quot;7&quot; fill=&quot;#176285&quot; stroke=&quot;#fff&quot; stroke-width=&quot;2&quot;&gt;&lt;title&gt;{label}&lt;/title&gt;&lt;/circle&gt;&#39;)
+        parts.append(f&#39;&lt;text x=&quot;{x + 10:.3f}&quot; y=&quot;{y - 10:.3f}&quot; font-size=&quot;12&quot;&gt;n={item[&quot;count&quot;]}&lt;/text&gt;&#39;)
+    parts.extend([
+        &#39;&lt;text x=&quot;812&quot; y=&quot;577&quot; text-anchor=&quot;middle&quot; font-size=&quot;15&quot;&gt;Mean predicted probability&lt;/text&gt;&#39;,
+        &#39;&lt;text transform=&quot;translate(605 399) rotate(-90)&quot; text-anchor=&quot;middle&quot; font-size=&quot;15&quot;&gt;Observed positive fraction&lt;/text&gt;&#39;,
+        &#39;&lt;text x=&quot;44&quot; y=&quot;642&quot; font-size=&quot;17&quot; font-weight=&quot;700&quot;&gt;Synthetic-only results, not field-validated utility performance.&lt;/text&gt;&#39;,
+        &#39;&lt;text x=&quot;44&quot; y=&quot;671&quot; font-size=&quot;15&quot;&gt;Fixed split seed 4173. Threshold 0.5 is illustrative. Test labels never fit or tune the model.&lt;/text&gt;&#39;,
+        &#39;&lt;text x=&quot;44&quot; y=&quot;698&quot; font-size=&quot;15&quot;&gt;See the report for confusion counts, overlapping error slices and the largest prediction errors.&lt;/text&gt;&#39;,
+        &#39;&lt;/g&gt;&lt;/svg&gt;&#39;,
+    ])
+    return &quot;\n&quot;.join(parts) + &quot;\n&quot;
+
+
+def main() -&gt; None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(&quot;--seed&quot;, type=int, default=DATA_SEED, help=&quot;Synthetic-data seed (default: 2026)&quot;)
+    parser.add_argument(&quot;--report&quot;, type=Path, help=&quot;Optional output JSON path; overwrites that file&quot;)
+    parser.add_argument(&quot;--chart&quot;, type=Path, help=&quot;Optional output SVG path; overwrites that file&quot;)
+    args = parser.parse_args()
+    report = run(args.seed)
+    serialized = json.dumps(report, indent=2, allow_nan=False) + &quot;\n&quot;
+    for path, content in ((args.report, serialized), (args.chart, chart_svg(report))):
+        if path:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(content, encoding=&quot;utf-8&quot;, newline=&quot;\n&quot;)
+    print(serialized, end=&quot;&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre><p><a href="../example-lead-pipe-synthetic/index.html">← Results and run instructions</a></p></div></main>
+<div class="rule" aria-hidden="true"></div><footer class="site-footer"><div class="shell footer-inner"><p>All rights reserved © EK 2026</p></div></footer>
+<dialog class="image-viewer" aria-labelledby="viewer-title"><div class="viewer-header"><h2 id="viewer-title">Image viewer</h2><button type="button" data-viewer-close autofocus>Close <span aria-hidden="true">×</span></button></div><div class="viewer-controls" role="group" aria-label="Image controls"><div class="viewer-zoom-controls" role="group" aria-label="Zoom"><button type="button" data-zoom-out aria-label="Zoom out">− Zoom out</button><output class="zoom-level" aria-live="polite">100%</output><button type="button" data-zoom-in aria-label="Zoom in">+ Zoom in</button></div><div class="viewer-fit-controls"><button type="button" data-zoom-reset><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 3H3v6m12-6h6v6M3 15v6h6m12-6v6h-6"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>Fit to screen</button></div></div><p class="viewer-status" role="status"></p><div class="viewer-viewport" tabindex="0" aria-label="Image; scroll to pan when zoomed"><img class="viewer-image" alt=""></div><p class="viewer-caption"></p></dialog></body></html>

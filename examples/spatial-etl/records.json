@@ -1,0 +1,14 @@
+[
+  {"id":"SYN-001","crs":"LOCAL:DEMO_CARTESIAN","x":1000,"y":1200,"condition":"clear","inspected_at":"2026-01-01T09:00:00Z","revision":1},
+  {"id":"SYN-002","crs":"LOCAL:DEMO_CARTESIAN","x":1800,"y":1400,"condition":"clear","inspected_at":"2026-01-01T09:10:00Z","revision":1},
+  {"id":"SYN-003","crs":"LOCAL:DEMO_CARTESIAN","x":4500,"y":2100,"condition":"attention","inspected_at":"2026-01-01T09:20:00Z","revision":1},
+  {"id":"SYN-004","crs":"LOCAL:DEMO_CARTESIAN","x":7900,"y":8300,"condition":"clear","inspected_at":"2026-01-01T09:30:00Z","revision":1},
+  {"id":"SYN-005","crs":"UNKNOWN","x":1000,"y":1200,"condition":"clear","inspected_at":"2026-01-01T09:00:00Z","revision":1},
+  {"id":"SYN-006","crs":"LOCAL:DEMO_CARTESIAN","x":-1,"y":1200,"condition":"clear","inspected_at":"2026-01-01T09:00:00Z","revision":1},
+  {"id":"SYN-007","crs":"LOCAL:DEMO_CARTESIAN","x":1000,"y":1200,"inspected_at":"2026-01-01T09:00:00Z","revision":1},
+  {"id":"SYN-008","crs":"LOCAL:DEMO_CARTESIAN","x":1000,"y":1200,"condition":"clear","inspected_at":"2026-02-30T09:00:00Z","revision":1},
+  {"id":"SYN-009","crs":"LOCAL:DEMO_CARTESIAN","x":1000,"y":1200,"condition":"clear","inspected_at":"2026-01-01T09:00:00Z","revision":true},
+  {"id":"SYN-010","crs":"LOCAL:DEMO_CARTESIAN","x":1000,"y":"not-a-number","condition":"clear","inspected_at":"2026-01-01T09:00:00Z","revision":1},
+  {"id":"SYN-011","crs":"LOCAL:DEMO_CARTESIAN","x":1000,"y":1200,"condition":"clear","inspected_at":"2026-01-01T09:00:00Z","revision":1},
+  {"id":"SYN-011","crs":"LOCAL:DEMO_CARTESIAN","x":2000,"y":2200,"condition":"attention","inspected_at":"2026-01-01T09:00:00Z","revision":1}
+]

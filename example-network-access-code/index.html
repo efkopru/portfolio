@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en"><head>
+
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A worked network-access example: source code | Esad Kopru</title>
+<meta name="description" content="Inspect the public-safe educational companion demo.py. Synthetic example, separate from the original professional or research implementation."><meta name="theme-color" content="#e0e9f0"><meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="canonical" href="https://www.ekopru.com/example-network-access-code/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Esad Kopru"><meta property="og:title" content="A worked network-access example: source code | Esad Kopru"><meta property="og:description" content="Inspect the public-safe educational companion demo.py. Synthetic example, separate from the original professional or research implementation."><meta property="og:url" content="https://www.ekopru.com/example-network-access-code/"><meta property="og:image" content="https://www.ekopru.com/assets/social/doctoral-research.png?v=a5442023417d"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:type" content="image/png"><meta property="og:image:alt" content="A worked network-access example: source code | Esad Kopru portfolio"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://www.ekopru.com/assets/social/doctoral-research.png?v=a5442023417d"><meta name="twitter:image:alt" content="A worked network-access example: source code | Esad Kopru portfolio">
+<link rel="icon" href="../assets/efk-logo.avif"><script src="../theme.js?v=5218a73bfc30"></script><link rel="stylesheet" href="../styles.css?v=e1254d9cef71"><script src="../script.js?v=e48c5a6c7147" defer></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfilePage","name":"A worked network-access example: source code | Esad Kopru","url":"https://www.ekopru.com/example-network-access-code/","mainEntity":{"@type":"Person","name":"Esad Kopru","url":"https://www.ekopru.com","sameAs":["https://github.com/efkopru"],"knowsAbout":["Geospatial data science","Geospatial data engineering","Geospatial software engineering"],"alumniOf":[{"@type":"CollegeOrUniversity","name":"The University of Texas at Dallas"}]}}</script>
+</head><body data-root="../"><a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header"><div class="shell header-inner"><a class="brand" href="../index.html" aria-label="Esad Kopru home"><img src="../assets/efk-logo.avif" width="101" height="48" alt="EFK Portfolio"></a><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button><nav id="site-nav" class="site-nav" aria-label="Main navigation"><a href="../index.html">Home</a><a href="../contact/index.html">Contact</a><a href="../resume/index.html">Resume</a><div class="nav-group"><div class="nav-heading"><a href="../spatial-and-data-analysis/index.html">Spatial &amp; Data Analysis</a><button type="button" class="nav-disclosure" aria-label="Toggle Spatial &amp; Data Analysis project menu" aria-expanded="false" aria-controls="nav-spatial-and-data-analysis"><span aria-hidden="true">▾</span></button></div><div class="dropdown" id="nav-spatial-and-data-analysis"><a href="../spatial-and-data-analysis/index.html">Overview</a><a href="../spatial-analysis/index.html">Spatial Analysis</a><a href="../arcgis-enterprise-and-online/index.html">ArcGIS Enterprise and Online</a><a href="../qgis/index.html">QGIS</a><a href="../code-enforcement-violations/index.html">Code Enforcement Violations</a><a href="../crime-analysis/index.html">Crime Analysis</a><a href="../accessibility-analysis/index.html">Measuring access to community amenities</a></div></div><div class="nav-group"><div class="nav-heading"><a href="../ml-optimization/index.html">ML / Optimization</a><button type="button" class="nav-disclosure" aria-label="Toggle ML / Optimization project menu" aria-expanded="false" aria-controls="nav-ml-optimization"><span aria-hidden="true">▾</span></button></div><div class="dropdown" id="nav-ml-optimization"><a href="../ml-optimization/index.html">Overview</a><a href="../income-level-prediction-using-r/index.html">Income Level Prediction using R</a><a href="../building-footprint-extraction/index.html">Building Footprint Extraction</a><a href="../traveling-salesman/index.html">Traveling Salesman</a><a href="../water-conservation-routes/index.html">Water Conservation Routes</a><a href="../lead-service-review-prototype/index.html">Lead pipe prediction prototype</a></div></div><div class="nav-group"><div class="nav-heading"><a href="../development-and-etl/index.html">Development &amp; ETL</a><button type="button" class="nav-disclosure" aria-label="Toggle Development &amp; ETL project menu" aria-expanded="false" aria-controls="nav-development-and-etl"><span aria-hidden="true">▾</span></button></div><div class="dropdown" id="nav-development-and-etl"><a href="../development-and-etl/index.html">Overview</a><a href="../python-and-notebooks/index.html">Python Scripts &amp; Notebooks</a><a href="../sql-and-javascript-and-r/index.html">SQL &amp; JavaScript &amp; R</a><a href="../modelbuilder-and-arcmap-tool-in-vbnet/index.html">ModelBuilder &amp; ArcMap tool in VB.NET</a><a href="../interactive-maps-a-custom-js-app/index.html">Interactive Maps - A custom JS App</a><a href="../interactive-maps-experience-builder/index.html">Interactive Maps - Experience Builder</a><a href="../utility-inspection-etl/index.html">Utility inspection data pipeline</a><a href="../workforce-participation/index.html">An interactive workforce atlas</a><a href="../geospatial-processing-tools/index.html">Raster and document processing utilities</a></div></div><div class="nav-group"><div class="nav-heading"><a href="../additional-projects/index.html">Additional projects</a><button type="button" class="nav-disclosure" aria-label="Toggle Additional projects project menu" aria-expanded="false" aria-controls="nav-additional-projects"><span aria-hidden="true">▾</span></button></div><div class="dropdown" id="nav-additional-projects"><a href="../additional-projects/index.html">Overview</a><a href="../utility-inspection-etl/index.html">Utility inspection data pipeline</a><a href="../accessibility-analysis/index.html">Measuring access to community amenities</a><a href="../lead-service-review-prototype/index.html">Lead pipe prediction prototype</a><a href="../workforce-participation/index.html">An interactive workforce atlas</a><a href="../geospatial-processing-tools/index.html">Raster and document processing utilities</a></div></div><a href="../doctoral-research/index.html">Doctoral Research</a></nav></div></header><div class="rule" aria-hidden="true"></div>
+<div class="theme-toolbar shell" data-theme-toolbar hidden><button class="theme-toggle" type="button" role="switch" aria-checked="false" data-theme-toggle><span class="theme-toggle-label">Dark mode</span><span class="theme-toggle-track" aria-hidden="true"><span class="theme-toggle-thumb"></span></span><span class="theme-toggle-state" data-theme-state aria-hidden="true">Off</span></button></div>
+<main id="main" tabindex="-1"><div class="shell source-page"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="../example-network-access/index.html">Educational companion</a><span aria-hidden="true">/</span><span>demo.py</span></nav><h1>A worked network-access example: source code</h1><p>This source belongs to the new teaching example, not a recovered employer artifact or the original research implementation.</p><a class="text-link" href="../examples/network-access/demo.py">Open raw demo.py</a><pre class="code-block" tabindex="0" aria-label="demo.py"><code>&quot;&quot;&quot;Bounded, synthetic teaching example. Not the dissertation solver or benchmark.&quot;&quot;&quot;
+
+from __future__ import annotations
+
+import argparse
+from dataclasses import dataclass
+import heapq
+import json
+from pathlib import Path
+import platform
+import statistics
+import time
+
+
+MAX_EDGES = 16
+REPEATS = 5
+SOURCE_COMMIT = &quot;bc917f2a679f0ef624b15d2e6b4a3dc5fc8db388&quot;
+
+
+@dataclass(frozen=True, order=True)
+class Edge:
+    a: str
+    b: str
+    cost: int
+
+
+@dataclass(frozen=True)
+class Graph:
+    edges: tuple[Edge, ...]
+    source: str
+    targets: tuple[str, ...]
+
+
+def validate(graph: Graph) -&gt; Graph:
+    &quot;&quot;&quot;Normalize a tiny simple undirected graph; integer costs avoid rounding.&quot;&quot;&quot;
+    if not graph.edges or len(graph.edges) &gt; MAX_EDGES:
+        raise ValueError(f&quot;Use 1 to {MAX_EDGES} edges only; exhaustive search is exponential.&quot;)
+    seen: set[tuple[str, str]] = set()
+    normalized = []
+    nodes = set()
+    for edge in graph.edges:
+        if not all(isinstance(node, str) and node for node in (edge.a, edge.b)):
+            raise ValueError(&quot;Node IDs must be nonempty strings.&quot;)
+        if edge.a == edge.b or type(edge.cost) is not int or edge.cost &lt;= 0:
+            raise ValueError(&quot;Edges need different endpoints and positive integer costs.&quot;)
+        a, b = sorted((edge.a, edge.b))
+        if (a, b) in seen:
+            raise ValueError(&quot;Duplicate undirected edge.&quot;)
+        seen.add((a, b))
+        nodes.update((a, b))
+        normalized.append(Edge(a, b, edge.cost))
+    if (graph.source not in nodes or not graph.targets
+            or len(set(graph.targets)) != len(graph.targets)
+            or any(target not in nodes or target == graph.source for target in graph.targets)):
+        raise ValueError(&quot;Use an existing source and distinct existing non-source targets.&quot;)
+    return Graph(tuple(sorted(normalized)), graph.source, tuple(sorted(graph.targets)))
+
+
+def reaches_targets(graph: Graph, selected: tuple[int, ...]) -&gt; bool:
+    adjacency: dict[str, list[str]] = {}
+    for index in selected:
+        edge = graph.edges[index]
+        adjacency.setdefault(edge.a, []).append(edge.b)
+        adjacency.setdefault(edge.b, []).append(edge.a)
+    reached = {graph.source}
+    pending = [graph.source]
+    while pending:
+        for node in adjacency.get(pending.pop(), ()):
+            if node not in reached:
+                reached.add(node)
+                pending.append(node)
+    return set(graph.targets).issubset(reached)
+
+
+def independent_shortest_paths(graph: Graph) -&gt; dict:
+    &quot;&quot;&quot;Dijkstra paths, followed by a deduplicated union-cost comparison.
+
+    Use selected_edges to inspect the solution independently of input ordering.
+    The auxiliary selected indices refer to validate(graph).edges, not input order.
+    &quot;&quot;&quot;
+    graph = validate(graph)
+    adjacency: dict[str, list[tuple[str, int, int]]] = {}
+    for index, edge in enumerate(graph.edges):
+        adjacency.setdefault(edge.a, []).append((edge.b, edge.cost, index))
+        adjacency.setdefault(edge.b, []).append((edge.a, edge.cost, index))
+    distances = {graph.source: 0}
+    previous: dict[str, tuple[str, int]] = {}
+    queue = [(0, graph.source)]
+    while queue:
+        distance, node = heapq.heappop(queue)
+        if distance != distances[node]:
+            continue
+        for neighbor, cost, index in adjacency.get(node, ()):
+            alternative = distance + cost
+            if alternative &lt; distances.get(neighbor, float(&quot;inf&quot;)):
+                distances[neighbor] = alternative
+                previous[neighbor] = (node, index)
+                heapq.heappush(queue, (alternative, neighbor))
+    selected: set[int] = set()
+    paths = []
+    for target in graph.targets:
+        if target not in distances:
+            raise ValueError(&quot;At least one target is unreachable.&quot;)
+        node = target
+        path = [node]
+        while node != graph.source:
+            node, edge_index = previous[node]
+            selected.add(edge_index)
+            path.append(node)
+        paths.append({&quot;target&quot;: target, &quot;path&quot;: list(reversed(path)), &quot;cost&quot;: distances[target]})
+    return {
+        &quot;cost&quot;: sum(graph.edges[index].cost for index in selected),
+        &quot;path_sum&quot;: sum(path[&quot;cost&quot;] for path in paths),
+        &quot;selected&quot;: tuple(sorted(selected)),
+        &quot;selected_edges&quot;: tuple(graph.edges[index] for index in sorted(selected)),
+        &quot;paths&quot;: paths,
+    }
+
+
+def exhaustive_shared_network(graph: Graph) -&gt; dict:
+    &quot;&quot;&quot;Find the minimum selected-edge cost by checking every subset, no pruning.
+
+    Use selected_edges to inspect the solution independently of input ordering.
+    The auxiliary selected indices refer to validate(graph).edges, not input order.
+    &quot;&quot;&quot;
+    graph = validate(graph)
+    best_cost = float(&quot;inf&quot;)
+    best_selection = None
+    subsets = 1 &lt;&lt; len(graph.edges)
+    for mask in range(subsets):
+        selected = tuple(index for index in range(len(graph.edges)) if mask &amp; (1 &lt;&lt; index))
+        feasible = reaches_targets(graph, selected)
+        cost = sum(graph.edges[index].cost for index in selected)
+        if feasible and cost &lt; best_cost:
+            best_cost = cost
+            best_selection = selected
+    if best_selection is None:
+        raise ValueError(&quot;At least one target is unreachable.&quot;)
+    return {&quot;cost&quot;: best_cost, &quot;selected&quot;: best_selection,
+            &quot;selected_edges&quot;: tuple(graph.edges[index] for index in best_selection),
+            &quot;subsets_checked&quot;: subsets}
+
+
+def fixture(target_count: int = 2) -&gt; Graph:
+    &quot;&quot;&quot;Invented cost units, no geographic coordinates or research data.&quot;&quot;&quot;
+    if target_count not in (2, 3, 4):
+        raise ValueError(&quot;The published fixtures have 2, 3, or 4 targets.&quot;)
+    targets = tuple(f&quot;T{index + 1}&quot; for index in range(target_count))
+    edges = [Edge(&quot;S&quot;, &quot;H&quot;, 4)]
+    for target in targets:
+        edges.extend((Edge(&quot;H&quot;, target, 3), Edge(&quot;S&quot;, target, 6)))
+    if target_count &gt;= 3:
+        edges.extend(Edge(targets[index], targets[index + 1], 10) for index in range(target_count - 1))
+    if target_count == 4:
+        edges.append(Edge(&quot;T1&quot;, &quot;T4&quot;, 10))
+    return validate(Graph(tuple(edges), &quot;S&quot;, targets))
+
+
+def timed_median(function, graph: Graph) -&gt; tuple[dict, float]:
+    function(graph)  # One untimed warm-up per method and fixture.
+    times = []
+    result = None
+    for _ in range(REPEATS):
+        start = time.perf_counter_ns()
+        result = function(graph)
+        times.append((time.perf_counter_ns() - start) / 1_000_000)
+    return result, round(statistics.median(times), 6)
+
+
+def report() -&gt; dict:
+    graph = fixture()
+    baseline = independent_shortest_paths(graph)
+    exact = exhaustive_shared_network(graph)
+    benchmark_rows = []
+    for target_count in (2, 3, 4):
+        instance = fixture(target_count)
+        paths, paths_ms = timed_median(independent_shortest_paths, instance)
+        shared, shared_ms = timed_median(exhaustive_shared_network, instance)
+        benchmark_rows.append([
+            target_count, len(instance.edges), shared[&quot;subsets_checked&quot;],
+            paths[&quot;cost&quot;], shared[&quot;cost&quot;], paths_ms, shared_ms,
+        ])
+    chosen_edges = exact[&quot;selected_edges&quot;]
+    return {
+        &quot;title&quot;: &quot;Why shared edges change a network-access decision&quot;,
+        &quot;disclosure&quot;: &quot;New synthetic teaching companion, not the dissertation implementation or its research benchmark. Costs are invented units, not travel times or distances.&quot;,
+        &quot;metrics&quot;: [
+            {&quot;label&quot;: &quot;Independent shortest-path union cost&quot;, &quot;value&quot;: baseline[&quot;cost&quot;]},
+            {&quot;label&quot;: &quot;Minimum shared-network cost&quot;, &quot;value&quot;: exact[&quot;cost&quot;]},
+            {&quot;label&quot;: &quot;Exhaustively checked edge subsets&quot;, &quot;value&quot;: exact[&quot;subsets_checked&quot;]},
+        ],
+        &quot;tables&quot;: [
+            {
+                &quot;heading&quot;: &quot;Worked example: independent routes&quot;,
+                &quot;headers&quot;: [&quot;Target&quot;, &quot;Route&quot;, &quot;Route cost&quot;],
+                &quot;rows&quot;: [[path[&quot;target&quot;], &quot; → &quot;.join(path[&quot;path&quot;]), path[&quot;cost&quot;]] for path in baseline[&quot;paths&quot;]],
+            },
+            {
+                &quot;heading&quot;: &quot;Worked example: selected shared-network edges&quot;,
+                &quot;headers&quot;: [&quot;Edge&quot;, &quot;Cost counted once&quot;],
+                &quot;rows&quot;: [[f&quot;{edge.a} ↔ {edge.b}&quot;, edge.cost] for edge in chosen_edges],
+            },
+            {
+                &quot;heading&quot;: &quot;Measured synthetic micro-benchmark (environment-specific)&quot;,
+                &quot;headers&quot;: [&quot;Targets&quot;, &quot;Edges&quot;, &quot;Subsets&quot;, &quot;Path-union cost&quot;, &quot;Shared cost&quot;, &quot;Dijkstra median ms&quot;, &quot;Exhaustive median ms&quot;],
+                &quot;rows&quot;: benchmark_rows,
+            },
+        ],
+        &quot;notes&quot;: [
+            &quot;For each target the direct path costs 6, versus 7 through H. Yet sharing S–H gives a total selected-edge cost of 4 + 3 + 3 = 10 instead of 6 + 6 = 12. Individual journeys need not become shorter.&quot;,
+            &quot;The comparable baseline is the union of independent shortest-path edges, counted once. Summing journey costs would double-count any shared edge.&quot;,
+            &quot;Solver settings: simple undirected graphs; positive integer edge costs; all targets required; optional intermediate nodes; exhaustive enumeration of every subset; no pruning, tolerance, heuristic, random seed, external solver, or time limit; single process; hard cap 16 edges (65,536 subsets).&quot;,
+            f&quot;Timings are medians of {REPEATS} runs after one warm-up, measured with perf_counter_ns, including validation and solving but excluding fixture creation, report assembly, and file I/O. They are illustrative, not a scalable algorithm comparison.&quot;,
+            f&quot;Measured environment: {platform.python_implementation()} {platform.python_version()}, {platform.system()} {platform.release()}, {platform.machine()}. Workload and timing noise vary by machine; rerunning overwrites timings.&quot;,
+            &quot;This familiar minimum connecting-subgraph example is not a novelty claim, proof about the original formulation, or validation of convex-hull preprocessing. The public R source uses a separate OMPR/GLPK formulation with flow variables.&quot;,
+            &quot;No unpublished manuscript, employer code, client records, or real location data is included. No journal publication or DOI is asserted.&quot;,
+        ],
+        &quot;sources&quot;: [
+            {&quot;label&quot;: &quot;Public research code, pinned revision&quot;, &quot;url&quot;: f&quot;https://github.com/efkopru/gemini-shortest-path/tree/{SOURCE_COMMIT}&quot;},
+            {&quot;label&quot;: &quot;UT Dallas doctoral record (Spring 2024)&quot;, &quot;url&quot;: &quot;https://graduate.utdallas.edu/fsa/doctoral-degrees-awarded/2023-2024-doctoral-degrees-awarded/&quot;},
+        ],
+    }
+
+
+def main() -&gt; None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(&quot;--report&quot;, type=Path, metavar=&quot;PATH&quot;, help=&quot;Write the measured JSON report to PATH.&quot;)
+    args = parser.parse_args()
+    result = report()
+    serialized = json.dumps(result, ensure_ascii=False, indent=2) + &quot;\n&quot;
+    if args.report:
+        args.report.parent.mkdir(parents=True, exist_ok=True)
+        args.report.write_text(serialized, encoding=&quot;utf-8&quot;)
+        print(f&quot;Report written: {args.report}&quot;)
+    else:
+        # ASCII JSON also works when Windows redirects stdout using a legacy code page.
+        print(json.dumps(result, ensure_ascii=True, indent=2))
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre><p><a href="../example-network-access/index.html">← Results and run instructions</a></p></div></main>
+<div class="rule" aria-hidden="true"></div><footer class="site-footer"><div class="shell footer-inner"><p>All rights reserved © EK 2026</p></div></footer>
+<dialog class="image-viewer" aria-labelledby="viewer-title"><div class="viewer-header"><h2 id="viewer-title">Image viewer</h2><button type="button" data-viewer-close autofocus>Close <span aria-hidden="true">×</span></button></div><div class="viewer-controls" role="group" aria-label="Image controls"><div class="viewer-zoom-controls" role="group" aria-label="Zoom"><button type="button" data-zoom-out aria-label="Zoom out">− Zoom out</button><output class="zoom-level" aria-live="polite">100%</output><button type="button" data-zoom-in aria-label="Zoom in">+ Zoom in</button></div><div class="viewer-fit-controls"><button type="button" data-zoom-reset><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 3H3v6m12-6h6v6M3 15v6h6m12-6v6h-6"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>Fit to screen</button></div></div><p class="viewer-status" role="status"></p><div class="viewer-viewport" tabindex="0" aria-label="Image; scroll to pan when zoomed"><img class="viewer-image" alt=""></div><p class="viewer-caption"></p></dialog></body></html>

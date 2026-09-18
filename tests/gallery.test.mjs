@@ -25,10 +25,11 @@ test('original galleries have separate pages and retain their complete collectio
   }
 });
 
-test('home restores the original three lists without role filters or project cards', async () => {
+test('home retains the original three collections below selected work without role filters', async () => {
   const html = await readFile(new URL('../dist/index.html', import.meta.url), 'utf8');
-  assert.ok(html.includes('Hello!') && html.includes('Breakdown of the Projects'));
-  assert.ok(!/class="filters"|class="project-card"|data-role-link/.test(html));
+  assert.ok(html.includes('<h1>Esad Kopru</h1>') && html.includes('Breakdown of the Projects'));
+  assert.ok(!/class="filters"|data-role-link/.test(html));
+  assert.ok(html.indexOf('id="selected-work"') < html.indexOf('id="projects"'));
   for (const collection of collections) {
     for (const [id] of collection.entries) assert.ok(html.includes(`./${id}/index.html`));
   }

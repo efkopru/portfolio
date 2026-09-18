@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="730" viewBox="0 0 1100 730" role="img" aria-labelledby="title desc">
+<title id="title">Synthetic lead-pipe model evaluation</title>
+<desc id="desc">Brier and log-loss comparison against training prevalence, plus a reliability plot. Generated from 200 held-out invented records in 40 disjoint groups. Not real-world performance.</desc>
+<rect width="1100" height="730" rx="18" fill="#edf6fa"/>
+<g font-family="Arial, sans-serif" fill="#163447">
+<text x="44" y="49" font-size="16" font-weight="700">REPRODUCIBLE EDUCATIONAL EXAMPLE</text>
+<text x="44" y="94" font-size="30" font-weight="700">Inspect the errors, not just the score</text>
+<text x="44" y="127" font-size="17">Synthetic data seed 2026 | 200 held-out properties | 40 groups | no shared groups</text>
+<rect x="34" y="160" width="1032" height="446" rx="12" fill="#fff"/>
+<text x="58" y="198" font-size="20" font-weight="700">Held-out losses</text>
+<text x="58" y="224" font-size="15">Lower is better; bars share a 0 to 1 scale.</text>
+<text x="58" y="268" font-size="17" font-weight="700">Brier score</text>
+<text x="58" y="301" font-size="15">Logistic</text>
+<rect x="151" y="284" width="40.838" height="25" rx="4" fill="#176285"/>
+<text x="198.838" y="302" font-size="15">0.1238</text>
+<text x="58" y="340" font-size="15">Prevalence</text>
+<rect x="151" y="323" width="78.777" height="25" rx="4" fill="#a34422"/>
+<text x="236.777" y="341" font-size="15">0.2387</text>
+<text x="58" y="394" font-size="17" font-weight="700">Log loss</text>
+<text x="58" y="427" font-size="15">Logistic</text>
+<rect x="151" y="410" width="130.389" height="25" rx="4" fill="#176285"/>
+<text x="288.389" y="428" font-size="15">0.3951</text>
+<text x="58" y="466" font-size="15">Prevalence</text>
+<rect x="151" y="449" width="221.270" height="25" rx="4" fill="#a34422"/>
+<text x="379.270" y="467" font-size="15">0.6705</text>
+<text x="603" y="198" font-size="20" font-weight="700">Reliability by probability bin</text>
+<text x="603" y="224" font-size="15">Descriptive check; no calibrator was fitted.</text>
+<line x1="660" y1="525" x2="965" y2="525" stroke="#d5e2e9"/>
+<text x="644" y="530" text-anchor="end" font-size="13">0.0</text>
+<text x="660" y="548" text-anchor="middle" font-size="13">0.0</text>
+<line x1="660" y1="472" x2="965" y2="472" stroke="#d5e2e9"/>
+<text x="644" y="477" text-anchor="end" font-size="13">0.2</text>
+<text x="721" y="548" text-anchor="middle" font-size="13">0.2</text>
+<line x1="660" y1="419" x2="965" y2="419" stroke="#d5e2e9"/>
+<text x="644" y="424" text-anchor="end" font-size="13">0.4</text>
+<text x="782" y="548" text-anchor="middle" font-size="13">0.4</text>
+<line x1="660" y1="366" x2="965" y2="366" stroke="#d5e2e9"/>
+<text x="644" y="371" text-anchor="end" font-size="13">0.6</text>
+<text x="843" y="548" text-anchor="middle" font-size="13">0.6</text>
+<line x1="660" y1="313" x2="965" y2="313" stroke="#d5e2e9"/>
+<text x="644" y="318" text-anchor="end" font-size="13">0.8</text>
+<text x="904" y="548" text-anchor="middle" font-size="13">0.8</text>
+<line x1="660" y1="260" x2="965" y2="260" stroke="#d5e2e9"/>
+<text x="644" y="265" text-anchor="end" font-size="13">1.0</text>
+<text x="965" y="548" text-anchor="middle" font-size="13">1.0</text>
+<line x1="660" y1="525" x2="965" y2="260" stroke="#667785" stroke-width="2" stroke-dasharray="6 5"/>
+<circle cx="686.639" cy="512.955" r="7" fill="#176285" stroke="#fff" stroke-width="2"><title>[0.0, 0.2): n=66, mean prediction 0.0873, observed 0.0455</title></circle>
+<text x="696.639" y="502.955" font-size="12">n=66</text>
+<circle cx="749.511" cy="486.354" r="7" fill="#176285" stroke="#fff" stroke-width="2"><title>[0.2, 0.4): n=48, mean prediction 0.2935, observed 0.1458</title></circle>
+<text x="759.511" y="476.354" font-size="12">n=48</text>
+<circle cx="811.792" cy="398.261" r="7" fill="#176285" stroke="#fff" stroke-width="2"><title>[0.4, 0.6): n=23, mean prediction 0.4977, observed 0.4783</title></circle>
+<text x="821.792" y="388.261" font-size="12">n=23</text>
+<circle cx="877.120" cy="320.571" r="7" fill="#176285" stroke="#fff" stroke-width="2"><title>[0.6, 0.8): n=35, mean prediction 0.7119, observed 0.7714</title></circle>
+<text x="887.120" y="310.571" font-size="12">n=35</text>
+<circle cx="937.070" cy="288.393" r="7" fill="#176285" stroke="#fff" stroke-width="2"><title>[0.8, 1.0]: n=28, mean prediction 0.9084, observed 0.8929</title></circle>
+<text x="947.070" y="278.393" font-size="12">n=28</text>
+<text x="812" y="577" text-anchor="middle" font-size="15">Mean predicted probability</text>
+<text transform="translate(605 399) rotate(-90)" text-anchor="middle" font-size="15">Observed positive fraction</text>
+<text x="44" y="642" font-size="17" font-weight="700">Synthetic-only results, not field-validated utility performance.</text>
+<text x="44" y="671" font-size="15">Fixed split seed 4173. Threshold 0.5 is illustrative. Test labels never fit or tune the model.</text>
+<text x="44" y="698" font-size="15">See the report for confusion counts, overlapping error slices and the largest prediction errors.</text>
+</g></svg>

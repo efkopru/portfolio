@@ -1,0 +1,297 @@
+{
+  "title": "Synthetic spatial ETL: validation, replay and recovery",
+  "disclosure": "Educational reconstruction using invented records on a local Cartesian grid. No client data, Earth coordinates, or production performance claims.",
+  "metrics": [
+    {
+      "label": "Synthetic input rows",
+      "value": "12"
+    },
+    {
+      "label": "Accepted initial rows",
+      "value": "4"
+    },
+    {
+      "label": "Quarantined input rows",
+      "value": "8"
+    },
+    {
+      "label": "Records after recovery",
+      "value": "5"
+    },
+    {
+      "label": "Rollback state check",
+      "value": "Passed"
+    }
+  ],
+  "tables": [
+    {
+      "heading": "Committed batch results",
+      "headers": [
+        "Batch",
+        "Inserted",
+        "Updated",
+        "Unchanged",
+        "Stale skipped"
+      ],
+      "rows": [
+        [
+          "Initial load",
+          4,
+          0,
+          0,
+          0
+        ],
+        [
+          "Identical replay",
+          0,
+          0,
+          4,
+          0
+        ],
+        [
+          "Recovery retry",
+          1,
+          2,
+          0,
+          0
+        ],
+        [
+          "Recovered replay",
+          0,
+          0,
+          3,
+          0
+        ],
+        [
+          "Older source replay",
+          0,
+          0,
+          2,
+          2
+        ]
+      ]
+    },
+    {
+      "heading": "Quarantine review",
+      "headers": [
+        "Input row",
+        "Synthetic ID",
+        "Reason"
+      ],
+      "rows": [
+        [
+          5,
+          "SYN-005",
+          "crs must be LOCAL:DEMO_CARTESIAN"
+        ],
+        [
+          6,
+          "SYN-006",
+          "x must be a finite number in [0, 10000] metres"
+        ],
+        [
+          7,
+          "SYN-007",
+          "schema mismatch: missing=['condition'], extra=[]"
+        ],
+        [
+          8,
+          "SYN-008",
+          "inspected_at contains an invalid calendar date or time"
+        ],
+        [
+          9,
+          "SYN-009",
+          "revision must be a positive SQLite-sized integer"
+        ],
+        [
+          10,
+          "SYN-010",
+          "y must be a finite number in [0, 10000] metres"
+        ],
+        [
+          11,
+          "SYN-011",
+          "duplicate id in batch; all occurrences quarantined"
+        ],
+        [
+          12,
+          "SYN-011",
+          "duplicate id in batch; all occurrences quarantined"
+        ]
+      ]
+    },
+    {
+      "heading": "Recovered database state",
+      "headers": [
+        "Synthetic ID",
+        "X (m)",
+        "Y (m)",
+        "Condition",
+        "Revision"
+      ],
+      "rows": [
+        [
+          "SYN-001",
+          1000.0,
+          1200.0,
+          "attention",
+          2
+        ],
+        [
+          "SYN-002",
+          1820.0,
+          1400.0,
+          "clear",
+          2
+        ],
+        [
+          "SYN-003",
+          4500.0,
+          2100.0,
+          "attention",
+          1
+        ],
+        [
+          "SYN-004",
+          7900.0,
+          8300.0,
+          "clear",
+          1
+        ],
+        [
+          "SYN-012",
+          5000.0,
+          5100.0,
+          "attention",
+          1
+        ]
+      ]
+    }
+  ],
+  "notes": [
+    "CRS is LOCAL:DEMO_CARTESIAN: arbitrary origin, x right/east, y up/north, metres, valid extent 0 to 10000 on each axis. It has no Earth reference and cannot be overlaid on a real map.",
+    "A deliberate failure after two updates left every stored value identical to the pre-load snapshot. A subsequent retry committed two updates and one insertion.",
+    "Repeated batches perform no writes when payload and revision match. Older revisions are skipped. Conflicting equal revisions or reversed inspection dates abort the complete transaction.",
+    "Quarantine retains each rejected input and its reason. Both occurrences of a duplicated ID are rejected; source ordering never chooses a winner.",
+    "SQLite is used for a portable transaction demonstration, not presented as PostGIS, a spatial index, a production job scheduler, or a performance benchmark."
+  ],
+  "checks": {
+    "rollback_verified": true,
+    "identical_replay_verified": true,
+    "recovered_replay_verified": true
+  },
+  "quarantine": [
+    {
+      "row": 5,
+      "id": "SYN-005",
+      "reason": "crs must be LOCAL:DEMO_CARTESIAN",
+      "record": {
+        "id": "SYN-005",
+        "crs": "UNKNOWN",
+        "x": 1000,
+        "y": 1200,
+        "condition": "clear",
+        "inspected_at": "2026-01-01T09:00:00Z",
+        "revision": 1
+      }
+    },
+    {
+      "row": 6,
+      "id": "SYN-006",
+      "reason": "x must be a finite number in [0, 10000] metres",
+      "record": {
+        "id": "SYN-006",
+        "crs": "LOCAL:DEMO_CARTESIAN",
+        "x": -1,
+        "y": 1200,
+        "condition": "clear",
+        "inspected_at": "2026-01-01T09:00:00Z",
+        "revision": 1
+      }
+    },
+    {
+      "row": 7,
+      "id": "SYN-007",
+      "reason": "schema mismatch: missing=['condition'], extra=[]",
+      "record": {
+        "id": "SYN-007",
+        "crs": "LOCAL:DEMO_CARTESIAN",
+        "x": 1000,
+        "y": 1200,
+        "inspected_at": "2026-01-01T09:00:00Z",
+        "revision": 1
+      }
+    },
+    {
+      "row": 8,
+      "id": "SYN-008",
+      "reason": "inspected_at contains an invalid calendar date or time",
+      "record": {
+        "id": "SYN-008",
+        "crs": "LOCAL:DEMO_CARTESIAN",
+        "x": 1000,
+        "y": 1200,
+        "condition": "clear",
+        "inspected_at": "2026-02-30T09:00:00Z",
+        "revision": 1
+      }
+    },
+    {
+      "row": 9,
+      "id": "SYN-009",
+      "reason": "revision must be a positive SQLite-sized integer",
+      "record": {
+        "id": "SYN-009",
+        "crs": "LOCAL:DEMO_CARTESIAN",
+        "x": 1000,
+        "y": 1200,
+        "condition": "clear",
+        "inspected_at": "2026-01-01T09:00:00Z",
+        "revision": true
+      }
+    },
+    {
+      "row": 10,
+      "id": "SYN-010",
+      "reason": "y must be a finite number in [0, 10000] metres",
+      "record": {
+        "id": "SYN-010",
+        "crs": "LOCAL:DEMO_CARTESIAN",
+        "x": 1000,
+        "y": "not-a-number",
+        "condition": "clear",
+        "inspected_at": "2026-01-01T09:00:00Z",
+        "revision": 1
+      }
+    },
+    {
+      "row": 11,
+      "id": "SYN-011",
+      "reason": "duplicate id in batch; all occurrences quarantined",
+      "record": {
+        "id": "SYN-011",
+        "crs": "LOCAL:DEMO_CARTESIAN",
+        "x": 1000,
+        "y": 1200,
+        "condition": "clear",
+        "inspected_at": "2026-01-01T09:00:00Z",
+        "revision": 1
+      }
+    },
+    {
+      "row": 12,
+      "id": "SYN-011",
+      "reason": "duplicate id in batch; all occurrences quarantined",
+      "record": {
+        "id": "SYN-011",
+        "crs": "LOCAL:DEMO_CARTESIAN",
+        "x": 2000,
+        "y": 2200,
+        "condition": "attention",
+        "inspected_at": "2026-01-01T09:00:00Z",
+        "revision": 1
+      }
+    }
+  ]
+}

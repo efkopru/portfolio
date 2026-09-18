@@ -1,6 +1,12 @@
 # Esad Kopru portfolio
 
-Static portfolio using the original ekopru.com navigation, three-category project index, and separate gallery pages. Updated factual content and newer projects remain available without the replacement role-filter/card interface. No framework or account system is required. The contact form uses FormSubmit for email delivery. External GIS applications load only after an explicit click.
+Static portfolio preserving the original ekopru.com navigation, three-category project index, and separate gallery pages. Three selected projects introduce the portfolio before the complete original collections. Case studies present the problem, contribution, tools, methods, results, and limits before their galleries. No framework or account system is required. The contact form uses FormSubmit for email delivery. External GIS applications load only after an explicit click.
+
+## Evidence branch
+
+`codex/portfolio-evidence` is an independent review branch based on production `main`. It is not the older alternate-homepage branch. Its homepage is the root `index.html` in this checkout. Nothing in the build merges, pushes, or deploys this branch. Keep Hostinger's production branch on `main` until this version is approved.
+
+The additions are three featured projects, visible case-study summaries, three runnable synthetic companions, a cited doctoral research explanation, and project-specific sharing images. Original routes, galleries, Classic/Midnight switch, and the existing Contact form are retained.
 
 ## Work locally
 
@@ -20,6 +26,10 @@ Open `http://127.0.0.1:4173/`. The development server binds only to this compute
 - `content/portfolio.mjs`: profile, employment, skills, and 20 project case studies.
 - `content/site-structure.mjs`: original navigation order, separate page galleries, additional projects, and public application links.
 - `content/screenshots.json`: local screenshot paths, dimensions, captions, and original source URLs.
+- `content/evidence.mjs`: featured projects, educational companions, diagrams, and the explicit public-source file allowlist.
+- `examples/`: three self-contained Python teaching examples with guides, tests, and actual-run JSON reports.
+- `scripts/evidence-pages.mjs`: case-study summaries, evaluation tables, run instructions, and escaped source viewers.
+- `scripts/social-cards.mjs`: project-specific sharing-card metadata.
 - `scripts/build.mjs`: page templates, metadata, sitemap, publication output.
 - `styles.css`: responsive design, focus states, and print layout.
 - `script.js`: same-page contact submission, theme selection, dropdown/mobile navigation, the accessible image viewer, click-to-load applications, and legacy hash navigation.
@@ -67,5 +77,46 @@ Project galleries use local images recovered from the original portfolio, public
 ## Validation
 
 `npm run check` verifies page structure, source-data completeness, all local links and anchors, preservation of old routes, metadata, and the publication file allowlist. `npm test` protects the important factual distinctions between consultant work, automated execution, historical program outcomes, and synthetic experiments.
+
+## Reproduce the educational examples
+
+These are newly authored teaching companions using invented data, not recovered employer code or reproductions of original research experiments. Each page labels that distinction and exposes its guide, source, tests, report, settings, and limitations. The code and reports are explicitly allowlisted for static publication; caches, databases, and other workspace files are not.
+
+Python 3.10+ with the standard-library `sqlite3` module is needed only to run these examples and their tests. Website builds on Hostinger need Node.js only and use the checked-in reports and images.
+
+```powershell
+npm run test:examples
+npm run validate
+```
+
+The runner tries `python`, `python3`, and `py -3`. If needed, set `$env:PYTHON` to the full executable path, without arguments. Each test suite runs in its own interpreter. `validate` builds the site, checks publication output, runs website regressions, then runs all example tests.
+
+From the repository root, regenerate each report independently:
+
+```powershell
+python examples/spatial-etl/demo.py --report examples/spatial-etl/report.json
+python examples/lead-pipe-synthetic/demo.py --report examples/lead-pipe-synthetic/report.json --chart assets/evidence/lead-pipe-evaluation.svg
+python examples/network-access/demo.py --report examples/network-access/report.json
+npm run build
+```
+
+The ETL example validates invented local-grid observations and demonstrates quarantine, transactional revision-aware updates, idempotent replay, rollback, and recovery in SQLite. It does not claim PostGIS or real coordinate transformations. The ML example compares a grouped-split logistic model with a training-prevalence baseline and reports losses, confusion counts, reliability bins, and error slices. Its scores are not field accuracy. The network example contrasts independent shortest-path edges with an exhaustively optimized shared network on tiny graphs; timings are actual local measurements that vary between runs, not dissertation benchmarks.
+
+The research page cites the [UT Dallas doctoral record](https://graduate.utdallas.edu/fsa/doctoral-degrees-awarded/2023-2024-doctoral-degrees-awarded/) and [version-pinned public R source](https://github.com/efkopru/gemini-shortest-path/tree/bc917f2a679f0ef624b15d2e6b4a3dc5fc8db388). It does not claim a journal paper or DOI. Each example guide documents its exact constraints.
+
+## Sharing images
+
+Every project has a local 1200 by 630 PNG cover. General pages use `assets/social/portfolio.png`; companion and source pages inherit their parent project's cover. Open Graph and Twitter metadata use absolute, content-versioned image URLs based on `SITE_URL`. Existing reviewed project imagery is used where available. No remote image downloads occur during builds.
+
+To regenerate the committed images on Windows after changing project titles or summaries:
+
+```powershell
+powershell -NoProfile -File scripts/create-social-previews.ps1
+npm run build
+npm run check
+npm test
+```
+
+PNG generation uses Windows System.Drawing; ordinary website builds on other systems only copy the committed PNGs. Sharing services need the final public HTTPS URLs to fetch these images. Local metadata tests do not prove that a sharing service has refreshed its cached preview.
 
 Image captions, dimensions, and available public source URLs are recorded in `content/screenshots.json`. Internal audit and publication-planning notes remain outside the public repository.

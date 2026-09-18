@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 640" role="img" aria-labelledby="title desc">
+  <title id="title">Shared edges versus independent shortest paths</title>
+  <desc id="desc">An invented four-node graph. Two direct source-to-target edges cost six each, total twelve. A shared source-to-hub edge costs four and each hub-to-target edge costs three, total ten. The teaching example checks all thirty-two edge subsets.</desc>
+  <rect width="1040" height="640" rx="24" fill="#edf6fa"/>
+  <g font-family="Arial, sans-serif" fill="#163447">
+    <text x="48" y="66" font-size="29" font-weight="700">One source. Two targets. Shared cost.</text>
+    <text x="48" y="103" font-size="19">Invented graph and cost units. Not dissertation benchmark data.</text>
+    <path d="M140 314 L850 204 M140 314 L850 424" fill="none" stroke="#657789" stroke-width="4" stroke-dasharray="9 9"/>
+    <path d="M140 314 L505 314 L850 204 M505 314 L850 424" fill="none" stroke="#176285" stroke-width="10"/>
+    <g fill="#fff" stroke="#176285" stroke-width="4">
+      <circle cx="140" cy="314" r="37"/><circle cx="505" cy="314" r="37"/>
+      <circle cx="850" cy="204" r="37"/><circle cx="850" cy="424" r="37"/>
+    </g>
+    <g font-size="25" font-weight="700" text-anchor="middle">
+      <text x="140" y="323">S</text><text x="505" y="323">H</text>
+      <text x="850" y="213">T1</text><text x="850" y="433">T2</text>
+    </g>
+    <g font-size="23" font-weight="700">
+      <text x="315" y="305">4</text><text x="677" y="248">3</text><text x="677" y="400">3</text>
+      <text x="480" y="239">6</text><text x="480" y="411">6</text>
+    </g>
+    <text x="104" y="378" font-size="18">Source</text>
+    <text x="492" y="341" font-size="13">Hub</text>
+    <path d="M48 501 H94" stroke="#176285" stroke-width="8"/>
+    <text x="112" y="508" font-size="21">Shared network: 4 + 3 + 3 = 10</text>
+    <path d="M48 548 H94" stroke="#657789" stroke-width="4" stroke-dasharray="9 9"/>
+    <text x="112" y="555" font-size="21">Independent shortest-path union: 6 + 6 = 12</text>
+    <text x="48" y="605" font-size="18">Lower selected-edge cost does not mean shorter individual journeys.</text>
+  </g>
+</svg>

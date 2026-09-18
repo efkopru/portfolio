@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en"><head>
+
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A worked network-access example: tests | Esad Kopru</title>
+<meta name="description" content="Inspect the public-safe educational companion test_demo.py. Synthetic example, separate from the original professional or research implementation."><meta name="theme-color" content="#e0e9f0"><meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="canonical" href="https://www.ekopru.com/example-network-access-tests/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Esad Kopru"><meta property="og:title" content="A worked network-access example: tests | Esad Kopru"><meta property="og:description" content="Inspect the public-safe educational companion test_demo.py. Synthetic example, separate from the original professional or research implementation."><meta property="og:url" content="https://www.ekopru.com/example-network-access-tests/"><meta property="og:image" content="https://www.ekopru.com/assets/social/doctoral-research.png?v=a5442023417d"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:type" content="image/png"><meta property="og:image:alt" content="A worked network-access example: tests | Esad Kopru portfolio"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://www.ekopru.com/assets/social/doctoral-research.png?v=a5442023417d"><meta name="twitter:image:alt" content="A worked network-access example: tests | Esad Kopru portfolio">
+<link rel="icon" href="../assets/efk-logo.avif"><script src="../theme.js?v=5218a73bfc30"></script><link rel="stylesheet" href="../styles.css?v=e1254d9cef71"><script src="../script.js?v=e48c5a6c7147" defer></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfilePage","name":"A worked network-access example: tests | Esad Kopru","url":"https://www.ekopru.com/example-network-access-tests/","mainEntity":{"@type":"Person","name":"Esad Kopru","url":"https://www.ekopru.com","sameAs":["https://github.com/efkopru"],"knowsAbout":["Geospatial data science","Geospatial data engineering","Geospatial software engineering"],"alumniOf":[{"@type":"CollegeOrUniversity","name":"The University of Texas at Dallas"}]}}</script>
+</head><body data-root="../"><a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header"><div class="shell header-inner"><a class="brand" href="../index.html" aria-label="Esad Kopru home"><img src="../assets/efk-logo.avif" width="101" height="48" alt="EFK Portfolio"></a><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button><nav id="site-nav" class="site-nav" aria-label="Main navigation"><a href="../index.html">Home</a><a href="../contact/index.html">Contact</a><a href="../resume/index.html">Resume</a><div class="nav-group"><div class="nav-heading"><a href="../spatial-and-data-analysis/index.html">Spatial &amp; Data Analysis</a><button type="button" class="nav-disclosure" aria-label="Toggle Spatial &amp; Data Analysis project menu" aria-expanded="false" aria-controls="nav-spatial-and-data-analysis"><span aria-hidden="true">▾</span></button></div><div class="dropdown" id="nav-spatial-and-data-analysis"><a href="../spatial-and-data-analysis/index.html">Overview</a><a href="../spatial-analysis/index.html">Spatial Analysis</a><a href="../arcgis-enterprise-and-online/index.html">ArcGIS Enterprise and Online</a><a href="../qgis/index.html">QGIS</a><a href="../code-enforcement-violations/index.html">Code Enforcement Violations</a><a href="../crime-analysis/index.html">Crime Analysis</a><a href="../accessibility-analysis/index.html">Measuring access to community amenities</a></div></div><div class="nav-group"><div class="nav-heading"><a href="../ml-optimization/index.html">ML / Optimization</a><button type="button" class="nav-disclosure" aria-label="Toggle ML / Optimization project menu" aria-expanded="false" aria-controls="nav-ml-optimization"><span aria-hidden="true">▾</span></button></div><div class="dropdown" id="nav-ml-optimization"><a href="../ml-optimization/index.html">Overview</a><a href="../income-level-prediction-using-r/index.html">Income Level Prediction using R</a><a href="../building-footprint-extraction/index.html">Building Footprint Extraction</a><a href="../traveling-salesman/index.html">Traveling Salesman</a><a href="../water-conservation-routes/index.html">Water Conservation Routes</a><a href="../lead-service-review-prototype/index.html">Lead pipe prediction prototype</a></div></div><div class="nav-group"><div class="nav-heading"><a href="../development-and-etl/index.html">Development &amp; ETL</a><button type="button" class="nav-disclosure" aria-label="Toggle Development &amp; ETL project menu" aria-expanded="false" aria-controls="nav-development-and-etl"><span aria-hidden="true">▾</span></button></div><div class="dropdown" id="nav-development-and-etl"><a href="../development-and-etl/index.html">Overview</a><a href="../python-and-notebooks/index.html">Python Scripts &amp; Notebooks</a><a href="../sql-and-javascript-and-r/index.html">SQL &amp; JavaScript &amp; R</a><a href="../modelbuilder-and-arcmap-tool-in-vbnet/index.html">ModelBuilder &amp; ArcMap tool in VB.NET</a><a href="../interactive-maps-a-custom-js-app/index.html">Interactive Maps - A custom JS App</a><a href="../interactive-maps-experience-builder/index.html">Interactive Maps - Experience Builder</a><a href="../utility-inspection-etl/index.html">Utility inspection data pipeline</a><a href="../workforce-participation/index.html">An interactive workforce atlas</a><a href="../geospatial-processing-tools/index.html">Raster and document processing utilities</a></div></div><div class="nav-group"><div class="nav-heading"><a href="../additional-projects/index.html">Additional projects</a><button type="button" class="nav-disclosure" aria-label="Toggle Additional projects project menu" aria-expanded="false" aria-controls="nav-additional-projects"><span aria-hidden="true">▾</span></button></div><div class="dropdown" id="nav-additional-projects"><a href="../additional-projects/index.html">Overview</a><a href="../utility-inspection-etl/index.html">Utility inspection data pipeline</a><a href="../accessibility-analysis/index.html">Measuring access to community amenities</a><a href="../lead-service-review-prototype/index.html">Lead pipe prediction prototype</a><a href="../workforce-participation/index.html">An interactive workforce atlas</a><a href="../geospatial-processing-tools/index.html">Raster and document processing utilities</a></div></div><a href="../doctoral-research/index.html">Doctoral Research</a></nav></div></header><div class="rule" aria-hidden="true"></div>
+<div class="theme-toolbar shell" data-theme-toolbar hidden><button class="theme-toggle" type="button" role="switch" aria-checked="false" data-theme-toggle><span class="theme-toggle-label">Dark mode</span><span class="theme-toggle-track" aria-hidden="true"><span class="theme-toggle-thumb"></span></span><span class="theme-toggle-state" data-theme-state aria-hidden="true">Off</span></button></div>
+<main id="main" tabindex="-1"><div class="shell source-page"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="../example-network-access/index.html">Educational companion</a><span aria-hidden="true">/</span><span>test_demo.py</span></nav><h1>A worked network-access example: tests</h1><p>This source belongs to the new teaching example, not a recovered employer artifact or the original research implementation.</p><a class="text-link" href="../examples/network-access/test_demo.py">Open raw test_demo.py</a><pre class="code-block" tabindex="0" aria-label="test_demo.py"><code>import json
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
+import unittest
+
+from demo import Edge, Graph, exhaustive_shared_network, fixture, independent_shortest_paths, report, validate
+
+
+class NetworkAccessTests(unittest.TestCase):
+    def test_worked_example_has_expected_global_optimum(self):
+        graph = fixture()
+        self.assertEqual(independent_shortest_paths(graph)[&quot;cost&quot;], 12)
+        shared = exhaustive_shared_network(graph)
+        self.assertEqual(shared[&quot;cost&quot;], 10)
+        self.assertEqual(shared[&quot;subsets_checked&quot;], 32)
+        self.assertEqual({(edge.a, edge.b) for edge in shared[&quot;selected_edges&quot;]}, {(&quot;H&quot;, &quot;S&quot;), (&quot;H&quot;, &quot;T1&quot;), (&quot;H&quot;, &quot;T2&quot;)})
+
+    def test_baseline_deduplicates_shared_edges(self):
+        graph = Graph((Edge(&quot;S&quot;, &quot;H&quot;, 4), Edge(&quot;H&quot;, &quot;A&quot;, 1), Edge(&quot;H&quot;, &quot;B&quot;, 1)), &quot;S&quot;, (&quot;A&quot;, &quot;B&quot;))
+        baseline = independent_shortest_paths(graph)
+        self.assertEqual(baseline[&quot;path_sum&quot;], 10)
+        self.assertEqual(baseline[&quot;cost&quot;], 6)
+        self.assertEqual(exhaustive_shared_network(graph)[&quot;cost&quot;], 6)
+
+    def test_single_target_agrees_with_shortest_path(self):
+        graph = fixture()
+        graph = Graph(graph.edges, graph.source, (&quot;T1&quot;,))
+        self.assertEqual(independent_shortest_paths(graph)[&quot;cost&quot;], exhaustive_shared_network(graph)[&quot;cost&quot;])
+
+    def test_fixture_sizes_and_costs(self):
+        for targets, edges, cost in ((2, 5, 10), (3, 9, 13), (4, 13, 16)):
+            with self.subTest(targets=targets):
+                graph = fixture(targets)
+                self.assertEqual(len(graph.edges), edges)
+                result = exhaustive_shared_network(graph)
+                self.assertEqual(result[&quot;cost&quot;], cost)
+                self.assertEqual(result[&quot;subsets_checked&quot;], 2 ** edges)
+                self.assertLessEqual(result[&quot;cost&quot;], independent_shortest_paths(graph)[&quot;cost&quot;])
+
+    def test_disconnected_target_is_rejected_by_both_methods(self):
+        graph = Graph((Edge(&quot;S&quot;, &quot;A&quot;, 1), Edge(&quot;X&quot;, &quot;T&quot;, 1)), &quot;S&quot;, (&quot;T&quot;,))
+        for solver in (independent_shortest_paths, exhaustive_shared_network):
+            with self.assertRaisesRegex(ValueError, &quot;unreachable&quot;):
+                solver(graph)
+
+    def test_invalid_cost_duplicate_self_loop_and_empty_node(self):
+        for edges in ((Edge(&quot;S&quot;, &quot;T&quot;, -1),), (Edge(&quot;S&quot;, &quot;T&quot;, 0),), (Edge(&quot;S&quot;, &quot;T&quot;, True),),
+                      (Edge(&quot;S&quot;, &quot;T&quot;, 1.5),), (Edge(&quot;S&quot;, &quot;T&quot;, 1), Edge(&quot;T&quot;, &quot;S&quot;, 1)),
+                      (Edge(&quot;S&quot;, &quot;S&quot;, 1),), (Edge(&quot;&quot;, &quot;T&quot;, 1),)):
+            with self.subTest(edges=edges), self.assertRaises(ValueError):
+                validate(Graph(edges, &quot;S&quot;, (&quot;T&quot;,)))
+
+    def test_invalid_terminals(self):
+        graph = fixture()
+        for source, targets in ((&quot;missing&quot;, (&quot;T1&quot;,)), (&quot;S&quot;, ()), (&quot;S&quot;, (&quot;T1&quot;, &quot;T1&quot;)), (&quot;S&quot;, (&quot;S&quot;,)), (&quot;S&quot;, (&quot;missing&quot;,))):
+            with self.subTest(source=source, targets=targets), self.assertRaises(ValueError):
+                validate(Graph(graph.edges, source, targets))
+
+    def test_hard_cap_prevents_unbounded_exponential_search(self):
+        graph = Graph(tuple(Edge(&quot;S&quot;, f&quot;T{i}&quot;, 1) for i in range(17)), &quot;S&quot;, (&quot;T1&quot;,))
+        with self.assertRaisesRegex(ValueError, &quot;16&quot;):
+            exhaustive_shared_network(graph)
+
+    def test_input_order_does_not_change_solution(self):
+        graph = fixture()
+        reversed_graph = Graph(tuple(Edge(e.b, e.a, e.cost) for e in reversed(graph.edges)), &quot;S&quot;, tuple(reversed(graph.targets)))
+        self.assertEqual(exhaustive_shared_network(graph), exhaustive_shared_network(reversed_graph))
+
+    def test_selected_edge_objects_are_safe_for_unsorted_input(self):
+        graph = Graph((Edge(&quot;S&quot;, &quot;T1&quot;, 6), Edge(&quot;S&quot;, &quot;T2&quot;, 6), Edge(&quot;S&quot;, &quot;H&quot;, 4),
+                       Edge(&quot;H&quot;, &quot;T1&quot;, 3), Edge(&quot;H&quot;, &quot;T2&quot;, 3)), &quot;S&quot;, (&quot;T2&quot;, &quot;T1&quot;))
+        reversed_graph = Graph(tuple(Edge(edge.b, edge.a, edge.cost)
+                                     for edge in reversed(graph.edges)), &quot;S&quot;, (&quot;T1&quot;, &quot;T2&quot;))
+        normalized = validate(graph)
+        for solver, expected_cost in ((independent_shortest_paths, 12),
+                                      (exhaustive_shared_network, 10)):
+            with self.subTest(solver=solver.__name__):
+                result = solver(graph)
+                selected_edges = result[&quot;selected_edges&quot;]
+                self.assertEqual(sum(edge.cost for edge in selected_edges), expected_cost)
+                self.assertEqual(sum(edge.cost for edge in selected_edges), result[&quot;cost&quot;])
+                self.assertEqual(selected_edges, solver(reversed_graph)[&quot;selected_edges&quot;])
+                self.assertEqual(selected_edges, tuple(normalized.edges[index]
+                                                       for index in result[&quot;selected&quot;]))
+                self.assertEqual(len(selected_edges), len(set(selected_edges)))
+
+    def test_report_contract_and_environment_disclosure(self):
+        result = report()
+        self.assertIsInstance(result[&quot;title&quot;], str)
+        self.assertIn(&quot;synthetic&quot;, result[&quot;disclosure&quot;])
+        self.assertTrue(any(&quot;environment&quot; in note.lower() for note in result[&quot;notes&quot;]))
+        for metric in result[&quot;metrics&quot;]:
+            self.assertIsInstance(metric[&quot;label&quot;], str)
+            self.assertIsInstance(metric[&quot;value&quot;], (int, float, str))
+        for table in result[&quot;tables&quot;]:
+            self.assertIsInstance(table[&quot;heading&quot;], str)
+            self.assertTrue(all(isinstance(header, str) for header in table[&quot;headers&quot;]))
+            for row in table[&quot;rows&quot;]:
+                self.assertEqual(len(row), len(table[&quot;headers&quot;]))
+                self.assertTrue(all(isinstance(cell, (str, int, float)) for cell in row))
+
+    def test_cli_writes_reusable_json_report(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / &quot;report.json&quot;
+            subprocess.run([sys.executable, str(Path(__file__).with_name(&quot;demo.py&quot;)), &quot;--report&quot;, str(output)], check=True, capture_output=True)
+            self.assertEqual(json.loads(output.read_text(encoding=&quot;utf-8&quot;))[&quot;metrics&quot;][1][&quot;value&quot;], 10)
+
+    def test_cli_stdout_is_portable_json(self):
+        process = subprocess.run([sys.executable, str(Path(__file__).with_name(&quot;demo.py&quot;))], check=True, capture_output=True)
+        self.assertEqual(json.loads(process.stdout.decode(&quot;ascii&quot;))[&quot;metrics&quot;][1][&quot;value&quot;], 10)
+
+
+if __name__ == &quot;__main__&quot;:
+    unittest.main()
+</code></pre><p><a href="../example-network-access/index.html">← Results and run instructions</a></p></div></main>
+<div class="rule" aria-hidden="true"></div><footer class="site-footer"><div class="shell footer-inner"><p>All rights reserved © EK 2026</p></div></footer>
+<dialog class="image-viewer" aria-labelledby="viewer-title"><div class="viewer-header"><h2 id="viewer-title">Image viewer</h2><button type="button" data-viewer-close autofocus>Close <span aria-hidden="true">×</span></button></div><div class="viewer-controls" role="group" aria-label="Image controls"><div class="viewer-zoom-controls" role="group" aria-label="Zoom"><button type="button" data-zoom-out aria-label="Zoom out">− Zoom out</button><output class="zoom-level" aria-live="polite">100%</output><button type="button" data-zoom-in aria-label="Zoom in">+ Zoom in</button></div><div class="viewer-fit-controls"><button type="button" data-zoom-reset><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 3H3v6m12-6h6v6M3 15v6h6m12-6v6h-6"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>Fit to screen</button></div></div><p class="viewer-status" role="status"></p><div class="viewer-viewport" tabindex="0" aria-label="Image; scroll to pan when zoomed"><img class="viewer-image" alt=""></div><p class="viewer-caption"></p></dialog></body></html>

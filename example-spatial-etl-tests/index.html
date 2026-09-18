@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en"><head>
+
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A reproducible spatial ETL example: tests | Esad Kopru</title>
+<meta name="description" content="Inspect the public-safe educational companion test_demo.py. Synthetic example, separate from the original professional or research implementation."><meta name="theme-color" content="#e0e9f0"><meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="canonical" href="https://www.ekopru.com/example-spatial-etl-tests/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Esad Kopru"><meta property="og:title" content="A reproducible spatial ETL example: tests | Esad Kopru"><meta property="og:description" content="Inspect the public-safe educational companion test_demo.py. Synthetic example, separate from the original professional or research implementation."><meta property="og:url" content="https://www.ekopru.com/example-spatial-etl-tests/"><meta property="og:image" content="https://www.ekopru.com/assets/social/utility-inspection-etl.png?v=3998fe1b7a0f"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:type" content="image/png"><meta property="og:image:alt" content="A reproducible spatial ETL example: tests | Esad Kopru portfolio"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://www.ekopru.com/assets/social/utility-inspection-etl.png?v=3998fe1b7a0f"><meta name="twitter:image:alt" content="A reproducible spatial ETL example: tests | Esad Kopru portfolio">
+<link rel="icon" href="../assets/efk-logo.avif"><script src="../theme.js?v=5218a73bfc30"></script><link rel="stylesheet" href="../styles.css?v=e1254d9cef71"><script src="../script.js?v=e48c5a6c7147" defer></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfilePage","name":"A reproducible spatial ETL example: tests | Esad Kopru","url":"https://www.ekopru.com/example-spatial-etl-tests/","mainEntity":{"@type":"Person","name":"Esad Kopru","url":"https://www.ekopru.com","sameAs":["https://github.com/efkopru"],"knowsAbout":["Geospatial data science","Geospatial data engineering","Geospatial software engineering"],"alumniOf":[{"@type":"CollegeOrUniversity","name":"The University of Texas at Dallas"}]}}</script>
+</head><body data-root="../"><a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header"><div class="shell header-inner"><a class="brand" href="../index.html" aria-label="Esad Kopru home"><img src="../assets/efk-logo.avif" width="101" height="48" alt="EFK Portfolio"></a><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button><nav id="site-nav" class="site-nav" aria-label="Main navigation"><a href="../index.html">Home</a><a href="../contact/index.html">Contact</a><a href="../resume/index.html">Resume</a><div class="nav-group"><div class="nav-heading"><a href="../spatial-and-data-analysis/index.html">Spatial &amp; Data Analysis</a><button type="button" class="nav-disclosure" aria-label="Toggle Spatial &amp; Data Analysis project menu" aria-expanded="false" aria-controls="nav-spatial-and-data-analysis"><span aria-hidden="true">▾</span></button></div><div class="dropdown" id="nav-spatial-and-data-analysis"><a href="../spatial-and-data-analysis/index.html">Overview</a><a href="../spatial-analysis/index.html">Spatial Analysis</a><a href="../arcgis-enterprise-and-online/index.html">ArcGIS Enterprise and Online</a><a href="../qgis/index.html">QGIS</a><a href="../code-enforcement-violations/index.html">Code Enforcement Violations</a><a href="../crime-analysis/index.html">Crime Analysis</a><a href="../accessibility-analysis/index.html">Measuring access to community amenities</a></div></div><div class="nav-group"><div class="nav-heading"><a href="../ml-optimization/index.html">ML / Optimization</a><button type="button" class="nav-disclosure" aria-label="Toggle ML / Optimization project menu" aria-expanded="false" aria-controls="nav-ml-optimization"><span aria-hidden="true">▾</span></button></div><div class="dropdown" id="nav-ml-optimization"><a href="../ml-optimization/index.html">Overview</a><a href="../income-level-prediction-using-r/index.html">Income Level Prediction using R</a><a href="../building-footprint-extraction/index.html">Building Footprint Extraction</a><a href="../traveling-salesman/index.html">Traveling Salesman</a><a href="../water-conservation-routes/index.html">Water Conservation Routes</a><a href="../lead-service-review-prototype/index.html">Lead pipe prediction prototype</a></div></div><div class="nav-group"><div class="nav-heading"><a href="../development-and-etl/index.html">Development &amp; ETL</a><button type="button" class="nav-disclosure" aria-label="Toggle Development &amp; ETL project menu" aria-expanded="false" aria-controls="nav-development-and-etl"><span aria-hidden="true">▾</span></button></div><div class="dropdown" id="nav-development-and-etl"><a href="../development-and-etl/index.html">Overview</a><a href="../python-and-notebooks/index.html">Python Scripts &amp; Notebooks</a><a href="../sql-and-javascript-and-r/index.html">SQL &amp; JavaScript &amp; R</a><a href="../modelbuilder-and-arcmap-tool-in-vbnet/index.html">ModelBuilder &amp; ArcMap tool in VB.NET</a><a href="../interactive-maps-a-custom-js-app/index.html">Interactive Maps - A custom JS App</a><a href="../interactive-maps-experience-builder/index.html">Interactive Maps - Experience Builder</a><a href="../utility-inspection-etl/index.html">Utility inspection data pipeline</a><a href="../workforce-participation/index.html">An interactive workforce atlas</a><a href="../geospatial-processing-tools/index.html">Raster and document processing utilities</a></div></div><div class="nav-group"><div class="nav-heading"><a href="../additional-projects/index.html">Additional projects</a><button type="button" class="nav-disclosure" aria-label="Toggle Additional projects project menu" aria-expanded="false" aria-controls="nav-additional-projects"><span aria-hidden="true">▾</span></button></div><div class="dropdown" id="nav-additional-projects"><a href="../additional-projects/index.html">Overview</a><a href="../utility-inspection-etl/index.html">Utility inspection data pipeline</a><a href="../accessibility-analysis/index.html">Measuring access to community amenities</a><a href="../lead-service-review-prototype/index.html">Lead pipe prediction prototype</a><a href="../workforce-participation/index.html">An interactive workforce atlas</a><a href="../geospatial-processing-tools/index.html">Raster and document processing utilities</a></div></div><a href="../doctoral-research/index.html">Doctoral Research</a></nav></div></header><div class="rule" aria-hidden="true"></div>
+<div class="theme-toolbar shell" data-theme-toolbar hidden><button class="theme-toggle" type="button" role="switch" aria-checked="false" data-theme-toggle><span class="theme-toggle-label">Dark mode</span><span class="theme-toggle-track" aria-hidden="true"><span class="theme-toggle-thumb"></span></span><span class="theme-toggle-state" data-theme-state aria-hidden="true">Off</span></button></div>
+<main id="main" tabindex="-1"><div class="shell source-page"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="../example-spatial-etl/index.html">Educational companion</a><span aria-hidden="true">/</span><span>test_demo.py</span></nav><h1>A reproducible spatial ETL example: tests</h1><p>This source belongs to the new teaching example, not a recovered employer artifact or the original research implementation.</p><a class="text-link" href="../examples/spatial-etl/test_demo.py">Open raw test_demo.py</a><pre class="code-block" tabindex="0" aria-label="test_demo.py"><code>&quot;&quot;&quot;Runnable regression tests for the synthetic ETL reconstruction.&quot;&quot;&quot;
+
+from dataclasses import asdict, replace
+import json
+from pathlib import Path
+import sqlite3
+import unittest
+
+import demo
+
+
+class ETLTests(unittest.TestCase):
+    def setUp(self):
+        self.rows = json.loads(Path(__file__).with_name(&quot;records.json&quot;).read_text(encoding=&quot;utf-8&quot;))
+        self.valid, self.rejected = demo.validate_batch(self.rows)
+        self.connection = sqlite3.connect(&quot;:memory:&quot;)
+        self.addCleanup(self.connection.close)
+        demo.initialize(self.connection)
+
+    def test_fixture_validation_and_original_quarantine(self):
+        self.assertEqual(len(self.valid), 4)
+        self.assertEqual(len(self.rejected), 8)
+        self.assertEqual(self.rejected[0][&quot;record&quot;], self.rows[4])
+        self.assertEqual([item[&quot;row&quot;] for item in self.rejected], list(range(5, 13)))
+
+    def test_schema_types_and_required_fields(self):
+        bad_rows = [None, 42, [], {}, {**self.rows[0], &quot;unexpected&quot;: True}]
+        for field in demo.FIELDS:
+            missing = dict(self.rows[0])
+            missing.pop(field)
+            bad_rows.append(missing)
+        for raw in bad_rows:
+            with self.subTest(raw=raw), self.assertRaises(ValueError):
+                demo.validate_record(raw)
+
+    def test_array_required(self):
+        with self.assertRaisesRegex(ValueError, &quot;JSON array&quot;):
+            demo.validate_batch({&quot;items&quot;: self.rows})
+
+    def test_non_object_rows_quarantined(self):
+        accepted, rejected = demo.validate_batch([None, &quot;text&quot;, 25])
+        self.assertEqual(accepted, [])
+        self.assertEqual(len(rejected), 3)
+
+    def test_coordinate_boundaries_and_normalization(self):
+        record = demo.validate_record({**self.rows[0], &quot;x&quot;: 0, &quot;y&quot;: 10000})
+        self.assertEqual((record.x, record.y), (0.0, 10000.0))
+        self.assertIsInstance(record.x, float)
+
+    def test_non_numeric_nonfinite_and_out_of_range_coordinates(self):
+        for axis in (&quot;x&quot;, &quot;y&quot;):
+            for value in (True, False, None, &quot;100&quot;, float(&quot;nan&quot;), float(&quot;inf&quot;), -float(&quot;inf&quot;), -0.1, 10000.1, 10**1000):
+                with self.subTest(axis=axis, value=value), self.assertRaises(ValueError):
+                    demo.validate_record({**self.rows[0], axis: value})
+
+    def test_crs_id_condition_timestamp_revision_contracts(self):
+        cases = {
+            &quot;crs&quot;: [None, &quot;UNKNOWN&quot;, &quot;local:demo_cartesian&quot;],
+            &quot;id&quot;: [None, &quot;SYN-1&quot;, &quot;REAL-001&quot;, 1, []],
+            &quot;condition&quot;: [None, &quot;unknown&quot;, []],
+            &quot;inspected_at&quot;: [None, &quot;2026-02-30T10:00:00Z&quot;, &quot;2026-01-01&quot;, &quot;2026-01-01T09:00:00+00:00&quot;, &quot;2026-01-01T25:00:00Z&quot;],
+            &quot;revision&quot;: [True, False, 1.0, &quot;1&quot;, 0, -1, 2**63],
+        }
+        for field, values in cases.items():
+            for value in values:
+                with self.subTest(field=field, value=value), self.assertRaises(ValueError):
+                    demo.validate_record({**self.rows[0], field: value})
+
+    def test_duplicate_policy_is_order_independent(self):
+        original = self.rows[0]
+        other = {**original, &quot;x&quot;: 9000}
+        for rows in ([original, other], [other, original]):
+            valid, rejected = demo.validate_batch(rows)
+            self.assertEqual(valid, [])
+            self.assertEqual(len(rejected), 2)
+            self.assertTrue(all(&quot;duplicate id&quot; in item[&quot;reason&quot;] for item in rejected))
+
+    def test_idempotent_replay_has_no_writes(self):
+        initial = demo.load(self.connection, self.valid)
+        self.assertEqual(initial, {&quot;inserted&quot;: 4, &quot;updated&quot;: 0, &quot;unchanged&quot;: 0, &quot;stale&quot;: 0})
+        before = demo.snapshot(self.connection)
+        writes = self.connection.total_changes
+        replay = demo.load(self.connection, self.valid)
+        self.assertEqual(replay[&quot;unchanged&quot;], 4)
+        self.assertEqual(demo.snapshot(self.connection), before)
+        self.assertEqual(self.connection.total_changes, writes)
+
+    def test_updates_and_stale_revisions(self):
+        demo.load(self.connection, self.valid)
+        updated = replace(self.valid[0], revision=2, x=1100, inspected_at=&quot;2026-01-02T09:00:00Z&quot;)
+        counts = demo.load(self.connection, [updated])
+        self.assertEqual(counts[&quot;updated&quot;], 1)
+        before = demo.snapshot(self.connection)
+        writes = self.connection.total_changes
+        stale = demo.load(self.connection, [self.valid[0]])
+        self.assertEqual(stale[&quot;stale&quot;], 1)
+        self.assertEqual(demo.snapshot(self.connection), before)
+        self.assertEqual(self.connection.total_changes, writes)
+
+    def test_injected_failure_rolls_back_updates_and_inserts_then_recovers(self):
+        demo.load(self.connection, self.valid)
+        before = demo.snapshot(self.connection)
+        updates = [replace(self.valid[0], revision=2, condition=&quot;attention&quot;), replace(self.valid[1], id=&quot;SYN-099&quot;)]
+        with self.assertRaises(demo.InjectedFailure):
+            demo.load(self.connection, updates, fail_after=2)
+        self.assertEqual(demo.snapshot(self.connection), before)
+        self.assertFalse(self.connection.in_transaction)
+        result = demo.load(self.connection, updates)
+        self.assertEqual((result[&quot;inserted&quot;], result[&quot;updated&quot;]), (1, 1))
+        self.assertEqual(len(demo.snapshot(self.connection)), 5)
+
+    def test_revision_conflict_rolls_back_entire_batch(self):
+        demo.load(self.connection, self.valid)
+        before = demo.snapshot(self.connection)
+        new = replace(self.valid[1], id=&quot;SYN-099&quot;)
+        conflicting = replace(self.valid[0], x=2000)
+        with self.assertRaisesRegex(demo.RecordConflict, &quot;unchanged revision&quot;):
+            demo.load(self.connection, [new, conflicting])
+        self.assertEqual(demo.snapshot(self.connection), before)
+
+    def test_backwards_inspection_time_rolls_back(self):
+        demo.load(self.connection, self.valid)
+        before = demo.snapshot(self.connection)
+        older_time = replace(self.valid[0], revision=2, inspected_at=&quot;2025-12-31T09:00:00Z&quot;)
+        with self.assertRaisesRegex(demo.RecordConflict, &quot;older inspection time&quot;):
+            demo.load(self.connection, [older_time])
+        self.assertEqual(demo.snapshot(self.connection), before)
+
+    def test_loader_revalidates_callers_and_duplicate_ids(self):
+        for records in ([replace(self.valid[0], x=-1)], [self.valid[0], self.valid[0]]):
+            with self.assertRaisesRegex(ValueError, &quot;validated&quot;):
+                demo.load(self.connection, records)
+        self.assertEqual(demo.snapshot(self.connection), [])
+
+    def test_invalid_fail_after_and_active_transaction_protected(self):
+        for value in (0, -1, 5, True, 1.1):
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                demo.load(self.connection, self.valid, fail_after=value)
+        self.connection.execute(&quot;BEGIN&quot;)
+        with self.assertRaisesRegex(ValueError, &quot;active transaction&quot;):
+            demo.load(self.connection, self.valid)
+        self.assertTrue(self.connection.in_transaction)
+        self.connection.rollback()
+
+    def test_structured_logging(self):
+        with self.assertLogs(&quot;spatial_etl&quot;, level=&quot;INFO&quot;) as logged:
+            demo.load(self.connection, self.valid)
+            with self.assertRaises(demo.InjectedFailure):
+                demo.load(self.connection, self.valid, fail_after=1)
+        events = [json.loads(record.getMessage()) for record in logged.records]
+        self.assertTrue(any(item[&quot;event&quot;] == &quot;load_committed&quot; and item[&quot;inserted&quot;] == 4 for item in events))
+        self.assertTrue(any(item[&quot;event&quot;] == &quot;load_rolled_back&quot; for item in events))
+
+    def test_empty_batch_is_noop(self):
+        self.assertEqual(demo.load(self.connection, []), {&quot;inserted&quot;: 0, &quot;updated&quot;: 0, &quot;unchanged&quot;: 0, &quot;stale&quot;: 0})
+        self.assertEqual(demo.snapshot(self.connection), [])
+
+    def test_report_matches_checked_in_actual_run(self):
+        actual = demo.run_demo()
+        expected = json.loads(Path(__file__).with_name(&quot;report.json&quot;).read_text(encoding=&quot;utf-8&quot;))
+        self.assertEqual(actual, expected)
+        self.assertEqual(actual, demo.run_demo())
+        self.assertTrue(all(actual[&quot;checks&quot;].values()))
+        self.assertEqual(len(actual[&quot;quarantine&quot;]), 8)
+        self.assertEqual(len(actual[&quot;tables&quot;][2][&quot;rows&quot;]), 5)
+        for metric in actual[&quot;metrics&quot;]:
+            self.assertIsInstance(metric[&quot;label&quot;], str)
+            self.assertIsInstance(metric[&quot;value&quot;], str)
+        for table in actual[&quot;tables&quot;]:
+            for row in table[&quot;rows&quot;]:
+                self.assertEqual(len(row), len(table[&quot;headers&quot;]))
+                self.assertTrue(all(isinstance(value, (str, int, float)) for value in row))
+
+
+if __name__ == &quot;__main__&quot;:
+    unittest.main()
+</code></pre><p><a href="../example-spatial-etl/index.html">← Results and run instructions</a></p></div></main>
+<div class="rule" aria-hidden="true"></div><footer class="site-footer"><div class="shell footer-inner"><p>All rights reserved © EK 2026</p></div></footer>
+<dialog class="image-viewer" aria-labelledby="viewer-title"><div class="viewer-header"><h2 id="viewer-title">Image viewer</h2><button type="button" data-viewer-close autofocus>Close <span aria-hidden="true">×</span></button></div><div class="viewer-controls" role="group" aria-label="Image controls"><div class="viewer-zoom-controls" role="group" aria-label="Zoom"><button type="button" data-zoom-out aria-label="Zoom out">− Zoom out</button><output class="zoom-level" aria-live="polite">100%</output><button type="button" data-zoom-in aria-label="Zoom in">+ Zoom in</button></div><div class="viewer-fit-controls"><button type="button" data-zoom-reset><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 3H3v6m12-6h6v6M3 15v6h6m12-6v6h-6"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>Fit to screen</button></div></div><p class="viewer-status" role="status"></p><div class="viewer-viewport" tabindex="0" aria-label="Image; scroll to pan when zoomed"><img class="viewer-image" alt=""></div><p class="viewer-caption"></p></dialog></body></html>

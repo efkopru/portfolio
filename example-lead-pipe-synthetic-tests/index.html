@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en"><head>
+
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inspect the synthetic ML evaluation: tests | Esad Kopru</title>
+<meta name="description" content="Inspect the public-safe educational companion test_demo.py. Synthetic example, separate from the original professional or research implementation."><meta name="theme-color" content="#e0e9f0"><meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="canonical" href="https://www.ekopru.com/example-lead-pipe-synthetic-tests/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Esad Kopru"><meta property="og:title" content="Inspect the synthetic ML evaluation: tests | Esad Kopru"><meta property="og:description" content="Inspect the public-safe educational companion test_demo.py. Synthetic example, separate from the original professional or research implementation."><meta property="og:url" content="https://www.ekopru.com/example-lead-pipe-synthetic-tests/"><meta property="og:image" content="https://www.ekopru.com/assets/social/lead-service-review-prototype.png?v=060bab72c44c"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:type" content="image/png"><meta property="og:image:alt" content="Inspect the synthetic ML evaluation: tests | Esad Kopru portfolio"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://www.ekopru.com/assets/social/lead-service-review-prototype.png?v=060bab72c44c"><meta name="twitter:image:alt" content="Inspect the synthetic ML evaluation: tests | Esad Kopru portfolio">
+<link rel="icon" href="../assets/efk-logo.avif"><script src="../theme.js?v=5218a73bfc30"></script><link rel="stylesheet" href="../styles.css?v=e1254d9cef71"><script src="../script.js?v=e48c5a6c7147" defer></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfilePage","name":"Inspect the synthetic ML evaluation: tests | Esad Kopru","url":"https://www.ekopru.com/example-lead-pipe-synthetic-tests/","mainEntity":{"@type":"Person","name":"Esad Kopru","url":"https://www.ekopru.com","sameAs":["https://github.com/efkopru"],"knowsAbout":["Geospatial data science","Geospatial data engineering","Geospatial software engineering"],"alumniOf":[{"@type":"CollegeOrUniversity","name":"The University of Texas at Dallas"}]}}</script>
+</head><body data-root="../"><a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header"><div class="shell header-inner"><a class="brand" href="../index.html" aria-label="Esad Kopru home"><img src="../assets/efk-logo.avif" width="101" height="48" alt="EFK Portfolio"></a><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button><nav id="site-nav" class="site-nav" aria-label="Main navigation"><a href="../index.html">Home</a><a href="../contact/index.html">Contact</a><a href="../resume/index.html">Resume</a><div class="nav-group"><div class="nav-heading"><a href="../spatial-and-data-analysis/index.html">Spatial &amp; Data Analysis</a><button type="button" class="nav-disclosure" aria-label="Toggle Spatial &amp; Data Analysis project menu" aria-expanded="false" aria-controls="nav-spatial-and-data-analysis"><span aria-hidden="true">▾</span></button></div><div class="dropdown" id="nav-spatial-and-data-analysis"><a href="../spatial-and-data-analysis/index.html">Overview</a><a href="../spatial-analysis/index.html">Spatial Analysis</a><a href="../arcgis-enterprise-and-online/index.html">ArcGIS Enterprise and Online</a><a href="../qgis/index.html">QGIS</a><a href="../code-enforcement-violations/index.html">Code Enforcement Violations</a><a href="../crime-analysis/index.html">Crime Analysis</a><a href="../accessibility-analysis/index.html">Measuring access to community amenities</a></div></div><div class="nav-group"><div class="nav-heading"><a href="../ml-optimization/index.html">ML / Optimization</a><button type="button" class="nav-disclosure" aria-label="Toggle ML / Optimization project menu" aria-expanded="false" aria-controls="nav-ml-optimization"><span aria-hidden="true">▾</span></button></div><div class="dropdown" id="nav-ml-optimization"><a href="../ml-optimization/index.html">Overview</a><a href="../income-level-prediction-using-r/index.html">Income Level Prediction using R</a><a href="../building-footprint-extraction/index.html">Building Footprint Extraction</a><a href="../traveling-salesman/index.html">Traveling Salesman</a><a href="../water-conservation-routes/index.html">Water Conservation Routes</a><a href="../lead-service-review-prototype/index.html">Lead pipe prediction prototype</a></div></div><div class="nav-group"><div class="nav-heading"><a href="../development-and-etl/index.html">Development &amp; ETL</a><button type="button" class="nav-disclosure" aria-label="Toggle Development &amp; ETL project menu" aria-expanded="false" aria-controls="nav-development-and-etl"><span aria-hidden="true">▾</span></button></div><div class="dropdown" id="nav-development-and-etl"><a href="../development-and-etl/index.html">Overview</a><a href="../python-and-notebooks/index.html">Python Scripts &amp; Notebooks</a><a href="../sql-and-javascript-and-r/index.html">SQL &amp; JavaScript &amp; R</a><a href="../modelbuilder-and-arcmap-tool-in-vbnet/index.html">ModelBuilder &amp; ArcMap tool in VB.NET</a><a href="../interactive-maps-a-custom-js-app/index.html">Interactive Maps - A custom JS App</a><a href="../interactive-maps-experience-builder/index.html">Interactive Maps - Experience Builder</a><a href="../utility-inspection-etl/index.html">Utility inspection data pipeline</a><a href="../workforce-participation/index.html">An interactive workforce atlas</a><a href="../geospatial-processing-tools/index.html">Raster and document processing utilities</a></div></div><div class="nav-group"><div class="nav-heading"><a href="../additional-projects/index.html">Additional projects</a><button type="button" class="nav-disclosure" aria-label="Toggle Additional projects project menu" aria-expanded="false" aria-controls="nav-additional-projects"><span aria-hidden="true">▾</span></button></div><div class="dropdown" id="nav-additional-projects"><a href="../additional-projects/index.html">Overview</a><a href="../utility-inspection-etl/index.html">Utility inspection data pipeline</a><a href="../accessibility-analysis/index.html">Measuring access to community amenities</a><a href="../lead-service-review-prototype/index.html">Lead pipe prediction prototype</a><a href="../workforce-participation/index.html">An interactive workforce atlas</a><a href="../geospatial-processing-tools/index.html">Raster and document processing utilities</a></div></div><a href="../doctoral-research/index.html">Doctoral Research</a></nav></div></header><div class="rule" aria-hidden="true"></div>
+<div class="theme-toolbar shell" data-theme-toolbar hidden><button class="theme-toggle" type="button" role="switch" aria-checked="false" data-theme-toggle><span class="theme-toggle-label">Dark mode</span><span class="theme-toggle-track" aria-hidden="true"><span class="theme-toggle-thumb"></span></span><span class="theme-toggle-state" data-theme-state aria-hidden="true">Off</span></button></div>
+<main id="main" tabindex="-1"><div class="shell source-page"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="../example-lead-pipe-synthetic/index.html">Educational companion</a><span aria-hidden="true">/</span><span>test_demo.py</span></nav><h1>Inspect the synthetic ML evaluation: tests</h1><p>This source belongs to the new teaching example, not a recovered employer artifact or the original research implementation.</p><a class="text-link" href="../examples/lead-pipe-synthetic/test_demo.py">Open raw test_demo.py</a><pre class="code-block" tabindex="0" aria-label="test_demo.py"><code>&quot;&quot;&quot;Checks for educational code and arithmetic, not a utility model validation.&quot;&quot;&quot;
+
+import json
+import math
+import subprocess
+import sys
+import tempfile
+import unittest
+import xml.etree.ElementTree as ET
+from dataclasses import replace
+from pathlib import Path
+
+from demo import (calibration_bins, chart_svg, error_slices, evaluate, features, fit,
+                  grouped_split, make_records, predict, run, sigmoid)
+
+
+class SyntheticCompanionTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.records = make_records()
+        cls.train, cls.test = grouped_split(cls.records)
+        cls.weights = fit(cls.train)
+        cls.report = run()
+
+    def test_generation_is_deterministic(self):
+        self.assertEqual(self.records, make_records())
+        self.assertNotEqual(self.records, make_records(seed=99))
+
+    def test_split_is_input_order_independent(self):
+        self.assertEqual((self.train, self.test), grouped_split(list(reversed(self.records))))
+
+    def test_groups_and_properties_do_not_leak(self):
+        for attribute in (&quot;group_id&quot;, &quot;property_id&quot;):
+            self.assertFalse({getattr(row, attribute) for row in self.train} &amp;
+                             {getattr(row, attribute) for row in self.test})
+        self.assertEqual(len(self.train) + len(self.test), 800)
+        self.assertEqual(len(self.test), 200)
+        self.assertEqual(self.report[&quot;split&quot;][&quot;train_groups&quot;], 120)
+        self.assertEqual(self.report[&quot;split&quot;][&quot;test_groups&quot;], 40)
+
+    def test_duplicate_property_rows_are_rejected(self):
+        for duplicate in (self.records[0], replace(self.records[0], group_id=&quot;other&quot;)):
+            with self.assertRaises(ValueError):
+                grouped_split(self.records + [duplicate])
+
+    def test_labels_and_identifiers_are_not_features(self):
+        row = self.records[0]
+        changed = replace(row, target=1 - row.target, property_id=&quot;other&quot;, group_id=&quot;other&quot;)
+        self.assertEqual(features(row), features(changed))
+
+    def test_keyword_is_noisy_evidence_not_a_label(self):
+        self.assertTrue(any(row.keyword_evidence != row.target for row in self.records))
+
+    def test_missing_age_is_explicit_and_finite(self):
+        values = features(replace(self.records[0], installation_age=None))
+        self.assertEqual(values[-1], 1.0)
+        self.assertEqual(values[1], 0.0)
+        self.assertTrue(all(math.isfinite(value) for value in values))
+
+    def test_sigmoid_is_stable(self):
+        self.assertEqual(sigmoid(1000), 1.0)
+        self.assertEqual(sigmoid(-1000), 0.0)
+
+    def test_fit_is_repeatable_and_excludes_test_targets(self):
+        self.assertEqual(self.weights, fit(self.train))
+        test_ids = {row.property_id for row in self.test}
+        changed = [replace(row, target=1 - row.target) if row.property_id in test_ids else row
+                   for row in self.records]
+        changed_train, changed_test = grouped_split(changed)
+        self.assertEqual(changed_train, self.train)
+        self.assertEqual({row.property_id for row in changed_test}, test_ids)
+        self.assertEqual(self.weights, fit(changed_train))
+
+    def test_metrics_match_hand_calculation(self):
+        metrics = evaluate([0, 1], [0.25, 0.75])
+        self.assertAlmostEqual(metrics[&quot;brier_score&quot;], 0.0625)
+        self.assertAlmostEqual(metrics[&quot;log_loss&quot;], -math.log(0.75))
+        self.assertEqual(metrics[&quot;accuracy&quot;], 1)
+
+    def test_confusion_arithmetic_and_threshold_boundary(self):
+        metrics = evaluate([0, 1, 0, 1], [0.1, 0.8, 0.5, 0.2])
+        self.assertEqual(metrics[&quot;confusion&quot;], {&quot;true_negative&quot;: 1, &quot;true_positive&quot;: 1,
+                                                &quot;false_negative&quot;: 1, &quot;false_positive&quot;: 1})
+        self.assertEqual(metrics[&quot;accuracy&quot;], 0.5)
+
+    def test_reliability_includes_one_and_handles_empty_bins(self):
+        bins = calibration_bins([0, 1, 0, 1], [0, 0.2, 0.99, 1.0])
+        self.assertEqual([item[&quot;count&quot;] for item in bins], [1, 1, 0, 0, 2])
+        self.assertIsNone(bins[2][&quot;observed_fraction&quot;])
+        self.assertIsNone(bins[2][&quot;mean_prediction&quot;])
+        self.assertAlmostEqual(bins[4][&quot;mean_prediction&quot;], 0.995)
+        self.assertEqual(bins[4][&quot;observed_fraction&quot;], 0.5)
+
+    def test_all_reliability_records_are_counted_once(self):
+        bins = self.report[&quot;reliability_bins&quot;]
+        self.assertEqual(sum(item[&quot;count&quot;] for item in bins), 200)
+        self.assertAlmostEqual(sum(item[&quot;count&quot;] * item[&quot;observed_fraction&quot;] for item in bins),
+                               self.report[&quot;logistic_model&quot;][&quot;positive_labels&quot;])
+
+    def test_baseline_is_training_prevalence_only(self):
+        prevalence = sum(row.target for row in self.train) / len(self.train)
+        self.assertEqual(self.report[&quot;training_prevalence&quot;], prevalence)
+        expected = evaluate([row.target for row in self.test], [prevalence] * len(self.test))
+        self.assertEqual(self.report[&quot;training_prevalence_baseline&quot;], expected)
+
+    def test_intentionally_learnable_signal(self):
+        learned = self.report[&quot;logistic_model&quot;]
+        baseline = self.report[&quot;training_prevalence_baseline&quot;]
+        self.assertLess(learned[&quot;log_loss&quot;], baseline[&quot;log_loss&quot;])
+        self.assertLess(learned[&quot;brier_score&quot;], baseline[&quot;brier_score&quot;])
+
+    def test_error_slice_partitions_and_confusion_totals(self):
+        slices = self.report[&quot;error_slices&quot;]
+        for pair in (slices[:2], slices[2:]):
+            self.assertEqual(sum(item[&quot;metrics&quot;][&quot;n&quot;] for item in pair), 200)
+            for key, value in self.report[&quot;logistic_model&quot;][&quot;confusion&quot;].items():
+                self.assertEqual(sum(item[&quot;metrics&quot;][&quot;confusion&quot;][key] for item in pair), value)
+        empty = error_slices([replace(self.test[0], installation_age=None)], [0.5])
+        self.assertIsNone(empty[0][&quot;metrics&quot;])
+
+    def test_report_is_deterministic_and_presentation_complete(self):
+        self.assertEqual(self.report, run())
+        for key in (&quot;title&quot;, &quot;disclosure&quot;, &quot;metrics&quot;, &quot;tables&quot;, &quot;notes&quot;):
+            self.assertTrue(self.report[key])
+        for table in self.report[&quot;tables&quot;]:
+            self.assertTrue(all(len(row) == len(table[&quot;headers&quot;]) for row in table[&quot;rows&quot;]))
+        json.dumps(self.report, allow_nan=False)
+        self.assertIn(&quot;not the original&quot;, self.report[&quot;disclosure&quot;])
+
+    def test_svg_is_valid_and_values_come_from_report(self):
+        svg = chart_svg(self.report)
+        root = ET.fromstring(svg)
+        self.assertEqual(root.attrib[&quot;role&quot;], &quot;img&quot;)
+        self.assertIn(f&#39;{self.report[&quot;logistic_model&quot;][&quot;brier_score&quot;]:.4f}&#39;, svg)
+        self.assertIn(f&#39;{self.report[&quot;training_prevalence_baseline&quot;][&quot;log_loss&quot;]:.4f}&#39;, svg)
+        self.assertIn(&quot;not field-validated&quot;, svg)
+        self.assertNotIn(&quot;&lt;script&quot;, svg)
+
+    def test_published_artifacts_match_default_run(self):
+        folder = Path(__file__).resolve().parent
+        self.assertEqual(json.loads((folder / &quot;report.json&quot;).read_text(encoding=&quot;utf-8&quot;)),
+                         self.report)
+        figure = folder.parent.parent / &quot;assets&quot; / &quot;evidence&quot; / &quot;lead-pipe-evaluation.svg&quot;
+        self.assertEqual(figure.read_text(encoding=&quot;utf-8&quot;), chart_svg(self.report))
+
+    def test_cli_exports_match_actual_run(self):
+        with tempfile.TemporaryDirectory() as directory:
+            destination = Path(directory)
+            result = subprocess.run([sys.executable, str(Path(__file__).with_name(&quot;demo.py&quot;)),
+                                     &quot;--report&quot;, str(destination / &quot;report.json&quot;),
+                                     &quot;--chart&quot;, str(destination / &quot;chart.svg&quot;)],
+                                    check=True, capture_output=True, text=True)
+            self.assertEqual(json.loads(result.stdout), self.report)
+            self.assertEqual(json.loads((destination / &quot;report.json&quot;).read_text()), self.report)
+            self.assertEqual((destination / &quot;chart.svg&quot;).read_text(), chart_svg(self.report))
+
+    def test_invalid_inputs_are_rejected(self):
+        for fraction in (0, 1, -1):
+            with self.assertRaises(ValueError):
+                grouped_split(self.records, test_fraction=fraction)
+        with self.assertRaises(ValueError):
+            fit([])
+        with self.assertRaises(ValueError):
+            fit(self.train, rate=float(&quot;nan&quot;))
+        with self.assertRaises(ValueError):
+            predict([1.0], self.test[0])
+        for targets, probabilities in (([], []), ([0], [0.1, 0.2]), ([2], [0.1]),
+                                       ([0], [float(&quot;nan&quot;)]), ([1], [1.1])):
+            with self.assertRaises(ValueError):
+                evaluate(targets, probabilities)
+        for invalid in (0, -1, 1.5):
+            with self.assertRaises(ValueError):
+                calibration_bins([0], [0.1], bins=invalid)
+        with self.assertRaises(ValueError):
+            evaluate([0], [0.5], threshold=float(&quot;nan&quot;))
+
+
+if __name__ == &quot;__main__&quot;:
+    unittest.main()
+</code></pre><p><a href="../example-lead-pipe-synthetic/index.html">← Results and run instructions</a></p></div></main>
+<div class="rule" aria-hidden="true"></div><footer class="site-footer"><div class="shell footer-inner"><p>All rights reserved © EK 2026</p></div></footer>
+<dialog class="image-viewer" aria-labelledby="viewer-title"><div class="viewer-header"><h2 id="viewer-title">Image viewer</h2><button type="button" data-viewer-close autofocus>Close <span aria-hidden="true">×</span></button></div><div class="viewer-controls" role="group" aria-label="Image controls"><div class="viewer-zoom-controls" role="group" aria-label="Zoom"><button type="button" data-zoom-out aria-label="Zoom out">− Zoom out</button><output class="zoom-level" aria-live="polite">100%</output><button type="button" data-zoom-in aria-label="Zoom in">+ Zoom in</button></div><div class="viewer-fit-controls"><button type="button" data-zoom-reset><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 3H3v6m12-6h6v6M3 15v6h6m12-6v6h-6"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>Fit to screen</button></div></div><p class="viewer-status" role="status"></p><div class="viewer-viewport" tabindex="0" aria-label="Image; scroll to pan when zoomed"><img class="viewer-image" alt=""></div><p class="viewer-caption"></p></dialog></body></html>

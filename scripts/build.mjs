@@ -4,6 +4,9 @@ import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import { profile, projects } from '../content/portfolio.mjs';
 import { collections, browseCollections, siteProjects, additionalProjects } from '../content/site-structure.mjs';
+import { companions, evidenceAssets, companionRoute, sourceRoute } from '../content/evidence.mjs';
+import { featuredSection, caseSummary, projectEvidence, companionPage, sourcePage } from './evidence-pages.mjs';
+import { socialCards } from './social-cards.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const output = resolve(root, 'dist');
@@ -11,6 +14,9 @@ const output = resolve(root, 'dist');
 const assetVersions = Object.fromEntries(await Promise.all(['theme.js', 'styles.css', 'script.js'].map(async file =>
   [file, createHash('sha256').update(await readFile(resolve(root, file))).digest('hex').slice(0, 12)]
 )));
+const socialAssets = socialCards.map(card => `assets/social/${card.Name}.png`);
+const socialVersions = Object.fromEntries(await Promise.all(socialAssets.map(async file => [file, createHash('sha256').update(await readFile(resolve(root, file))).digest('hex').slice(0, 12)])));
+const reports = new Map(await Promise.all(companions.map(async companion => [companion.id, JSON.parse(await readFile(resolve(root, `examples/${companion.id}/report.json`), 'utf8'))])));
 const origin = new URL(process.env.SITE_URL || 'https://www.ekopru.com').origin;
 if (!/^https?:\/\//.test(origin)) throw new Error('SITE_URL must be an HTTP or HTTPS origin.');
 if (new Set(projects.map(project => project.id)).size !== projects.length) throw new Error('Duplicate project ID.');
@@ -25,9 +31,12 @@ const links = items => items.map(item => `<a class="text-link" href="${esc(item.
 const chips = items => `<ul class="chips" aria-label="Technologies">${items.map(item => `<li>${esc(item)}</li>`).join('')}</ul>`;
 const list = items => `<ul>${items.map(item => `<li>${esc(item)}</li>`).join('')}</ul>`;
 
-function layout({ title, description, body, route = '', current = '', noindex = false, redirect = '' }) {
+function layout({ title, description, body, route = '', current = '', noindex = false, redirect = '', socialProject = '' }) {
   const prefix = route ? '../' : './';
   const canonical = `${origin}/${route ? route + '/' : ''}`;
+  const cover = socialAssets.includes(`assets/social/${socialProject || route}.png`) ? socialProject || route : 'portfolio';
+  const coverPath = `assets/social/${cover}.png`;
+  const coverUrl = `${origin}/${coverPath}?v=${socialVersions[coverPath]}`;
   const navLink = (label, path) => `<a href="${prefix}${path}"${(route ? path === route + '/index.html' : path === 'index.html') ? ' aria-current="page"' : ''}>${esc(label)}</a>`;
   const navGroup = c => `<div class="nav-group"><div class="nav-heading">${navLink(c.title, c.id + '/index.html')}<button type="button" class="nav-disclosure" aria-label="Toggle ${esc(c.title)} project menu" aria-expanded="false" aria-controls="nav-${c.id}"><span aria-hidden="true">▾</span></button></div><div class="dropdown" id="nav-${c.id}">${navLink('Overview', c.id + '/index.html')}${c.entries.map(([id, title]) => navLink(title, id + '/index.html')).join('')}</div></div>`;
   const additionalNav = { id: 'additional-projects', title: 'Additional projects', entries: additionalProjects.map(project => [project.id, project.title]) };
@@ -39,7 +48,7 @@ ${noindex && !route ? `<base href="./"><script>${errorPageBaseScript}</script>` 
 <title>${esc(title)} | Esad Kopru</title>
 <meta name="description" content="${esc(description)}"><meta name="theme-color" content="#e0e9f0"><meta name="referrer" content="strict-origin-when-cross-origin">
 ${noindex ? '<meta name="robots" content="noindex, follow">' : `<link rel="canonical" href="${canonical}">`}
-<meta property="og:type" content="website"><meta property="og:site_name" content="Esad Kopru"><meta property="og:title" content="${esc(title)} | Esad Kopru"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${canonical}"><meta name="twitter:card" content="summary">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Esad Kopru"><meta property="og:title" content="${esc(title)} | Esad Kopru"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${canonical}"><meta property="og:image" content="${coverUrl}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:type" content="image/png"><meta property="og:image:alt" content="${esc(title)} | Esad Kopru portfolio"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="${coverUrl}"><meta name="twitter:image:alt" content="${esc(title)} | Esad Kopru portfolio">
 <link rel="icon" href="${prefix}assets/efk-logo.avif"><script src="${prefix}theme.js?v=${assetVersions['theme.js']}"></script><link rel="stylesheet" href="${prefix}styles.css?v=${assetVersions['styles.css']}"><script src="${prefix}script.js?v=${assetVersions['script.js']}" defer></script>
 <script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@type': 'ProfilePage', name: `${title} | Esad Kopru`, url: canonical, mainEntity: { '@type': 'Person', name: profile.name, url: origin, sameAs: [profile.github], knowsAbout: ['Geospatial data science', 'Geospatial data engineering', 'Geospatial software engineering'], alumniOf: [{ '@type': 'CollegeOrUniversity', name: 'The University of Texas at Dallas' }] } }).replaceAll('<','\\u003c')}</script>
 </head><body data-root="${prefix}"${redirect ? ` data-redirect="${esc(redirect)}"` : ''}><a class="skip-link" href="#main">Skip to content</a>
@@ -66,7 +75,7 @@ function projectList(entries, prefix = '../') {
 }
 
 function home() {
-  return layout({ title: 'Geospatial Data Science & GIS Development', description: profile.description, body: `<section class="home-intro"><h1>Hello!</h1><p>Geospatial Data Scientist with 10+ years specializing in data analytics, spatial optimization, ETL automation, and GIS development using Python, SQL, JavaScript, and R. I build GIS systems, analytical models, and automated data pipelines that turn location information into decisions.</p><p>Python · ArcGIS Enterprise · QGIS · Deep Learning · ETL Automation · Custom JS</p><p class="signature">Esad</p><a class="project-button" href="#projects">Breakdown of the Projects</a></section><section class="shell project-index" id="projects" aria-label="Breakdown of the Projects">${browseCollections.map(c => `<section><h2>${esc(c.heading)}</h2>${projectList(c.entries, './')}</section>`).join('')}</section>` });
+  return layout({ title: 'Geospatial Data Science & GIS Development', description: profile.description, body: `<section class="home-intro evidence-intro"><h1>Esad Kopru</h1><p class="home-specialty">Geospatial data science, data engineering &amp; software engineering</p><p>10+ years building GIS systems, analytical models, and automated data pipelines that turn location information into decisions.</p><div class="home-actions"><a class="project-button" href="#selected-work">Selected work</a><a class="text-link" href="#projects">All projects</a></div></section>${featuredSection({ esc, chips })}<div class="shell library-heading"><h2>All projects</h2><p>Explore the original collections, tools, and historical examples.</p></div><section class="shell project-index" id="projects" aria-label="Breakdown of the Projects">${browseCollections.map(c => `<section><h2>${esc(c.heading)}</h2>${projectList(c.entries, './')}</section>`).join('')}</section>` });
 }
 
 function embeddedApp(embed) {
@@ -76,7 +85,7 @@ function embeddedApp(embed) {
 
 function projectPage(project) {
   const parent = project.collection;
-  return layout({ title: project.title, description: project.summary, route: project.id, body: `<div class="shell detail"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="../index.html#projects">Projects</a>${parent ? `<span aria-hidden="true">/</span><a href="../${parent.id}/index.html">${esc(parent.title)}</a>` : ''}</nav><header class="project-heading"><h1>${esc(project.title)}</h1><p>${esc(project.summary)}</p>${project.links?.length ? `<div class="project-links">${links(project.links)}</div>` : ''}</header>${embeddedApp(project.embed)}${gallery(project)}${project.contribution ? `<section class="project-description"><h2>About this work</h2><p>${esc(project.contribution)}</p>${project.result ? `<p>${esc(project.result)}</p>` : ''}<details class="project-details"><summary>Methods and project context</summary>${chips(project.tools)}<p>${esc(project.problem)}</p>${list(project.approach)}<p>${esc(project.context)}</p><p>${esc(project.boundary)}</p></details>${project.type?.includes('Synthetic') ? `<p class="evidence-note">${esc(project.boundary)}</p>` : ''}</section>` : ''}<p class="back-link"><a href="../index.html#projects">← Back to projects</a></p></div>` });
+  return layout({ title: project.title, description: project.summary, route: project.id, body: `<div class="shell detail"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="../index.html#projects">Projects</a>${parent ? `<span aria-hidden="true">/</span><a href="../${parent.id}/index.html">${esc(parent.title)}</a>` : ''}</nav><header class="project-heading"><h1>${esc(project.title)}</h1><p>${esc(project.summary)}</p>${project.links?.length ? `<div class="project-links">${links(project.links)}</div>` : ''}</header>${caseSummary(project, { esc, chips, list })}${projectEvidence(project, { esc })}${embeddedApp(project.embed)}${gallery(project)}<p class="back-link"><a href="../index.html#projects">← Back to projects</a></p></div>` });
 }
 
 function collectionPage(collection) {
@@ -112,6 +121,13 @@ const pages = new Map([
 ]);
 for (const project of siteProjects) pages.set(`${project.id}/index.html`, projectPage(project));
 for (const collection of browseCollections) pages.set(`${collection.id}/index.html`, collectionPage(collection));
+for (const companion of companions) {
+  pages.set(`${companionRoute(companion.id)}/index.html`, companionPage(companion, reports.get(companion.id), { layout, esc, list }));
+  for (const name of ['README.md', 'demo.py', 'test_demo.py']) {
+    const source = await readFile(resolve(root, `examples/${companion.id}/${name}`), 'utf8');
+    pages.set(`${sourceRoute(companion.id, name)}/index.html`, sourcePage(companion, name, source, { layout, esc }));
+  }
+}
 pages.set('additional-projects/index.html', layout({ title: 'Additional projects', description: 'More geospatial case studies, public software, and synthetic-data demonstrations.', route: 'additional-projects', body: `<div class="shell text-page"><h1>Additional projects</h1><p>More recent case studies, public tools, and experiments.</p>${projectList(additionalProjects.map(p => [p.id, p.title]))}<p class="back-link"><a href="../index.html#projects">← All project collections</a></p></div>` }));
 
 // Host only this allowlisted output. Internal evidence and source backups stay local.
@@ -133,11 +149,11 @@ for (const [path, html] of pages) {
   }
 }
 const screenshotAssets = [...new Set(siteProjects.flatMap(project => project.gallery.flatMap(image => [image.src, image.preview])))];
-for (const path of ['styles.css', 'script.js', 'theme.js', 'assets/efk-logo.avif', 'assets/gis-background.webp', ...screenshotAssets]) {
+for (const path of ['styles.css', 'script.js', 'theme.js', 'assets/efk-logo.avif', 'assets/gis-background.webp', ...screenshotAssets, ...evidenceAssets, ...socialAssets]) {
   await mkdir(resolve(output, path, '..'), { recursive: true });
   await copyFile(resolve(root, path), resolve(output, path));
 }
-const urls = ['', 'about/', 'resume/', 'contact/', 'additional-projects/', ...collections.map(c => c.id + '/'), ...siteProjects.map(project => project.id + '/')];
+const urls = ['', 'about/', 'resume/', 'contact/', 'additional-projects/', ...collections.map(c => c.id + '/'), ...siteProjects.map(project => project.id + '/'), ...companions.map(companion => companionRoute(companion.id) + '/')];
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map(path => `<url><loc>${origin}/${path}</loc></url>`).join('')}</urlset>`;
 for (const [path, content] of [['sitemap.xml', sitemap], ['robots.txt', `User-agent: *\nAllow: /\nSitemap: ${origin}/sitemap.xml\n`], ['_headers', "/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  X-Frame-Options: DENY\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-"+errorPageScriptHash+"'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://formsubmit.co; frame-src https://maps.cityoflewisville.com https://experience.arcgis.com https://lewisville.maps.arcgis.com https://www.arcgis.com; object-src 'none'; base-uri 'self'; form-action https://formsubmit.co; frame-ancestors 'none'\n"]]) {
   await writeFile(resolve(root, path), content); await writeFile(resolve(output, path), content);

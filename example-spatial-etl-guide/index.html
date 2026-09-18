@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en"><head>
+
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A reproducible spatial ETL example: guide | Esad Kopru</title>
+<meta name="description" content="Inspect the public-safe educational companion README.md. Synthetic example, separate from the original professional or research implementation."><meta name="theme-color" content="#e0e9f0"><meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="canonical" href="https://www.ekopru.com/example-spatial-etl-guide/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Esad Kopru"><meta property="og:title" content="A reproducible spatial ETL example: guide | Esad Kopru"><meta property="og:description" content="Inspect the public-safe educational companion README.md. Synthetic example, separate from the original professional or research implementation."><meta property="og:url" content="https://www.ekopru.com/example-spatial-etl-guide/"><meta property="og:image" content="https://www.ekopru.com/assets/social/utility-inspection-etl.png?v=3998fe1b7a0f"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:type" content="image/png"><meta property="og:image:alt" content="A reproducible spatial ETL example: guide | Esad Kopru portfolio"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://www.ekopru.com/assets/social/utility-inspection-etl.png?v=3998fe1b7a0f"><meta name="twitter:image:alt" content="A reproducible spatial ETL example: guide | Esad Kopru portfolio">
+<link rel="icon" href="../assets/efk-logo.avif"><script src="../theme.js?v=5218a73bfc30"></script><link rel="stylesheet" href="../styles.css?v=e1254d9cef71"><script src="../script.js?v=e48c5a6c7147" defer></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfilePage","name":"A reproducible spatial ETL example: guide | Esad Kopru","url":"https://www.ekopru.com/example-spatial-etl-guide/","mainEntity":{"@type":"Person","name":"Esad Kopru","url":"https://www.ekopru.com","sameAs":["https://github.com/efkopru"],"knowsAbout":["Geospatial data science","Geospatial data engineering","Geospatial software engineering"],"alumniOf":[{"@type":"CollegeOrUniversity","name":"The University of Texas at Dallas"}]}}</script>
+</head><body data-root="../"><a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header"><div class="shell header-inner"><a class="brand" href="../index.html" aria-label="Esad Kopru home"><img src="../assets/efk-logo.avif" width="101" height="48" alt="EFK Portfolio"></a><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button><nav id="site-nav" class="site-nav" aria-label="Main navigation"><a href="../index.html">Home</a><a href="../contact/index.html">Contact</a><a href="../resume/index.html">Resume</a><div class="nav-group"><div class="nav-heading"><a href="../spatial-and-data-analysis/index.html">Spatial &amp; Data Analysis</a><button type="button" class="nav-disclosure" aria-label="Toggle Spatial &amp; Data Analysis project menu" aria-expanded="false" aria-controls="nav-spatial-and-data-analysis"><span aria-hidden="true">▾</span></button></div><div class="dropdown" id="nav-spatial-and-data-analysis"><a href="../spatial-and-data-analysis/index.html">Overview</a><a href="../spatial-analysis/index.html">Spatial Analysis</a><a href="../arcgis-enterprise-and-online/index.html">ArcGIS Enterprise and Online</a><a href="../qgis/index.html">QGIS</a><a href="../code-enforcement-violations/index.html">Code Enforcement Violations</a><a href="../crime-analysis/index.html">Crime Analysis</a><a href="../accessibility-analysis/index.html">Measuring access to community amenities</a></div></div><div class="nav-group"><div class="nav-heading"><a href="../ml-optimization/index.html">ML / Optimization</a><button type="button" class="nav-disclosure" aria-label="Toggle ML / Optimization project menu" aria-expanded="false" aria-controls="nav-ml-optimization"><span aria-hidden="true">▾</span></button></div><div class="dropdown" id="nav-ml-optimization"><a href="../ml-optimization/index.html">Overview</a><a href="../income-level-prediction-using-r/index.html">Income Level Prediction using R</a><a href="../building-footprint-extraction/index.html">Building Footprint Extraction</a><a href="../traveling-salesman/index.html">Traveling Salesman</a><a href="../water-conservation-routes/index.html">Water Conservation Routes</a><a href="../lead-service-review-prototype/index.html">Lead pipe prediction prototype</a></div></div><div class="nav-group"><div class="nav-heading"><a href="../development-and-etl/index.html">Development &amp; ETL</a><button type="button" class="nav-disclosure" aria-label="Toggle Development &amp; ETL project menu" aria-expanded="false" aria-controls="nav-development-and-etl"><span aria-hidden="true">▾</span></button></div><div class="dropdown" id="nav-development-and-etl"><a href="../development-and-etl/index.html">Overview</a><a href="../python-and-notebooks/index.html">Python Scripts &amp; Notebooks</a><a href="../sql-and-javascript-and-r/index.html">SQL &amp; JavaScript &amp; R</a><a href="../modelbuilder-and-arcmap-tool-in-vbnet/index.html">ModelBuilder &amp; ArcMap tool in VB.NET</a><a href="../interactive-maps-a-custom-js-app/index.html">Interactive Maps - A custom JS App</a><a href="../interactive-maps-experience-builder/index.html">Interactive Maps - Experience Builder</a><a href="../utility-inspection-etl/index.html">Utility inspection data pipeline</a><a href="../workforce-participation/index.html">An interactive workforce atlas</a><a href="../geospatial-processing-tools/index.html">Raster and document processing utilities</a></div></div><div class="nav-group"><div class="nav-heading"><a href="../additional-projects/index.html">Additional projects</a><button type="button" class="nav-disclosure" aria-label="Toggle Additional projects project menu" aria-expanded="false" aria-controls="nav-additional-projects"><span aria-hidden="true">▾</span></button></div><div class="dropdown" id="nav-additional-projects"><a href="../additional-projects/index.html">Overview</a><a href="../utility-inspection-etl/index.html">Utility inspection data pipeline</a><a href="../accessibility-analysis/index.html">Measuring access to community amenities</a><a href="../lead-service-review-prototype/index.html">Lead pipe prediction prototype</a><a href="../workforce-participation/index.html">An interactive workforce atlas</a><a href="../geospatial-processing-tools/index.html">Raster and document processing utilities</a></div></div><a href="../doctoral-research/index.html">Doctoral Research</a></nav></div></header><div class="rule" aria-hidden="true"></div>
+<div class="theme-toolbar shell" data-theme-toolbar hidden><button class="theme-toggle" type="button" role="switch" aria-checked="false" data-theme-toggle><span class="theme-toggle-label">Dark mode</span><span class="theme-toggle-track" aria-hidden="true"><span class="theme-toggle-thumb"></span></span><span class="theme-toggle-state" data-theme-state aria-hidden="true">Off</span></button></div>
+<main id="main" tabindex="-1"><div class="shell source-page"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="../example-spatial-etl/index.html">Educational companion</a><span aria-hidden="true">/</span><span>README.md</span></nav><h1>A reproducible spatial ETL example: guide</h1><p>This source belongs to the new teaching example, not a recovered employer artifact or the original research implementation.</p><a class="text-link" href="../examples/spatial-etl/README.md">Open raw README.md</a><pre class="code-block" tabindex="0" aria-label="README.md"><code># Synthetic spatial ETL
+
+A small, runnable educational reconstruction of geospatial ingestion patterns. Every record, identifier, coordinate and inspection date is invented. This is not employer code, a deployed architecture, a production benchmark or a claim about historical project results.
+
+## Run
+
+Requires Python 3.10 or later with its standard-library `sqlite3` module. No packages, credentials, network services or setup steps are needed. Run from the repository root:
+
+```sh
+python examples/spatial-etl/demo.py
+```
+
+The command prints the full JSON report to stdout and structured event logs to stderr. SQLite runs in memory, so each invocation starts fresh and leaves no database behind. To regenerate the checked-in report and run the tests:
+
+```sh
+python examples/spatial-etl/demo.py --report examples/spatial-etl/report.json
+python -m unittest discover -s examples/spatial-etl -p &quot;test_*.py&quot; -v
+```
+
+On installations where the interpreter is named `python3` or `py`, substitute that executable. The checked-in `report.json` is produced by this command, not manually specified. Tests assert that its content exactly matches a fresh execution.
+
+## Architecture
+
+```text
+Invented JSON records
+         |
+Schema, CRS, extent, timestamp, revision and duplicate-ID validation
+         |                                 |
+Accepted records                    Quarantine with reason + original row
+         |
+SQLite BEGIN IMMEDIATE: parameterized insert / revision-aware update
+         |                                 |
+Commit                         Injected failure -&gt; rollback -&gt; snapshot check
+         |                                                   |
+Replay / stale revision checks                    Retry same batch -&gt; commit
+         |                                                   |
+         +---------------- JSON evidence report -------------+
+```
+
+The accompanying [architecture diagram](../../assets/evidence/spatial-etl.svg) is an educational reconstruction, not an employer architecture.
+
+## Spatial and schema contract
+
+`LOCAL:DEMO_CARTESIAN` is a made-up local coordinate reference system: arbitrary origin, x right/east, y up/north, metres, inclusive extent 0 to 10,000 on both axes. It is intentionally **not georeferenced**. Do not treat these coordinates as latitude/longitude, attach an EPSG code, overlay them on an Earth map, or infer real infrastructure locations. This example validates a declared CRS and bounds; it does not reproject data or validate geometry topology.
+
+Each JSON object must have exactly these fields:
+
+| Field | Requirement |
+| --- | --- |
+| `id` | String matching `SYN-NNN`; duplicate IDs quarantine every occurrence in the batch |
+| `crs` | Exactly `LOCAL:DEMO_CARTESIAN` |
+| `x`, `y` | Finite numeric metre values in [0, 10000]; booleans and numeric strings rejected |
+| `condition` | `clear` or `attention` |
+| `inspected_at` | Valid UTC timestamp in `YYYY-MM-DDTHH:MM:SSZ` format |
+| `revision` | Integer from 1 through 2^63 - 1; booleans rejected |
+
+Missing and unexpected fields are rejected. Quarantine preserves the source row and human-readable reason in the report. Twelve supplied rows exercise valid data and eight rejected rows, including both occurrences of a duplicate ID.
+
+## Update, failure and recovery policy
+
+The synthetic ID is the primary key. A new ID is inserted. A higher revision replaces the row only when its inspection time is not older. An identical revision and payload is a no-op. An older revision is skipped. Different values for the same revision are a conflict: the complete batch rolls back, rather than silently selecting a winner. Input to the loader is revalidated even if callers construct `Record` objects themselves.
+
+The demo loads four accepted rows, replays them, and prepares two updates plus one insertion. It deliberately fails after the second update and compares the entire database snapshot against the pre-load snapshot. It then retries, verifies recovery, repeats the recovered batch, and replays older source revisions. The five final records and all intermediate committed counts are inspectable in the generated report. All database values use bound SQL parameters.
+
+## What the tests cover
+
+- Deterministic report generation and parity with the checked-in report.
+- Strict schema, CRS, coordinate, date and revision validation, including NaN and infinity.
+- Rejection of both duplicate occurrences and retention of quarantine data.
+- Idempotent replay, stale revision skipping and correct updates.
+- Complete rollback after an injected failure, successful recovery and zero surviving partial inserts.
+- Equal-revision conflicts, backwards timestamps, active-transaction protection and invalid failure-injection parameters.
+- Structured success and rollback logs.
+
+## Limits
+
+This is a single-process, tiny in-memory SQLite demonstration. It does not implement PostGIS, spatial indexing, real-world coordinate transformations, orchestration, multi-worker locking/retry policies, secrets management, service authentication, monitoring infrastructure, schema migrations, backups or production-scale performance measurement. Validation rules and a primary key alone cannot prove correctness of real source observations. A real deployment would need those environment-specific controls and an agreed policy for late observations and conflicting source systems.
+</code></pre><p><a href="../example-spatial-etl/index.html">← Results and run instructions</a></p></div></main>
+<div class="rule" aria-hidden="true"></div><footer class="site-footer"><div class="shell footer-inner"><p>All rights reserved © EK 2026</p></div></footer>
+<dialog class="image-viewer" aria-labelledby="viewer-title"><div class="viewer-header"><h2 id="viewer-title">Image viewer</h2><button type="button" data-viewer-close autofocus>Close <span aria-hidden="true">×</span></button></div><div class="viewer-controls" role="group" aria-label="Image controls"><div class="viewer-zoom-controls" role="group" aria-label="Zoom"><button type="button" data-zoom-out aria-label="Zoom out">− Zoom out</button><output class="zoom-level" aria-live="polite">100%</output><button type="button" data-zoom-in aria-label="Zoom in">+ Zoom in</button></div><div class="viewer-fit-controls"><button type="button" data-zoom-reset><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 3H3v6m12-6h6v6M3 15v6h6m12-6v6h-6"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>Fit to screen</button></div></div><p class="viewer-status" role="status"></p><div class="viewer-viewport" tabindex="0" aria-label="Image; scroll to pan when zoomed"><img class="viewer-image" alt=""></div><p class="viewer-caption"></p></dialog></body></html>

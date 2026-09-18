@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600" role="img" aria-labelledby="title desc">
+  <title id="title">Community accessibility: explanatory method</title>
+  <desc id="desc">Street-network isochrones describe access to community amenities. Accessibility measures are aggregated at census tract level and combined with socioeconomic indicators in weighted scoring to identify underserved areas. This is a method diagram, not measured geography or a reconstruction of internal scoring inputs.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#527678"/></marker></defs>
+  <rect width="1200" height="600" rx="20" fill="#f4f7f6"/>
+  <g font-family="Arial, Helvetica, sans-serif">
+    <text x="48" y="57" font-size="14" font-weight="700" letter-spacing="2" fill="#456669">EXPLANATORY METHOD</text>
+    <text x="48" y="108" font-size="36" font-weight="700" fill="#183237">Measuring access to community amenities</text>
+    <text x="48" y="147" font-size="19" fill="#486267">Network-based access and socioeconomic context inform planning evidence.</text>
+    <g stroke="#527678" stroke-width="3" fill="none" marker-end="url(#arrow)">
+      <path d="M282 279H326"/><path d="M570 279H614"/><path d="M858 279H902"/>
+      <path d="M737 414V358"/>
+    </g>
+    <g fill="#ffffff" stroke="#b8cecb" stroke-width="2">
+      <rect x="48" y="212" width="234" height="145" rx="12"/><rect x="330" y="212" width="240" height="145" rx="12"/>
+      <rect x="618" y="212" width="240" height="145" rx="12"/><rect x="906" y="212" width="246" height="145" rx="12"/>
+      <rect x="618" y="420" width="240" height="70" rx="12"/>
+    </g>
+    <g fill="#183237" font-size="21" font-weight="700">
+      <text x="68" y="252">Network access</text><text x="350" y="252">Tract aggregation</text><text x="638" y="252">Weighted scoring</text><text x="926" y="252">Planning evidence</text>
+    </g>
+    <g fill="#486267" font-size="17">
+      <text x="68" y="292">Street network</text><text x="68" y="322">Amenity isochrones</text>
+      <text x="350" y="292">Reachable areas</text><text x="350" y="322">Census tract measures</text>
+      <text x="638" y="292">Accessibility measures</text><text x="638" y="322">Socioeconomic context</text>
+      <text x="926" y="292">Underserved areas</text><text x="926" y="322">Decision support</text>
+      <text x="638" y="449">Socioeconomic</text><text x="638" y="475">indicators</text>
+    </g>
+    <text x="48" y="433" font-size="19" font-weight="700" fill="#204d43">My contribution</text>
+    <text x="48" y="461" font-size="17" fill="#204d43">Conducted the analysis and combined network-based</text>
+    <text x="48" y="487" font-size="17" fill="#204d43">accessibility with socioeconomic indicators.</text>
+    <text x="48" y="540" font-size="16" fill="#486267">Method illustration only. No real map, travel cutoff, scoring weight, or internal decision record is reproduced.</text>
+    <text x="48" y="568" font-size="15" fill="#486267">The analysis supported a $750K federal award; the award is not a model-accuracy measure or a sole-causality claim.</text>
+  </g>
+</svg>

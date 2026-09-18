@@ -4,7 +4,7 @@ import { spawn } from 'node:child_process';
 import { once } from 'node:events';
 import { fileURLToPath } from 'node:url';
 
-test('full-size screenshots are served as images instead of downloads', async t => {
+test('screenshots and public example sources are served with correct content types', async t => {
   const server = spawn(process.execPath, ['scripts/serve.mjs', 'dist'], { cwd: fileURLToPath(new URL('../', import.meta.url)), env: { ...process.env, PORT: '0' }, stdio: ['ignore', 'pipe', 'pipe'] });
   t.after(() => server.kill());
   const origin = await new Promise((resolve, reject) => {
@@ -23,6 +23,12 @@ test('full-size screenshots are served as images instead of downloads', async t 
     assert.equal(response.status, 200);
     assert.equal(response.headers.get('content-type'), mime);
     assert.equal(response.headers.get('content-disposition'), null);
+  }
+  for (const [path, mime] of [['examples/spatial-etl/demo.py', 'text/plain; charset=utf-8'], ['examples/spatial-etl/README.md', 'text/plain; charset=utf-8'], ['examples/spatial-etl/records.json', 'application/json'], ['assets/evidence/network-access.svg', 'image/svg+xml'], ['assets/social/portfolio.png', 'image/png']]) {
+    const response = await fetch(`${origin}/${path}`, { method: 'HEAD' });
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get('content-type'), mime);
+    assert.equal(response.headers.get('x-content-type-options'), 'nosniff');
   }
   const exited = once(server, 'exit');
   server.kill();
