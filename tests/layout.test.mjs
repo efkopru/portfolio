@@ -134,7 +134,8 @@ test('compact featured cards preserve complete content and keep their size chang
   const rules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(match => ({ selectors: match[1].trim().split(',').map(selector => selector.trim()), body: match[2] }));
   const chipRules = rules.filter(rule => rule.selectors.some(selector => selector.includes('.chips')));
   for (const rule of chipRules) {
-    assert.ok(rule.selectors.every(selector => ['.chips', '.chips li'].includes(selector) || /^\.featured-/.test(selector)), 'Compact chip rules stay scoped to featured cards');
+    const caseToolsMarginReset = rule.selectors.length === 2 && rule.selectors.includes('.case-tools h2') && rule.selectors.includes('.case-tools .chips') && /^margin:\s*0;?$/.test(rule.body.trim());
+    assert.ok(caseToolsMarginReset || rule.selectors.every(selector => ['.chips', '.chips li'].includes(selector) || /^\.featured-/.test(selector)), 'Compact chip sizing stays scoped to featured cards; case tools may reset only their own margin');
   }
   assert.match(declarations(css, '.chips'), /\bgap:\s*\.5rem\s*(?:;|$)/);
   const globalChips = declarations(css, '.chips li');

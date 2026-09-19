@@ -11,9 +11,15 @@ export function featuredSection({ esc, chips }) {
   }).join('')}</div></section>`;
 }
 
-export function caseSummary(project, { esc, chips, list }) {
-  if (!project.contribution) return `<section class="case-overview"><h2>About this example</h2><p>${esc(project.summary)}</p><p class="evidence-note">Historical portfolio example. The gallery documents the work; a complete reproducible dataset and implementation are not included.</p></section>`;
-  return `<section class="case-overview" aria-label="Project overview"><p class="project-kind">${esc(project.type)}</p><div class="case-summary-grid">${[['Problem', project.problem], ['My contribution', project.contribution], ['Result', project.result]].map(([heading, text]) => `<article><h2>${heading}</h2><p>${esc(text)}</p></article>`).join('')}</div><div class="case-tools"><h2>Tools and methods</h2>${chips(project.tools)}</div><p class="case-context">${esc(project.context)}</p><p class="evidence-note">${esc(project.boundary)}</p><div class="case-methods"><h2>How it works</h2>${list(project.approach)}</div></section>`;
+export function caseSummary(project, { esc, chips }) {
+  if (!project.contribution) return '';
+  return `<section class="case-overview" aria-label="Project overview"><h2>What I did</h2><p>${esc(project.contribution)}</p><p class="case-result"><strong>Result:</strong> ${esc(project.result)}</p><div class="case-tools"><h2>Tools</h2>${chips(project.tools)}</div><p class="evidence-note">${esc(project.boundary)}</p></section>`;
+}
+
+export function caseDetails(project, { esc, list }) {
+  const content = project.contribution ? `<p class="case-context">${esc(project.context)}</p><p>${esc(project.problem)}</p>${list(project.approach)}` : '<p>These screenshots show earlier work. Full source files and datasets are not included.</p>';
+  const citation = project.id === 'doctoral-research' ? '<p>Dissertation: <cite>Modeling Integer Programming To Multiple Target Access Problem.</cite> The University of Texas at Dallas, 2024.</p>' : '';
+  return `<details class="project-details case-details"><summary>Technical details</summary>${content}${citation}</details>`;
 }
 
 export function figure(src, title, caption, esc) {
@@ -22,11 +28,12 @@ export function figure(src, title, caption, esc) {
 
 export function projectEvidence(project, ui) {
   const { esc } = ui;
+  if (project.id === 'doctoral-research') return '';
   const diagram = methodDiagrams[project.id];
   const companion = companions.find(item => item.project === project.id);
   if (!diagram && !companion) return '';
-  const companionAction = companion && project.id !== 'doctoral-research' ? `<a class="text-link" href="../${companionRoute(companion.id)}/index.html">Explore the example, results, and source <span aria-hidden="true">→</span></a>` : '';
-  return `<section class="project-evidence" aria-labelledby="evidence-heading"><h2 id="evidence-heading">Explore the work</h2>${diagram ? figure(diagram.src, diagram.title, diagram.caption, esc) : ''}${companion ? `<div class="companion-callout"><p class="project-kind">Runnable educational companion</p><h3>${esc(companion.title)}</h3><p>${esc(companion.summary)}</p><p class="evidence-note">New teaching example using invented data. Separate from the historical project, original prototype, and doctoral evaluation.</p>${companionAction}</div>` : ''}${project.id === 'doctoral-research' ? `<div class="research-context"><h3>Why shared access matters</h3><p>When one source must connect to several targets, separate shortest routes can overlook the value of shared links. A network formulation makes those shared decisions explicit. The worked example explains that distinction on a tiny invented network.</p><h3>Research record and citation</h3><p>Esad Kopru. <cite>Modeling Integer Programming To Multiple Target Access Problem.</cite> PhD dissertation, The University of Texas at Dallas, 2024. Title and degree are listed in the public doctoral record.</p></div>` : ''}</section>`;
+  const heading = diagram && companion ? 'Workflow and example' : diagram ? 'Workflow' : 'Example';
+  return `<section class="project-evidence" aria-labelledby="evidence-heading"><h2 id="evidence-heading">${heading}</h2>${diagram ? figure(diagram.src, diagram.title, diagram.caption, esc) : ''}${companion ? `<div class="companion-callout"><h3>${esc(companion.title)}</h3><p>${esc(companion.summary)}</p><p class="evidence-note">Uses invented data; separate from this project.</p><a class="text-link" href="../${companionRoute(companion.id)}/index.html">View example <span aria-hidden="true">→</span></a></div>` : ''}</section>`;
 }
 
 export function companionPage(companion, report, ui) {

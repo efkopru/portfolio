@@ -10,9 +10,12 @@ test('all recovered images are published and not inside collapsed galleries', as
   for (const image of Object.values(sourceGroups).flat()) assert.ok(used.has(image.src), `Unmapped screenshot: ${image.src}`);
   for (const project of siteProjects) {
     const html = await readFile(new URL(`../dist/${project.id}/index.html`, import.meta.url), 'utf8');
-    assert.ok(!/<details[^>]*>\s*<[^>]+[^]*?class="project-gallery"/.test(html), `${project.id}: hidden gallery`);
+    for (const details of html.matchAll(/<details\b[^>]*>([\s\S]*?)<\/details>/g)) {
+      assert.doesNotMatch(details[1], /class="project-gallery"|data-image-viewer/, `${project.id}: gallery images must stay outside optional technical details`);
+    }
+    const withoutDetails = html.replace(/<details\b[^>]*>[\s\S]*?<\/details>/g, '');
     assert.ok(!/<a[^>]+href="\.\.\/assets\/screenshots\/[^>]+target="_blank"/.test(html), `${project.id}: full-size viewing must not depend on popups`);
-    for (const image of project.gallery) assert.ok(html.includes(`src="../${image.preview}"`), `${project.id}: missing preview`);
+    for (const image of project.gallery) assert.ok(withoutDetails.includes(`src="../${image.preview}"`), `${project.id}: missing visible preview`);
   }
 });
 

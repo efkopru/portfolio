@@ -38,11 +38,11 @@ const additionalCollectionIds = {
   'geospatial-processing-tools': 'development-and-etl'
 };
 const extraPages = [
-  { id: 'qgis', summary: 'Fetching OpenStreetMap data, exporting selected features, and finding shortest and fastest paths.', gallery: screenshots.qgis },
-  { id: 'sql-and-javascript-and-r', summary: 'Examples of SQL processing, JavaScript applications, and analysis using R.', gallery: screenshots['sql-and-javascript-and-r'] },
-  { id: 'modelbuilder-and-arcmap-tool-in-vbnet', summary: 'Workflow automation with ArcGIS ModelBuilder and an ArcMap tool built in VB.NET.', gallery: screenshots['modelbuilder-and-arcmap-tool-in-vbnet'] },
-  { id: 'code-enforcement-violations', summary: 'Spatial analysis comparing property rental status and code-enforcement violations.', gallery: [screenshots['spatial-analysis'][1]] },
-  { id: 'interactive-maps-experience-builder', summary: 'An ArcGIS Experience Builder application with a layout intended for public display on large screens.', gallery: [] }
+  { id: 'qgis', summary: 'Getting OpenStreetMap data and finding the shortest or fastest routes in QGIS.', gallery: screenshots.qgis },
+  { id: 'sql-and-javascript-and-r', summary: 'SQL scripts, JavaScript applications, and data analysis in R.', gallery: screenshots['sql-and-javascript-and-r'] },
+  { id: 'modelbuilder-and-arcmap-tool-in-vbnet', summary: 'Tools built with ModelBuilder and VB.NET to automate ArcGIS tasks.', gallery: screenshots['modelbuilder-and-arcmap-tool-in-vbnet'] },
+  { id: 'code-enforcement-violations', summary: 'Maps comparing code violations at rental and non-rental homes.', gallery: [screenshots['spatial-analysis'][1]] },
+  { id: 'interactive-maps-experience-builder', summary: 'A public map built with ArcGIS Experience Builder for large-screen displays.', gallery: [] }
 ];
 const embeds = {
   'interactive-maps-a-custom-js-app': { url: 'https://maps.cityoflewisville.com/', title: 'City of Lewisville public GIS map', note: 'The current public application may differ from its historical version.' },

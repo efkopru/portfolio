@@ -7,7 +7,7 @@ import { projects } from '../content/portfolio.mjs';
 import { collections, browseCollections, siteProjects } from '../content/site-structure.mjs';
 import { featuredWork, methodDiagrams, companions, companionFiles, evidenceAssets, companionRoute, sourceRoute } from '../content/evidence.mjs';
 import { socialCards } from '../scripts/social-cards.mjs';
-import { companionPage, sourcePage, figure } from '../scripts/evidence-pages.mjs';
+import { caseSummary, caseDetails, projectEvidence, companionPage, sourcePage, figure } from '../scripts/evidence-pages.mjs';
 
 const source = (path, encoding = 'utf8') => readFile(new URL(`../${path}`, import.meta.url), encoding);
 const esc = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
@@ -114,28 +114,46 @@ test('featured cards use accessible three-step HTML flows instead of illustratio
   }
 });
 
-test('all case studies show their summary before gallery or external application', async () => {
+test('case studies keep concise ownership and limits visible with technical details after galleries and examples', async () => {
   for (const project of siteProjects) {
     const html = body(await source(`${project.id}/index.html`));
     const summaryIndex = html.indexOf('class="case-overview"');
-    assert.ok(summaryIndex >= 0, `${project.id} needs a case overview`);
-    for (const token of ['class="project-gallery"', 'class="embedded-app"']) {
+    const details = [...html.matchAll(/<details\b([^>]*class="[^"]*\bproject-details\b[^"]*"[^>]*)>([\s\S]*?)<\/details>/g)];
+    assert.equal(details.length, 1, `${project.id}: one optional technical-details disclosure`);
+    const [technical] = details;
+    assert.doesNotMatch(technical[1], /(?:^|\s)open(?:\s|=|$)/, `${project.id}: technical details start closed`);
+    assert.ok(technical[2].startsWith('<summary>Technical details</summary>'));
+    assert.doesNotMatch(technical[2], /class="project-gallery"|data-image-viewer|class="project-evidence"/, `${project.id}: screenshots and examples are not hidden in details`);
+    const galleryIndex = html.indexOf('class="project-gallery"');
+    const evidenceIndex = html.indexOf('class="project-evidence"');
+    if (galleryIndex >= 0 && evidenceIndex >= 0) assert.ok(galleryIndex < evidenceIndex, `${project.id}: the gallery precedes optional examples`);
+    for (const token of ['class="project-gallery"', 'class="embedded-app"', 'class="project-evidence"']) {
       const position = html.indexOf(token);
-      assert.ok(position < 0 || summaryIndex < position, `${project.id}: summary precedes ${token}`);
+      assert.ok(position < 0 || position < technical.index, `${project.id}: ${token} precedes technical details`);
     }
-    const summary = html.slice(summaryIndex, html.indexOf('</section>', summaryIndex));
-    assert.doesNotMatch(summary, /<details\b|\bhidden(?:\s|>|=)/);
     if (project.contribution) {
-      for (const heading of ['Problem', 'My contribution', 'Result', 'Tools and methods', 'How it works']) {
+      assert.ok(summaryIndex >= 0, `${project.id}: concise overview remains present`);
+      const summary = html.slice(summaryIndex, html.indexOf('</section>', summaryIndex));
+      assert.doesNotMatch(summary, /<details\b|\bhidden(?:\s|>|=)|class="case-context"|class="case-methods"/);
+      for (const heading of ['What I did', 'Tools']) {
         assert.ok(summary.includes(`<h2>${heading}</h2>`), `${project.id}: ${heading} visible`);
       }
-      for (const value of [project.problem, project.contribution, project.result, project.context, project.boundary, ...project.tools, ...project.approach]) {
-        assert.ok(summary.includes(esc(value)), `${project.id} contains its visible source-grounded case content`);
+      assert.ok(summary.includes('<strong>Result:</strong>'));
+      for (const value of [project.contribution, project.result, project.boundary, ...project.tools]) {
+        assert.ok(summary.includes(esc(value)), `${project.id}: ownership, outcome, tools and limits are visible`);
+      }
+      for (const value of [project.problem, project.context, ...project.approach]) {
+        assert.ok(technical[2].includes(esc(value)), `${project.id}: technical context and method remain accessible`);
+      }
+      for (const token of ['class="project-gallery"', 'class="embedded-app"', 'class="project-evidence"', 'class="project-details']) {
+        const position = html.indexOf(token);
+        assert.ok(position < 0 || summaryIndex < position, `${project.id}: summary precedes ${token}`);
       }
     } else {
-      assert.ok(summary.includes('About this example'));
-      assert.ok(summary.includes('complete reproducible dataset and implementation are not included'));
+      assert.equal(summaryIndex, -1, `${project.id}: historical gallery page avoids a duplicate overview`);
+      assert.ok(technical[2].includes('These screenshots show earlier work. Full source files and datasets are not included.'));
     }
+    assert.equal(await source(`${project.id}/index.html`), await source(`dist/${project.id}/index.html`));
   }
 });
 
@@ -167,7 +185,18 @@ test('all three companion overviews, source readers and raw assets are published
     }
     const parent = body(await source(`${companion.project}/index.html`));
     assert.equal(parent.includes(`href="../${route}"`), companion.project !== 'doctoral-research', `${companion.project}: only the doctoral page omits its companion CTA`);
-    assert.ok(parent.includes('New teaching example using invented data. Separate from the historical project, original prototype, and doctoral evaluation.'));
+    if (companion.project === 'doctoral-research') {
+      assert.doesNotMatch(parent, /class="companion-callout"|class="project-evidence"/);
+    } else {
+      const callout = parent.match(/<div class="companion-callout">([\s\S]*?)<\/div>/)?.[1];
+      assert.ok(callout);
+      assert.ok(callout.includes(esc(companion.title)));
+      assert.ok(callout.includes(esc(companion.summary)));
+      assert.ok(callout.includes('Uses invented data; separate from this project.'));
+      assert.ok(callout.includes(`href="../${route}">View example `));
+      const heading = methodDiagrams[companion.project] ? 'Workflow and example' : 'Example';
+      assert.ok(parent.includes(`<h2 id="evidence-heading">${heading}</h2>`));
+    }
   }
   for (const asset of evidenceAssets) assert.deepEqual(await source(asset, null), await source(`dist/${asset}`, null));
 });
@@ -207,6 +236,13 @@ test('evidence renderers escape source text, report values and figure attributes
   assert.ok(renderedFigure.includes(`alt="${esc(hostile)}"`));
   assert.ok(renderedFigure.includes(`<figcaption>${esc(hostile)}</figcaption>`));
   assert.doesNotMatch(renderedFigure, /<script\b/);
+  const project = { contribution: hostile, result: hostile, boundary: hostile, context: hostile, problem: hostile, tools: [hostile], approach: [hostile] };
+  const summary = caseSummary(project, { ...ui, chips: values => `<ul>${values.map(value => `<li>${esc(value)}</li>`).join('')}</ul>` });
+  const details = caseDetails(project, ui);
+  for (const html of [summary, details]) {
+    assert.ok(html.includes(esc(hostile)));
+    assert.doesNotMatch(html, /<script\b|<img src=x/);
+  }
 });
 
 test('method and companion diagrams retain local SVG sources, meaningful alt and provenance', async () => {
@@ -248,22 +284,22 @@ test('method and companion SVGs retain plain styling without decorative effects 
   }
 });
 
-test('research retains shared-access explanation and a plain doctoral citation without the removed source disclaimer', async () => {
+test('doctoral page keeps its own research summary and plain citation without teaching-example sections', async () => {
   const html = body(await source('doctoral-research/index.html'));
-  assert.ok(html.includes('Why shared access matters'));
-  assert.ok(html.includes('separate shortest routes can overlook the value of shared links'));
-  assert.ok(html.includes('PhD dissertation, The University of Texas at Dallas, 2024'));
-  assert.ok(html.includes('Modeling Integer Programming To Multiple Target Access Problem.'));
-  assert.ok(html.includes('public doctoral record'));
+  const technical = html.match(/<details\b[^>]*class="[^"]*\bcase-details\b[^"]*"[^>]*>([\s\S]*?)<\/details>/)?.[1];
+  assert.ok(technical);
+  assert.ok(technical.includes('The University of Texas at Dallas, 2024'));
+  assert.ok(technical.includes('Modeling Integer Programming To Multiple Target Access Problem.'));
+  assert.doesNotMatch(html, /Why shared access matters|class="research-context"|class="companion-callout"|class="project-evidence"|example-network-access/);
   assert.doesNotMatch(html, /version-pinned public research source|No journal publication, DOI, or dissertation benchmark is claimed here\./);
   assert.doesNotMatch(html, /(?:doi\.org\/|doi:\s*10\.|10\.\d{4,9}\/)/i);
+  assert.equal(projectEvidence(siteProjects.find(project => project.id === 'doctoral-research'), { esc }), '');
   const companion = JSON.parse(await source('examples/network-access/report.json'));
   assert.match(companion.disclosure, /(?:synthetic|invented|educational|toy)/i);
 });
 
 test('doctoral page omits research resource links while preserving navigation, gallery viewing and other project links', async () => {
   const project = siteProjects.find(project => project.id === 'doctoral-research');
-  const companion = companions.find(companion => companion.project === project.id);
   assert.deepEqual(project.links, []);
   const galleryLinks = new Set(project.gallery.map(image => `../${image.src}`));
   assert.ok(galleryLinks.size > 0, 'Doctoral gallery remains available');
@@ -272,12 +308,7 @@ test('doctoral page omits research resource links while preserving navigation, g
     const html = await source(path);
     const content = body(html);
     assert.doesNotMatch(content, /class="project-links"|href="https?:\/\/|href="[^"#]*example-network-access/);
-    const callout = content.match(/<div class="companion-callout">([\s\S]*?)<\/div>/)?.[1];
-    assert.ok(callout, `${path}: descriptive educational callout remains`);
-    assert.ok(callout.includes(esc(companion.title)));
-    assert.ok(callout.includes(esc(companion.summary)));
-    assert.ok(callout.includes('New teaching example using invented data.'));
-    assert.doesNotMatch(callout, /<a\b/);
+    assert.doesNotMatch(content, /class="companion-callout"|Uses invented data; separate from this project\./, `${path}: doctoral content omits the teaching-example callout`);
     const foundGalleryLinks = new Set();
     for (const anchor of content.matchAll(/<a\b([^>]*)href="([^"]+)"([^>]*)>/g)) {
       if (/\bdata-image-viewer\b/.test(anchor[1] + anchor[3])) {
