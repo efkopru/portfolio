@@ -1,8 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
+import { featuredWork } from '../content/evidence.mjs';
+import { projects } from '../content/portfolio.mjs';
 
 const source = path => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
+const esc = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
 const blockAfter = (text, pattern) => {
   const match = pattern.exec(text);
   assert.ok(match, `Missing CSS block: ${pattern}`);
@@ -72,6 +75,46 @@ test('compact homepage wrappers retain introduction, skills, actions and project
       const workflow = content.match(/<ol\b[^>]*class="[^"]*\bfeatured-flow\b[^"]*"[^>]*>/);
       assert.ok(title && workflow, `${path}: title and workflow both belong to the featured body`);
       assert.ok(workflow.index >= title.index + title[0].length, `${path}: featured card ${index + 1} presents its title before its workflow`);
+    }
+  }
+});
+
+test('compact featured cards preserve complete content and keep their size changes locally scoped', async () => {
+  const css = await source('styles.css');
+  const rules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(match => ({ selectors: match[1].trim().split(',').map(selector => selector.trim()), body: match[2] }));
+  const chipRules = rules.filter(rule => rule.selectors.some(selector => selector.includes('.chips')));
+  for (const rule of chipRules) {
+    assert.ok(rule.selectors.every(selector => ['.chips', '.chips li'].includes(selector) || /^\.featured-/.test(selector)), 'Compact chip rules stay scoped to featured cards');
+  }
+  assert.match(declarations(css, '.chips'), /\bgap:\s*\.5rem\s*(?:;|$)/);
+  const globalChips = declarations(css, '.chips li');
+  assert.match(globalChips, /\bfont-size:\s*\.88rem\s*(?:;|$)/);
+  assert.match(globalChips, /\bpadding:\s*\.3rem\s+\.6rem\s*(?:;|$)/);
+  assert.ok(chipRules.some(rule => rule.selectors.includes('.featured-body .chips li')), 'Featured chip compactness has its own selector');
+  assert.match(declarations(css, '.featured-result strong'), /\bdisplay:\s*inline\s*(?:;|$)/);
+  assert.match(declarations(css, '.text-link'), /\bmin-height:\s*44px\s*(?:;|$)/);
+  const featuredRules = rules.filter(rule => rule.selectors.some(selector => /^\.(?:featured-|flow-)/.test(selector)));
+  for (const rule of featuredRules) {
+    assert.doesNotMatch(rule.body, /(?:^|;)\s*(?:height|max-height|block-size|max-block-size)\s*:|(?:-webkit-)?line-clamp\s*:|text-overflow\s*:\s*ellipsis/i, 'Cards do not use fixed height or text truncation to appear smaller');
+    const targetMinHeight = rule.body.match(/(?:^|;)\s*min-height\s*:\s*([^;]+)/)?.[1];
+    if (rule.selectors.some(selector => selector.endsWith('.text-link')) && targetMinHeight) {
+      assert.equal(targetMinHeight.trim(), '44px', 'Case-study link overrides retain a 44px click target');
+    }
+  }
+  for (const path of ['index.html', 'dist/index.html']) {
+    const cards = [...(await source(path)).matchAll(/<article class="featured-card">([\s\S]*?)<\/article>/g)];
+    assert.equal(cards.length, featuredWork.length);
+    for (const [index, card] of cards.entries()) {
+      const item = featuredWork[index];
+      const project = projects.find(project => project.id === item.id);
+      for (const value of [item.role, project.title, project.summary, project.metric, project.metricLabel, ...project.tools.slice(0, 3)]) {
+        assert.ok(card[1].includes(esc(value)), `${path}: ${item.id} retains ${value}`);
+      }
+      const title = card[1].match(/<h3><a href="([^"]+)">([^<]+)<\/a><\/h3>/);
+      assert.equal(title?.[1], `./${item.id}/index.html`);
+      assert.equal(title?.[2], esc(project.title));
+      assert.match(card[1], /<a class="text-link"[^>]*>Read case study/);
+      assert.equal((card[1].match(new RegExp(`href="\\./${item.id}/index\\.html"`, 'g')) || []).length, 2, `${path}: title and case-study links remain`);
     }
   }
 });
