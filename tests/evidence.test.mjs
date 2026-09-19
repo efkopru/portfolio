@@ -166,7 +166,7 @@ test('all three companion overviews, source readers and raw assets are published
       assert.deepEqual(await source(file, null), await source(`dist/${file}`, null));
     }
     const parent = body(await source(`${companion.project}/index.html`));
-    assert.ok(parent.includes(`href="../${route}"`));
+    assert.equal(parent.includes(`href="../${route}"`), companion.project !== 'doctoral-research', `${companion.project}: only the doctoral page omits its companion CTA`);
     assert.ok(parent.includes('New teaching example using invented data. Separate from the historical project, original prototype, and doctoral evaluation.'));
   }
   for (const asset of evidenceAssets) assert.deepEqual(await source(asset, null), await source(`dist/${asset}`, null));
@@ -248,18 +248,60 @@ test('method and companion SVGs retain plain styling without decorative effects 
   }
 });
 
-test('research explains shared access, cites the public doctoral record and pins public source without invented publication identifiers', async () => {
+test('research retains shared-access explanation and a plain doctoral citation without the removed source disclaimer', async () => {
   const html = body(await source('doctoral-research/index.html'));
   assert.ok(html.includes('Why shared access matters'));
   assert.ok(html.includes('separate shortest routes can overlook the value of shared links'));
   assert.ok(html.includes('PhD dissertation, The University of Texas at Dallas, 2024'));
   assert.ok(html.includes('Modeling Integer Programming To Multiple Target Access Problem.'));
-  assert.ok(html.includes('https://graduate.utdallas.edu/fsa/doctoral-degrees-awarded/2023-2024-doctoral-degrees-awarded/'));
-  assert.match(html, /https:\/\/github\.com\/efkopru\/gemini-shortest-path\/tree\/[a-f0-9]{40}/);
-  assert.ok(html.includes('No journal publication, DOI, or dissertation benchmark is claimed here.'));
+  assert.ok(html.includes('public doctoral record'));
+  assert.doesNotMatch(html, /version-pinned public research source|No journal publication, DOI, or dissertation benchmark is claimed here\./);
   assert.doesNotMatch(html, /(?:doi\.org\/|doi:\s*10\.|10\.\d{4,9}\/)/i);
   const companion = JSON.parse(await source('examples/network-access/report.json'));
   assert.match(companion.disclosure, /(?:synthetic|invented|educational|toy)/i);
+});
+
+test('doctoral page omits research resource links while preserving navigation, gallery viewing and other project links', async () => {
+  const project = siteProjects.find(project => project.id === 'doctoral-research');
+  const companion = companions.find(companion => companion.project === project.id);
+  assert.deepEqual(project.links, []);
+  const galleryLinks = new Set(project.gallery.map(image => `../${image.src}`));
+  assert.ok(galleryLinks.size > 0, 'Doctoral gallery remains available');
+  const navigationLinks = new Set(['../index.html#projects', ...(project.collection ? [`../${project.collection.id}/index.html`] : [])]);
+  for (const path of ['doctoral-research/index.html', 'dist/doctoral-research/index.html']) {
+    const html = await source(path);
+    const content = body(html);
+    assert.doesNotMatch(content, /class="project-links"|href="https?:\/\/|href="[^"#]*example-network-access/);
+    const callout = content.match(/<div class="companion-callout">([\s\S]*?)<\/div>/)?.[1];
+    assert.ok(callout, `${path}: descriptive educational callout remains`);
+    assert.ok(callout.includes(esc(companion.title)));
+    assert.ok(callout.includes(esc(companion.summary)));
+    assert.ok(callout.includes('New teaching example using invented data.'));
+    assert.doesNotMatch(callout, /<a\b/);
+    const foundGalleryLinks = new Set();
+    for (const anchor of content.matchAll(/<a\b([^>]*)href="([^"]+)"([^>]*)>/g)) {
+      if (/\bdata-image-viewer\b/.test(anchor[1] + anchor[3])) {
+        assert.ok(galleryLinks.has(anchor[2]), `${path}: image links point only to the existing doctoral gallery`);
+        foundGalleryLinks.add(anchor[2]);
+      } else {
+        assert.ok(navigationLinks.has(anchor[2]), `${path}: non-image links are limited to breadcrumb and back navigation`);
+      }
+    }
+    assert.deepEqual(foundGalleryLinks, galleryLinks, `${path}: all doctoral images remain openable`);
+    assert.match(content, /<nav class="breadcrumbs"[^>]*>[\s\S]*?<a href="\.\.\/index\.html#projects">Projects<\/a>/);
+    assert.match(content, /<p class="back-link"><a href="\.\.\/index\.html#projects">/);
+    assert.match(html, /<nav id="site-nav"[^>]*aria-label="Main navigation"/);
+    assert.ok(html.includes('href="../contact/index.html"'));
+    assert.ok(html.includes('data-viewer-close'));
+    assert.ok(html.includes('data-zoom-in'));
+  }
+  assert.equal(await source('doctoral-research/index.html'), await source('dist/doctoral-research/index.html'));
+  for (const other of siteProjects.filter(other => other.id !== project.id)) {
+    const html = body(await source(`${other.id}/index.html`));
+    for (const link of other.links || []) {
+      assert.ok(html.includes(`href="${esc(link.url)}"`), `${other.id}: unrelated project link remains present`);
+    }
+  }
 });
 
 async function assertSocialMetadata(html, cover, origin) {

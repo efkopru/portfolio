@@ -90,7 +90,7 @@ export const projects = [
     approach: ['Represent access decisions on a spatial network.', 'Express the multiple-target access problem through integer programming.', 'Implement the formulation using MIP in Python and OMPR in R.'],
     result: 'The work formed part of my PhD, completed in May 2024. Public R source includes an OMPR/GLPK formulation, convex-hull preprocessing, and example network data.',
     boundary: 'The published source includes example networks and solver-based implementations. Performance depends on the problem instance, solver configuration, and preprocessing assumptions.',
-    links: [{ label: 'View public research source', url: 'https://github.com/efkopru/gemini-shortest-path' }, { label: 'UT Dallas doctoral record', url: 'https://graduate.utdallas.edu/fsa/doctoral-degrees-awarded/2023-2024-doctoral-degrees-awarded/' }]
+    links: []
   }
 ];
 
