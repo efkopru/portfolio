@@ -142,6 +142,11 @@ for (const oldPage of previous?.pages || []) {
     try { await unlink(resolve(output, oldPage)); } catch (error) { if (error.code !== 'ENOENT') throw error; }
   }
 }
+// Retire only these known generated illustrations, now replaced by HTML workflows.
+for (const name of ['featured-data-engineering.svg', 'featured-data-science.svg', 'featured-software-engineering.svg']) {
+  try { await unlink(resolve(output, 'assets/evidence', name)); }
+  catch (error) { if (error.code !== 'ENOENT') throw error; }
+}
 for (const [path, html] of pages) {
   for (const destination of [resolve(root, path), resolve(output, path)]) {
     await mkdir(resolve(destination, '..'), { recursive: true });

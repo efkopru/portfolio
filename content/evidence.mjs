@@ -1,9 +1,9 @@
 // Only public-safe companions are published. These are new educational examples,
 // never employer source or measurements of historical production systems.
 export const featuredWork = [
-  { id: 'utility-inspection-etl', role: 'Data engineering', image: 'assets/evidence/featured-data-engineering.svg' },
-  { id: 'accessibility-analysis', role: 'Data science', image: 'assets/evidence/featured-data-science.svg' },
-  { id: 'interactive-maps-a-custom-js-app', role: 'Software engineering', image: 'assets/evidence/featured-software-engineering.svg' }
+  { id: 'utility-inspection-etl', role: 'Data engineering', steps: ['Records', 'Process', 'Publish'] },
+  { id: 'accessibility-analysis', role: 'Data science', steps: ['Network', 'Score', 'Compare'] },
+  { id: 'interactive-maps-a-custom-js-app', role: 'Software engineering', steps: ['GIS data', 'Tools', 'Web map'] }
 ];
 
 export const methodDiagrams = {
@@ -40,6 +40,6 @@ export const companions = [
   }
 ];
 export const companionFiles = companion => ['README.md', 'demo.py', 'test_demo.py', 'report.json', ...(companion.id === 'spatial-etl' ? ['records.json'] : [])].map(name => `examples/${companion.id}/${name}`);
-export const evidenceAssets = [...new Set([...featuredWork.map(item => item.image), ...Object.values(methodDiagrams).map(diagram => diagram.src), ...companions.map(companion => companion.diagram), ...companions.flatMap(companionFiles)])];
+export const evidenceAssets = [...Object.values(methodDiagrams).map(diagram => diagram.src), ...companions.map(companion => companion.diagram), ...companions.flatMap(companionFiles)];
 export const companionRoute = id => `example-${id}`;
 export const sourceRoute = (id, name) => `example-${id}-${({ 'README.md': 'guide', 'demo.py': 'code', 'test_demo.py': 'tests' })[name]}`;

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import { runInNewContext } from 'node:vm';
 import { projects } from '../content/portfolio.mjs';
 import { collections, browseCollections, siteProjects } from '../content/site-structure.mjs';
@@ -75,39 +75,40 @@ test('homepage places exactly four selected skills between the introduction and 
   }
 });
 
-test('featured cards publish distinct dedicated 1200 by 630 conceptual illustrations', async () => {
+test('featured cards use accessible three-step HTML flows instead of illustration assets', async () => {
   const attribute = (tag, name) => tag.match(new RegExp(`\\b${name}="([^"]*)"`))?.[1];
-  const workflowImages = new Set([...Object.values(methodDiagrams).map(diagram => diagram.src), ...companions.map(companion => companion.diagram)]);
-  assert.equal(new Set(featuredWork.map(item => item.image)).size, featuredWork.length);
-  const contentHashes = new Set();
-  for (const item of featuredWork) {
-    assert.match(item.image, /^assets\/evidence\/featured-[^/]+\.svg$/);
-    assert.ok(!workflowImages.has(item.image), `${item.id}: thumbnail is separate from full workflow diagrams`);
-    assert.ok(evidenceAssets.includes(item.image), `${item.id}: thumbnail is explicitly published`);
-    const svg = await source(item.image);
-    const svgTag = svg.match(/<svg\b[^>]*>/)?.[0] || '';
-    assert.equal(attribute(svgTag, 'width'), '1200');
-    assert.equal(attribute(svgTag, 'height'), '630');
-    assert.equal(attribute(svgTag, 'viewBox'), '0 0 1200 630');
-    const description = svg.match(/<desc\b[^>]*>([\s\S]*?)<\/desc>/)?.[1] || '';
-    assert.match(description, /conceptual/i, `${item.id}: clearly describes a conceptual illustration`);
-    assert.match(description, /invented/i, `${item.id}: does not present invented content as original evidence`);
-    assert.equal(svg, await source(`dist/${item.image}`));
-    contentHashes.add(hash(svg));
-  }
-  assert.equal(contentHashes.size, featuredWork.length, 'Each featured illustration has distinct visual content');
+  const expectedSteps = [['Records', 'Process', 'Publish'], ['Network', 'Score', 'Compare'], ['GIS data', 'Tools', 'Web map']];
+  assert.deepEqual(featuredWork.map(item => item.steps), expectedSteps);
+  assert.ok(featuredWork.every(item => !Object.hasOwn(item, 'image')));
+  assert.ok(evidenceAssets.every(path => !/\/featured-[^/]+\.svg$/i.test(path)));
+  const publishedEvidence = await readdir(new URL('../dist/assets/evidence/', import.meta.url));
+  assert.ok(publishedEvidence.every(name => !/^featured-.*\.svg$/i.test(name)), 'Obsolete featured illustrations are absent from published assets');
+  assert.equal(await source('index.html'), await source('dist/index.html'));
   for (const path of ['index.html', 'dist/index.html']) {
     const html = body(await source(path));
+    assert.doesNotMatch(html, /<(?:img|svg)\b/i, `${path}: homepage content uses plain HTML visuals`);
     const cards = [...html.matchAll(/<article\b[^>]*class="[^"]*\bfeatured-card\b[^"]*"[^>]*>([\s\S]*?)<\/article>/g)];
     assert.equal(cards.length, featuredWork.length);
     for (const [index, card] of cards.entries()) {
       const item = featuredWork[index];
-      const images = [...card[1].matchAll(/<img\b[^>]*>/g)];
-      assert.equal(images.length, 1, `${path}: ${item.id} has one dedicated thumbnail`);
-      const image = images[0][0];
-      assert.equal(attribute(image, 'src'), `./${item.image}`);
-      assert.equal(attribute(image, 'width'), '1200');
-      assert.equal(attribute(image, 'height'), '630');
+      const flows = [...card[1].matchAll(/(<ol\b[^>]*class="[^"]*\bfeatured-flow\b[^"]*"[^>]*>)([\s\S]*?)<\/ol>/g)];
+      assert.equal(flows.length, 1, `${path}: ${item.id} has one semantic workflow list`);
+      const [flow] = flows;
+      assert.equal(attribute(flow[1], 'aria-label'), `${item.role} workflow`);
+      assert.notEqual(attribute(flow[1], 'aria-hidden'), 'true');
+      const steps = [...flow[2].matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/g)];
+      assert.equal(steps.length, 3);
+      assert.deepEqual(steps.map(step => {
+        const labels = [...step[1].matchAll(/<span\b[^>]*class="[^"]*\bflow-step\b[^"]*"[^>]*>([^<]+)<\/span>/g)];
+        assert.equal(labels.length, 1, `${item.id}: each list item has one text step`);
+        return labels[0][1].trim();
+      }), expectedSteps[index]);
+      const arrows = [...flow[2].matchAll(/(<span\b[^>]*class="[^"]*\bflow-arrow\b[^"]*"[^>]*>)([^<]+)<\/span>/g)];
+      assert.equal(arrows.length, 2, `${path}: ${item.id} has only two connecting arrows`);
+      for (const arrow of arrows) {
+        assert.equal(attribute(arrow[1], 'aria-hidden'), 'true');
+        assert.match(arrow[2].trim(), /^(?:→|&rarr;|&#8594;|&#x2192;)$/i);
+      }
       assert.ok(card[1].includes(`href="./${item.id}/index.html"`));
     }
   }
@@ -227,6 +228,23 @@ test('method and companion diagrams retain local SVG sources, meaningful alt and
     assert.match(svg, /<title\b[^>]*>[^<]+<\/title>/);
     assert.match(svg, /<desc\b[^>]*>[^<]+<\/desc>/);
     assert.doesNotMatch(svg, /<script\b|<foreignObject\b|\s(?:href|src)="https?:/i);
+  }
+});
+
+test('method and companion SVGs retain plain styling without decorative effects or external assets', async () => {
+  const diagrams = [...new Set([...Object.values(methodDiagrams).map(diagram => diagram.src), ...companions.map(companion => companion.diagram)])];
+  for (const path of diagrams) {
+    const svg = await source(path);
+    assert.match(svg, /<title\b[^>]*>\s*[^<\s][^<]*<\/title>/);
+    assert.match(svg, /<desc\b[^>]*>\s*[^<\s][^<]*<\/desc>/);
+    assert.doesNotMatch(svg, /<(?:linearGradient|radialGradient|filter|feDropShadow|image|foreignObject|script)\b/i, `${path}: no decorative effects or embedded assets`);
+    assert.doesNotMatch(svg, /\b(?:filter|box-shadow|text-shadow)\s*[:=]|@import|(?:linear|radial)-gradient\s*\(/i, `${path}: no CSS effects or imports`);
+    for (const reference of svg.matchAll(/\b(?:href|src)\s*=\s*["']([^"']*)["']/gi)) {
+      assert.match(reference[1], /^#[^\s]+$/, `${path}: references stay inside the same SVG`);
+    }
+    for (const reference of svg.matchAll(/\burl\(\s*([^)]*?)\s*\)/gi)) {
+      assert.match(reference[1].replace(/^["']|["']$/g, ''), /^#[^\s]+$/, `${path}: URLs only reference internal SVG definitions`);
+    }
   }
 });
 
