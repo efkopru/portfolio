@@ -276,55 +276,105 @@ def chart_svg(report: dict) -> str:
     """Produce a self-contained, accessible vector chart from the run's raw metrics."""
     model = report["logistic_model"]
     baseline = report["training_prevalence_baseline"]
+    split = report["split"]
+    loss_max = max(1.0, math.ceil(max(metrics[key] for metrics in (model, baseline)
+                                   for key in ("brier_score", "log_loss")) * 4) / 4)
+    loss_width = 300
     parts = [
-        '<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="730" viewBox="0 0 1100 730" role="img" aria-labelledby="title desc">',
+        '<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="866" viewBox="0 0 1200 866" role="img" aria-labelledby="title desc">',
         '<title id="title">Synthetic lead-pipe model evaluation</title>',
         '<desc id="desc">Brier and log-loss comparison against training prevalence, plus a reliability plot. '
-        'Generated from 200 held-out invented records in 40 disjoint groups. Not real-world performance.</desc>',
-        '<rect width="1100" height="730" rx="18" fill="#edf6fa"/>',
-        '<g font-family="Arial, sans-serif" fill="#163447">',
-        '<text x="44" y="49" font-size="16" font-weight="700">REPRODUCIBLE EDUCATIONAL EXAMPLE</text>',
-        '<text x="44" y="94" font-size="30" font-weight="700">Inspect the errors, not just the score</text>',
-        f'<text x="44" y="127" font-size="17">Synthetic data seed {report["seed"]} | 200 held-out properties | 40 groups | no shared groups</text>',
-        '<rect x="34" y="160" width="1032" height="446" rx="12" fill="#fff"/>',
-        '<text x="58" y="198" font-size="20" font-weight="700">Held-out losses</text>',
-        '<text x="58" y="224" font-size="15">Lower is better; bars share a 0 to 1 scale.</text>',
+        f'Generated from {split["test_properties"]} held-out invented records in {split["test_groups"]} disjoint groups. '
+        'Not real-world performance. Both loss metrics use one common zero-based scale; '
+        'the reliability plot uses equal zero-to-one axes.</desc>',
+        '<rect width="1200" height="866" rx="24" fill="#f5f8fc"/>',
+        '<g font-family="Arial, sans-serif" fill="#17324a">',
+        '<rect x="40" y="31" width="5" height="20" rx="2.5" fill="#147d86"/>',
+        '<text x="57" y="47" font-size="14" letter-spacing="1.7" font-weight="700" fill="#147d86">SYNTHETIC ML EVALUATION</text>',
+        '<text x="40" y="94" font-size="35" font-weight="700">Inspect the errors, not just the score</text>',
+        '<text x="40" y="125" font-size="18" fill="#536a7e">A reproducible comparison on invented records, with a fully separate holdout.</text>',
     ]
-    for block, (key, label) in enumerate((("brier_score", "Brier score"), ("log_loss", "Log loss"))):
-        y = 268 + block * 126
-        parts.append(f'<text x="58" y="{y}" font-size="17" font-weight="700">{label}</text>')
-        for index, (metrics, color, name) in enumerate(((model, "#176285", "Logistic"), (baseline, "#a34422", "Prevalence"))):
-            line_y = y + 16 + index * 39
-            parts.append(f'<text x="58" y="{line_y + 17}" font-size="15">{name}</text>')
-            parts.append(f'<rect x="151" y="{line_y}" width="{metrics[key] * 330:.3f}" height="25" rx="4" fill="{color}"/>')
-            parts.append(f'<text x="{158 + metrics[key] * 330:.3f}" y="{line_y + 18}" font-size="15">{metrics[key]:.4f}</text>')
-    parts.extend([
-        '<text x="603" y="198" font-size="20" font-weight="700">Reliability by probability bin</text>',
-        '<text x="603" y="224" font-size="15">Descriptive check; no calibrator was fitted.</text>',
-    ])
-    for tick in range(6):
-        x = 660 + tick * 61
-        y = 525 - tick * 53
+    for index, (label, value) in enumerate((
+        ("HELD-OUT PROPERTIES", split["test_properties"]),
+        ("HELD-OUT GROUPS", split["test_groups"]),
+        ("SHARED GROUPS", split["shared_groups"]),
+        ("DATA SEED", report["seed"]),
+    )):
+        x = 40 + index * 286
         parts.extend([
-            f'<line x1="660" y1="{y}" x2="965" y2="{y}" stroke="#d5e2e9"/>',
-            f'<text x="644" y="{y + 5}" text-anchor="end" font-size="13">{tick / 5:.1f}</text>',
-            f'<text x="{x}" y="548" text-anchor="middle" font-size="13">{tick / 5:.1f}</text>',
+            f'<rect x="{x}" y="150" width="262" height="68" rx="12" fill="#fff" stroke="#dfe7ef"/>',
+            f'<text x="{x + 18}" y="174" font-size="12" letter-spacing="0.9" font-weight="700" fill="#536a7e">{label}</text>',
+            f'<text x="{x + 18}" y="202" font-size="25" font-weight="700">{value}</text>',
         ])
-    parts.append('<line x1="660" y1="525" x2="965" y2="260" stroke="#667785" stroke-width="2" stroke-dasharray="6 5"/>')
+    parts.extend([
+        '<rect x="32" y="240" width="550" height="498" rx="18" fill="#fff" stroke="#dfe7ef"/>',
+        '<rect x="602" y="240" width="566" height="498" rx="18" fill="#fff" stroke="#dfe7ef"/>',
+        '<text x="60" y="280" font-size="23" font-weight="700">Held-out losses</text>',
+        '<text x="60" y="309" font-size="16" fill="#536a7e">Lower is better. Both metrics share the same scale.</text>',
+        '<circle cx="68" cy="338" r="5" fill="#147d86"/>',
+        '<text x="82" y="344" font-size="15">Logistic model</text>',
+        '<circle cx="250" cy="338" r="5" fill="#3e75b6"/>',
+        '<text x="264" y="344" font-size="15">Training-prevalence baseline</text>',
+    ])
+    for block, (key, label) in enumerate((("brier_score", "Brier score"), ("log_loss", "Log loss"))):
+        y = 390 + block * 149
+        parts.append(f'<text x="60" y="{y}" font-size="19" font-weight="700">{label}</text>')
+        for index, (metrics, color, name) in enumerate(((model, "#147d86", "Model"), (baseline, "#3e75b6", "Baseline"))):
+            line_y = y + 19 + index * 43
+            width = metrics[key] / loss_max * loss_width
+            parts.extend([
+                f'<text x="60" y="{line_y + 20}" font-size="16" fill="#536a7e">{name}</text>',
+                f'<rect x="151" y="{line_y}" width="{loss_width}" height="28" rx="5" fill="#eef3f7"/>',
+                f'<rect x="151" y="{line_y}" width="{width:.3f}" height="28" rx="5" fill="{color}" '
+                f'data-metric="{key}" data-predictor="{name.lower()}"><title>{label}, {name}: {metrics[key]:.4f}</title></rect>',
+                f'<text x="465" y="{line_y + 20}" font-size="17" font-weight="700">{metrics[key]:.4f}</text>',
+            ])
+    for tick in range(5):
+        x = 151 + tick * loss_width / 4
+        parts.extend([
+            f'<line x1="{x:g}" y1="644" x2="{x:g}" y2="651" stroke="#98acbc"/>',
+            f'<text x="{x:g}" y="673" text-anchor="middle" font-size="14" fill="#536a7e">{tick * loss_max / 4:g}</text>',
+        ])
+    parts.extend([
+        '<line x1="151" y1="644" x2="451" y2="644" stroke="#98acbc"/>',
+        f'<text x="60" y="711" font-size="15" fill="#536a7e">Common loss scale: 0 to {loss_max:g}. Bar lengths are proportional.</text>',
+        '<text x="630" y="280" font-size="23" font-weight="700">Reliability by probability bin</text>',
+        '<text x="630" y="309" font-size="16" fill="#536a7e">Descriptive check; no calibrator was fitted.</text>',
+    ])
+    plot_left, plot_bottom, plot_size = 724, 654, 326
+    for tick in range(6):
+        x = plot_left + tick * plot_size / 5
+        y = plot_bottom - tick * plot_size / 5
+        parts.extend([
+            f'<line x1="724" y1="{y:g}" x2="1050" y2="{y:g}" stroke="#e3eaf1"/>',
+            f'<line x1="{x:g}" y1="328" x2="{x:g}" y2="654" stroke="#e3eaf1"/>',
+            f'<text x="710" y="{y + 5:g}" text-anchor="end" font-size="14" fill="#536a7e">{tick / 5:.1f}</text>',
+            f'<text x="{x:g}" y="676" text-anchor="middle" font-size="14" fill="#536a7e">{tick / 5:.1f}</text>',
+        ])
+    parts.extend([
+        '<path d="M724 328V654H1050" fill="none" stroke="#98acbc" stroke-width="1.5"/>',
+        '<line x1="724" y1="654" x2="1050" y2="328" stroke="#b77923" stroke-width="2" stroke-dasharray="7 6"/>',
+    ])
     for item in report["reliability_bins"]:
         if not item["count"]:
             continue
-        x = 660 + item["mean_prediction"] * 305
-        y = 525 - item["observed_fraction"] * 265
+        x = plot_left + item["mean_prediction"] * plot_size
+        y = plot_bottom - item["observed_fraction"] * plot_size
         label = escape(f'{item["interval"]}: n={item["count"]}, mean prediction {item["mean_prediction"]:.4f}, observed {item["observed_fraction"]:.4f}')
-        parts.append(f'<circle cx="{x:.3f}" cy="{y:.3f}" r="7" fill="#176285" stroke="#fff" stroke-width="2"><title>{label}</title></circle>')
-        parts.append(f'<text x="{x + 10:.3f}" y="{y - 10:.3f}" font-size="12">n={item["count"]}</text>')
+        parts.append(f'<circle cx="{x:.3f}" cy="{y:.3f}" r="7" fill="#147d86" stroke="#fff" stroke-width="2" data-reliability-bin="{escape(item["interval"])}"><title>{label}</title></circle>')
+        parts.append(f'<text x="{x + 12:.3f}" y="{y - 12:.3f}" font-size="14" font-weight="700">n={item["count"]}</text>')
     parts.extend([
-        '<text x="812" y="577" text-anchor="middle" font-size="15">Mean predicted probability</text>',
-        '<text transform="translate(605 399) rotate(-90)" text-anchor="middle" font-size="15">Observed positive fraction</text>',
-        '<text x="44" y="642" font-size="17" font-weight="700">Synthetic-only results, not field-validated utility performance.</text>',
-        '<text x="44" y="671" font-size="15">Fixed split seed 4173. Threshold 0.5 is illustrative. Test labels never fit or tune the model.</text>',
-        '<text x="44" y="698" font-size="15">See the report for confusion counts, overlapping error slices and the largest prediction errors.</text>',
+        '<text x="887" y="700" text-anchor="middle" font-size="16">Mean predicted probability</text>',
+        '<text transform="translate(658 491) rotate(-90)" text-anchor="middle" font-size="16">Observed positive fraction</text>',
+        '<line x1="726" y1="721" x2="752" y2="721" stroke="#b77923" stroke-width="2" stroke-dasharray="7 6"/>',
+        '<text x="761" y="725" font-size="12" fill="#536a7e">Perfect agreement</text>',
+        '<circle cx="922" cy="721" r="4" fill="#147d86"/>',
+        '<text x="933" y="725" font-size="12" fill="#536a7e">Bin mean; n = records</text>',
+        '<rect x="32" y="758" width="1136" height="81" rx="13" fill="#fff8ed" stroke="#efe1c8"/>',
+        '<rect x="32" y="772" width="4" height="53" rx="2" fill="#b77923"/>',
+        '<text x="54" y="783" font-size="17" font-weight="700">Synthetic-only results, not field-validated utility performance.</text>',
+        f'<text x="54" y="806" font-size="15" fill="#536a7e">Split seed {report["settings"]["split_seed"]}. Threshold {report["settings"]["threshold"]:g} is illustrative. Test labels never fit or tune the model.</text>',
+        '<text x="54" y="827" font-size="15" fill="#536a7e">The report includes confusion counts, overlapping error slices and the largest prediction errors.</text>',
         '</g></svg>',
     ])
     return "\n".join(parts) + "\n"

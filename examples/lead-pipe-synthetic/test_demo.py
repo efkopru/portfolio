@@ -136,6 +136,39 @@ class SyntheticCompanionTests(unittest.TestCase):
         self.assertIn("not field-validated", svg)
         self.assertNotIn("<script", svg)
 
+    def test_chart_geometry_uses_common_zero_based_loss_and_probability_scales(self):
+        root = ET.fromstring(chart_svg(self.report))
+        bars = [node for node in root.iter() if "data-metric" in node.attrib]
+        self.assertEqual(len(bars), 4)
+        for bar in bars:
+            metrics = self.report["logistic_model" if bar.attrib["data-predictor"] == "model"
+                                  else "training_prevalence_baseline"]
+            self.assertEqual(float(bar.attrib["x"]), 151)
+            self.assertAlmostEqual(float(bar.attrib["width"]),
+                                   metrics[bar.attrib["data-metric"]] * 300, places=3)
+        points = [node for node in root.iter() if "data-reliability-bin" in node.attrib]
+        nonempty_bins = [item for item in self.report["reliability_bins"] if item["count"]]
+        self.assertEqual(len(points), len(nonempty_bins))
+        for point, item in zip(points, nonempty_bins):
+            self.assertAlmostEqual(float(point.attrib["cx"]),
+                                   724 + item["mean_prediction"] * 326, places=3)
+            self.assertAlmostEqual(float(point.attrib["cy"]),
+                                   654 - item["observed_fraction"] * 326, places=3)
+
+    def test_loss_chart_expands_shared_scale_without_clipping(self):
+        report = json.loads(json.dumps(self.report))
+        report["training_prevalence_baseline"]["log_loss"] = 1.6
+        svg = chart_svg(report)
+        self.assertIn("Common loss scale: 0 to 1.75", svg)
+        for bar in ET.fromstring(svg).iter():
+            if "data-metric" not in bar.attrib:
+                continue
+            metrics = report["logistic_model" if bar.attrib["data-predictor"] == "model"
+                             else "training_prevalence_baseline"]
+            self.assertAlmostEqual(float(bar.attrib["width"]),
+                                   metrics[bar.attrib["data-metric"]] / 1.75 * 300, places=3)
+            self.assertLessEqual(float(bar.attrib["width"]), 300)
+
     def test_published_artifacts_match_default_run(self):
         folder = Path(__file__).resolve().parent
         self.assertEqual(json.loads((folder / "report.json").read_text(encoding="utf-8")),

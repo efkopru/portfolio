@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Building an interactive mapping interface</title>
+  <desc id="desc">Conceptual software illustration of a browser map, layer controls, and a highlighted route. The interface and geography are invented, not a screenshot of the original application.</desc>
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#142e43"/><stop offset="1" stop-color="#20465b"/></linearGradient>
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M60 0H0V60" fill="none" stroke="#a8d8e4" stroke-opacity=".07"/></pattern>
+    <clipPath id="window"><rect x="79" y="75" width="1042" height="480" rx="24"/></clipPath>
+  </defs>
+  <path fill="url(#bg)" d="M0 0h1200v630H0z"/><path fill="url(#grid)" d="M0 0h1200v630H0z"/>
+  <rect x="79" y="87" width="1042" height="480" rx="24" fill="#0d263b" opacity=".45"/>
+  <g clip-path="url(#window)">
+    <path d="M79 75h1042v480H79z" fill="#c6dcd8"/>
+    <path d="m628 128 66 96 12 117 61 83 52 148h91l-42-156-69-90-17-111-65-87z" fill="#73a8b7"/>
+    <g fill="none" stroke="#f0f4e9" stroke-width="12" stroke-linejoin="round">
+      <path d="m276 182 840 327M267 371l385-143 470 24M456 135l-55 410M589 136l-72 420M829 139l-5 407M996 134l-73 420M264 493l458-45 400 53"/>
+    </g>
+    <g fill="#a3c4ac" opacity=".85"><path d="m876 287 106 5-27 92-80-26z"/><path d="m330 414 54-17-14 85-48 5z"/><path d="m565 291 43-15 45 35-99 24z"/></g>
+    <path d="M79 75h1042v72H79z" fill="#24475c"/>
+    <circle cx="117" cy="111" r="9" fill="#edba79"/><circle cx="149" cy="111" r="9" fill="#83c8bf"/><circle cx="181" cy="111" r="9" fill="#729dbb"/>
+    <rect x="303" y="96" width="474" height="29" rx="14" fill="#35596d"/>
+    <path d="M79 147h220v408H79z" fill="#1c3b50"/>
+    <g stroke="#9ec4d1" stroke-width="8" stroke-linecap="round"><path d="M119 195h126M150 254h93M150 316h73M150 378h93"/></g>
+    <g fill="#70cebd"><rect x="113" y="242" width="22" height="22" rx="5"/><rect x="113" y="304" width="22" height="22" rx="5"/></g>
+    <rect x="113" y="366" width="22" height="22" rx="5" fill="none" stroke="#80a5b7" stroke-width="3"/>
+    <path d="m435 451 32-238 175 68 62 95 220 85" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width="17" stroke-linejoin="round"/>
+    <path d="m435 451 32-238 175 68 62 95 220 85" fill="none" stroke="#257d87" stroke-width="10" stroke-linejoin="round"/>
+    <circle cx="435" cy="451" r="15" fill="#257d87" stroke="#fff" stroke-width="6"/>
+    <path d="M941 423c0 17-17 36-17 36s-17-19-17-36a17 17 0 0 1 34 0" fill="#e4ae60" stroke="#25485b" stroke-width="4"/>
+    <circle cx="924" cy="423" r="5" fill="#25485b"/>
+    <rect x="864" y="177" width="221" height="156" rx="18" fill="#17394c" fill-opacity=".96"/>
+    <g fill="none" stroke="#95d9d0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="m923 219-25 23 25 23m103-46 25 23-25 23m-43-54-16 62"/></g>
+    <path d="M897 303h155" stroke="#638c9c" stroke-width="6" stroke-linecap="round"/>
+  </g>
+  <rect x="79" y="75" width="1042" height="480" rx="24" fill="none" stroke="#7098ac" stroke-width="2"/>
+</svg>

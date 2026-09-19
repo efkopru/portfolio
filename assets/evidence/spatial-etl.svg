@@ -1,42 +1,50 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
   <title id="title">Synthetic spatial ETL: validate, load, verify and recover</title>
-  <desc id="desc">Invented records pass schema and local-grid validation. Invalid rows enter quarantine. Accepted rows enter a SQLite transaction. A failure rolls back the whole batch; retry commits. A JSON report records the outcomes. Educational reconstruction, not employer architecture.</desc>
-  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#27617b"/></marker></defs>
-  <rect width="1200" height="600" rx="20" fill="#edf4f8"/>
-  <g font-family="Arial, sans-serif" fill="#173446">
-    <text x="48" y="59" font-size="28" font-weight="700">Spatial ETL: evidence through replay and recovery</text>
-    <text x="48" y="93" font-size="18">Educational reconstruction | invented local-grid records | no production data</text>
-    <g fill="#fff" stroke="#6b93a9" stroke-width="2">
-      <rect x="48" y="145" width="225" height="105" rx="12"/>
-      <rect x="333" y="145" width="235" height="105" rx="12"/>
-      <rect x="632" y="145" width="235" height="105" rx="12"/>
-      <rect x="927" y="145" width="225" height="105" rx="12"/>
-      <rect x="333" y="329" width="235" height="105" rx="12" fill="#fff5e8"/>
-      <rect x="632" y="329" width="235" height="105" rx="12" fill="#fff5e8"/>
-      <rect x="927" y="329" width="225" height="105" rx="12"/>
+  <desc id="desc">Invented records pass schema and local-grid validation. Invalid rows enter quarantine. Accepted rows enter a SQLite transaction. A failure rolls back the whole batch; retry commits. A JSON report records the outcomes. Educational reconstruction, not employer architecture. Twelve synthetic input rows include eight rejected rows. Replay is a no-op, stale revisions are skipped, and recovery produces five final stored records. LOCAL:DEMO_CARTESIAN is an invented metre grid with no geographic reference. These are verified behaviors, not production performance claims.</desc>
+  <defs>
+    <linearGradient id="wash" x2="1" y2="1"><stop stop-color="#f5f8fc"/><stop offset="1" stop-color="#edf4f7"/></linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dy="5" stdDeviation="7" flood-color="#17324a" flood-opacity=".055"/></filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1 9 5 1 9" fill="none" stroke="#7590a4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></marker>
+    <marker id="warning-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1 9 5 1 9" fill="none" stroke="#b77923" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></marker>
+  </defs>
+  <rect width="1200" height="720" rx="24" fill="url(#wash)"/>
+  <g font-family="Arial, Helvetica, sans-serif">
+    <rect x="48" y="40" width="6" height="25" rx="3" fill="#147d86"/>
+    <text x="68" y="59" font-size="16" font-weight="700" letter-spacing="1.7" fill="#147d86">RUNNABLE EXAMPLE / SYNTHETIC DATA</text>
+    <text x="48" y="115" font-size="36" font-weight="700" fill="#17324a">Spatial ETL built to replay and recover</text>
+    <text x="48" y="151" font-size="19" fill="#536b7d">Validate inputs. Make atomic updates. Inspect what happens when a batch fails.</text>
+    <g fill="none" stroke="#7590a4" stroke-width="2.5" marker-end="url(#arrow)">
+      <path d="M288 302H332"/><path d="M576 302H620"/><path d="M864 302H908"/>
+      <path d="M1032 399V469"/><path d="M864 537H908"/>
     </g>
-    <g text-anchor="middle" font-size="19" font-weight="700">
-      <text x="160" y="178">Invented JSON</text><text x="450" y="178">Validate + normalize</text>
-      <text x="750" y="178">SQLite transaction</text><text x="1040" y="178">Commit + replay</text>
-      <text x="450" y="362">Quarantine</text><text x="750" y="362">Injected failure</text><text x="1040" y="362">JSON report</text>
+    <g fill="none" stroke="#b77923" stroke-width="2.5" marker-end="url(#warning-arrow)"><path d="M456 399V469"/><path d="M744 399V469"/></g>
+    <g fill="#fff" stroke="#dbe5ed" filter="url(#shadow)">
+      <rect x="48" y="200" width="240" height="200" rx="18"/><rect x="336" y="200" width="240" height="200" rx="18"/>
+      <rect x="624" y="200" width="240" height="200" rx="18"/><rect x="912" y="200" width="240" height="200" rx="18"/>
+      <rect x="912" y="474" width="240" height="132" rx="18"/>
     </g>
-    <g text-anchor="middle" font-size="17">
-      <text x="160" y="209">No Earth coordinates</text><text x="160" y="234">12 synthetic input rows</text>
-      <text x="450" y="209">Schema / CRS / bounds</text><text x="450" y="234">Time / revision / IDs</text>
-      <text x="750" y="209">Bound SQL parameters</text><text x="750" y="234">Atomic versioned updates</text>
-      <text x="1040" y="209">Repeat is a no-op</text><text x="1040" y="234">Stale revisions skipped</text>
-      <text x="450" y="393">Reason + original row</text><text x="450" y="418">8 rejected input rows</text>
-      <text x="750" y="393">Roll back entire batch</text><text x="750" y="418">Compare full snapshot</text>
-      <text x="1040" y="393">Retry succeeds</text><text x="1040" y="418">5 final stored records</text>
+    <g fill="#eaf4f5"><rect x="70" y="222" width="40" height="36" rx="10"/><rect x="358" y="222" width="40" height="36" rx="10"/><rect x="646" y="222" width="40" height="36" rx="10"/><rect x="934" y="222" width="40" height="36" rx="10"/></g>
+    <g fill="#147d86" font-size="16" font-weight="700" text-anchor="middle"><text x="90" y="246">01</text><text x="378" y="246">02</text><text x="666" y="246">03</text><text x="954" y="246">04</text></g>
+    <g fill="#17324a" font-size="20" font-weight="700"><text x="70" y="292">Invented JSON</text><text x="358" y="292">Validate + normalize</text><text x="646" y="292">SQLite transaction</text><text x="934" y="292">Commit + replay</text></g>
+    <g fill="#536b7d" font-size="17">
+      <text x="70" y="332">12 synthetic input rows</text><text x="70" y="363">No Earth coordinates</text>
+      <text x="358" y="332">Schema / CRS / bounds</text><text x="358" y="363">Time / revision / IDs</text>
+      <text x="646" y="332">Bound SQL parameters</text><text x="646" y="363">Atomic versioned updates</text>
+      <text x="934" y="332">Repeat is a no-op</text><text x="934" y="363">Stale revisions skipped</text>
     </g>
-    <g fill="none" stroke="#27617b" stroke-width="3" marker-end="url(#arrow)">
-      <path d="M273 198H324"/><path d="M568 198H623"/><path d="M867 198H918"/>
-      <path d="M450 250V319"/><path d="M750 250V319"/><path d="M1040 250V319"/>
-      <path d="M867 382H918"/>
+    <g fill="#fff5e5" stroke="#efdebe"><rect x="336" y="474" width="240" height="132" rx="18"/><rect x="624" y="474" width="240" height="132" rx="18"/></g>
+    <g fill="#8e601d" font-size="16"><text x="472" y="439">invalid</text><text x="760" y="439">failure</text></g>
+    <text x="1048" y="439" font-size="16" fill="#536b7d">verify</text>
+    <g font-size="20" font-weight="700"><text x="358" y="511" fill="#8e601d">Quarantine</text><text x="646" y="511" fill="#8e601d">Injected failure</text><text x="934" y="511" fill="#147d86">JSON report</text></g>
+    <g font-size="17" fill="#536b7d">
+      <text x="358" y="547">Reason + original row</text><text x="358" y="577">8 rejected input rows</text>
+      <text x="646" y="547">Roll back entire batch</text><text x="646" y="577">Compare full snapshot</text>
+      <text x="934" y="547">Retry succeeds</text><text x="934" y="577">5 final stored records</text>
     </g>
-    <text x="465" y="291" font-size="16">invalid</text><text x="765" y="291" font-size="16">failure path</text>
-    <text x="48" y="502" font-size="18" font-weight="700">Verified behavior, not a production performance claim</text>
-    <text x="48" y="535" font-size="17">Strict inputs, deterministic output, transaction rollback, retry, idempotency and inspectable tests.</text>
-    <text x="48" y="562" font-size="17">LOCAL:DEMO_CARTESIAN is an invented metre grid with no geographic reference.</text>
+    <text x="48" y="496" font-size="17" font-weight="700" fill="#147d86">BEHAVIOR CHECKS</text>
+    <text x="48" y="530" font-size="18" fill="#17324a">Strict inputs</text><text x="48" y="560" font-size="18" fill="#17324a">Deterministic output</text><text x="48" y="590" font-size="18" fill="#17324a">Inspectable tests</text>
+    <path d="M48 638H1152" stroke="#dbe5ed"/>
+    <text x="48" y="669" font-size="16" fill="#536b7d">Educational reconstruction, not employer architecture or production performance. No production data is used.</text>
+    <text x="48" y="696" font-size="16" fill="#536b7d">LOCAL:DEMO_CARTESIAN is an invented metre grid with no geographic reference.</text>
   </g>
 </svg>

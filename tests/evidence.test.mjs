@@ -56,6 +56,63 @@ test('three featured projects precede the preserved original collection indexes'
   }
 });
 
+test('homepage places exactly four selected skills between the introduction and actions', async () => {
+  for (const path of ['index.html', 'dist/index.html']) {
+    const html = body(await source(path));
+    const intro = html.match(/<section\b[^>]*class="[^"]*\bhome-intro\b[^"]*"[^>]*>([\s\S]*?)<\/section>/)?.[1];
+    assert.ok(intro, `${path}: homepage introduction is present`);
+    const skillLists = [...intro.matchAll(/<ul\b[^>]*aria-label="Selected skills"[^>]*>([\s\S]*?)<\/ul>/g)];
+    assert.equal(skillLists.length, 1, `${path}: one accessible selected-skills list`);
+    const [skills] = skillLists;
+    const keywords = [...skills[1].matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/g)].map(match => match[1].replace(/<[^>]+>/g, '').trim());
+    assert.deepEqual(keywords, ['Python', 'SQL', 'Machine learning', 'ETL pipelines']);
+    const paragraphs = [...intro.matchAll(/<p\b[^>]*>[\s\S]*?<\/p>/g)];
+    assert.ok(paragraphs.length >= 2, `${path}: specialty and introduction remain visible`);
+    const lastParagraph = paragraphs.at(-1);
+    assert.ok(lastParagraph.index + lastParagraph[0].length <= skills.index, `${path}: skills follow the introductory text`);
+    const actions = intro.search(/<div\b[^>]*class="[^"]*\bhome-actions\b/);
+    assert.ok(actions >= skills.index + skills[0].length, `${path}: skills precede homepage actions`);
+  }
+});
+
+test('featured cards publish distinct dedicated 1200 by 630 conceptual illustrations', async () => {
+  const attribute = (tag, name) => tag.match(new RegExp(`\\b${name}="([^"]*)"`))?.[1];
+  const workflowImages = new Set([...Object.values(methodDiagrams).map(diagram => diagram.src), ...companions.map(companion => companion.diagram)]);
+  assert.equal(new Set(featuredWork.map(item => item.image)).size, featuredWork.length);
+  const contentHashes = new Set();
+  for (const item of featuredWork) {
+    assert.match(item.image, /^assets\/evidence\/featured-[^/]+\.svg$/);
+    assert.ok(!workflowImages.has(item.image), `${item.id}: thumbnail is separate from full workflow diagrams`);
+    assert.ok(evidenceAssets.includes(item.image), `${item.id}: thumbnail is explicitly published`);
+    const svg = await source(item.image);
+    const svgTag = svg.match(/<svg\b[^>]*>/)?.[0] || '';
+    assert.equal(attribute(svgTag, 'width'), '1200');
+    assert.equal(attribute(svgTag, 'height'), '630');
+    assert.equal(attribute(svgTag, 'viewBox'), '0 0 1200 630');
+    const description = svg.match(/<desc\b[^>]*>([\s\S]*?)<\/desc>/)?.[1] || '';
+    assert.match(description, /conceptual/i, `${item.id}: clearly describes a conceptual illustration`);
+    assert.match(description, /invented/i, `${item.id}: does not present invented content as original evidence`);
+    assert.equal(svg, await source(`dist/${item.image}`));
+    contentHashes.add(hash(svg));
+  }
+  assert.equal(contentHashes.size, featuredWork.length, 'Each featured illustration has distinct visual content');
+  for (const path of ['index.html', 'dist/index.html']) {
+    const html = body(await source(path));
+    const cards = [...html.matchAll(/<article\b[^>]*class="[^"]*\bfeatured-card\b[^"]*"[^>]*>([\s\S]*?)<\/article>/g)];
+    assert.equal(cards.length, featuredWork.length);
+    for (const [index, card] of cards.entries()) {
+      const item = featuredWork[index];
+      const images = [...card[1].matchAll(/<img\b[^>]*>/g)];
+      assert.equal(images.length, 1, `${path}: ${item.id} has one dedicated thumbnail`);
+      const image = images[0][0];
+      assert.equal(attribute(image, 'src'), `./${item.image}`);
+      assert.equal(attribute(image, 'width'), '1200');
+      assert.equal(attribute(image, 'height'), '630');
+      assert.ok(card[1].includes(`href="./${item.id}/index.html"`));
+    }
+  }
+});
+
 test('all case studies show their summary before gallery or external application', async () => {
   for (const project of siteProjects) {
     const html = body(await source(`${project.id}/index.html`));
