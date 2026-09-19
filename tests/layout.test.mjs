@@ -59,10 +59,14 @@ test('compact homepage wrappers retain introduction, skills, actions and project
     assert.deepEqual([...skills.matchAll(/<li>([^<]+)<\/li>/g)].map(match => match[1]), ['Python', 'SQL', 'Machine learning', 'ETL pipelines']);
     const actions = links.match(/<div class="home-actions">([\s\S]*?)<\/div>/)?.[1];
     assert.ok(actions, `${path}: action links remain grouped`);
-    assert.deepEqual([...actions.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([^<]+)<\/a>/g)].map(match => [match[1], match[2]]), [['#selected-work', 'Selected work'], ['#projects', 'All projects']]);
+    assert.deepEqual([...actions.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([^<]+)<\/a>/g)].map(match => [match[1], match[2]]), [['#selected-work', 'Highlighted work'], ['#projects', 'All projects']]);
     const heading = html.match(/<div class="selected-work-heading">([\s\S]*?)<\/div>/);
     assert.ok(heading, `${path}: selected work has its compact heading wrapper`);
-    assert.ok(heading[1].includes('<h2 id="selected-heading">Selected work</h2>'));
+    assert.ok(heading[1].includes('<h2 id="selected-heading">Highlighted work</h2>'));
+    assert.equal((html.match(/id="selected-work"/g) || []).length, 1, `${path}: existing highlighted-work hash remains unique`);
+    assert.equal((html.match(/id="selected-heading"/g) || []).length, 1, `${path}: existing heading ID remains unique`);
+    assert.match(html, /<section\b[^>]*id="selected-work"[^>]*aria-labelledby="selected-heading"/);
+    assert.doesNotMatch(intro + heading[1], />\s*Selected work\s*</, `${path}: visible action and heading use the updated label`);
     assert.ok(heading[1].includes('Three projects across geospatial analysis, data delivery, and public-facing software.'));
     const positions = [html.indexOf('<section class="home-intro'), html.indexOf('id="selected-work"'), heading.index, html.indexOf('class="featured-grid"'), html.indexOf('class="shell library-heading"'), html.indexOf('id="projects"')];
     assert.ok(positions.every((position, index) => position >= 0 && (index === 0 || position > positions[index - 1])), `${path}: intro, selected work, and full project collections remain in order`);
@@ -77,6 +81,27 @@ test('compact homepage wrappers retain introduction, skills, actions and project
       assert.ok(workflow.index >= title.index + title[0].length, `${path}: featured card ${index + 1} presents its title before its workflow`);
     }
   }
+});
+
+test('homepage skills use plain left-aligned text with separately grouped actions', async () => {
+  const css = await source('styles.css');
+  const keywords = declarations(css, '.home-keywords');
+  assert.match(keywords, /\bdisplay:\s*flex\s*(?:;|$)/);
+  assert.match(keywords, /\bjustify-content:\s*flex-start\s*(?:;|$)/);
+  assert.match(keywords, /\bflex-wrap:\s*wrap\s*(?:;|$)/, 'Skills can wrap instead of overflowing on narrow screens');
+  assert.match(declarations(css, '.home-actions'), /\bjustify-content:\s*flex-start\s*(?:;|$)/);
+  assert.match(declarations(css, '.intro-links'), /\bflex-direction:\s*column\s*(?:;|$)/, 'Skills and actions retain separate rows');
+  const plainSkills = declarations(css, '.home-keywords li');
+  for (const [property, allowed] of [
+    ['border', /^(?:0|none)$/],
+    ['border-radius', /^0$/],
+    ['background', /^(?:transparent|none)$/],
+    ['padding', /^0$/]
+  ]) {
+    const value = plainSkills.match(new RegExp(`(?:^|;)\\s*${property}\\s*:\\s*([^;]+)`))?.[1];
+    if (value !== undefined) assert.match(value.trim(), allowed, `Skill ${property} does not recreate boxed badges`);
+  }
+  assert.equal(css, await source('dist/styles.css'));
 });
 
 test('compact featured cards preserve complete content and keep their size changes locally scoped', async () => {
