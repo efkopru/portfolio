@@ -22,23 +22,92 @@ const declarations = (css, selector) => {
   return blockAfter(css, new RegExp(`${escaped}\\s*\\{`));
 };
 
-test('header CSS and JavaScript share a 1320px desktop breakpoint with evenly distributed navigation', async () => {
+test('header keeps its logo position and 1320px breakpoint while compacting desktop navigation', async () => {
   const [css, script] = await Promise.all([source('styles.css'), source('script.js')]);
   const breakpoint = script.match(/const desktopNavigation\s*=\s*window\.matchMedia\(['"]\(min-width:\s*(\d+)px\)['"]\)/)?.[1];
   assert.equal(breakpoint, '1320');
   const desktop = blockAfter(css, new RegExp(`@media\\s*\\(min-width:\\s*${breakpoint}px\\)\\s*\\{`));
   const mobile = blockAfter(css, new RegExp(`@media\\s*\\(max-width:\\s*${Number(breakpoint) - 1}px\\)\\s*\\{`));
   const nav = declarations(desktop, '.site-nav');
-  for (const rule of [/\bflex:\s*1\s*(?:;|$)/, /\bflex-wrap:\s*nowrap\s*(?:;|$)/, /\bjustify-content:\s*space-between\s*(?:;|$)/, /\bgap:\s*1\.25rem\s*(?:;|$)/, /\bmargin-inline-start:\s*0\s*(?:;|$)/]) {
+  for (const rule of [/\bflex:\s*1\s*(?:;|$)/, /\bflex-wrap:\s*nowrap\s*(?:;|$)/, /\bjustify-content:\s*flex-start\s*(?:;|$)/, /\bgap:\s*0\s*(?:;|$)/, /\bmargin-inline-start:\s*0\s*(?:;|$)/]) {
     assert.match(nav, rule);
   }
+  const header = declarations(desktop, '.header-inner');
+  assert.match(header, /\bwidth:\s*min\(1440px,\s*calc\(100%\s*-\s*3rem\)\)\s*(?:;|$)/, 'Header width and horizontal position stay unchanged');
+  assert.match(header, /\bgap:\s*2rem\s*(?:;|$)/, 'Logo-to-navigation gap stays unchanged');
+  assert.match(header, /\bjustify-content:\s*flex-start\s*(?:;|$)/);
+  assert.match(declarations(css, '.brand'), /\bflex-shrink:\s*0\s*(?:;|$)/);
+  assert.match(declarations(desktop, '.site-nav>:not(:last-child)'), /\bflex:\s*3\s+0\s+auto\s*(?:;|$)/);
+  assert.match(declarations(desktop, '.site-nav>:not(:last-child)'), /\bpadding-inline-end:\s*\.9375rem\s*(?:;|$)/);
+  assert.match(declarations(desktop, '.site-nav>:last-child'), /\bflex:\s*0\s+0\s+auto\s*(?:;|$)/);
+  const tail = declarations(desktop, '.site-nav::after');
+  assert.match(tail, /\bcontent:\s*["']["']\s*(?:;|$)/);
+  assert.match(tail, /\bflex:\s*7\s+0\s+2\.1875rem\s*(?:;|$)/);
+  assert.match(tail, /\bpointer-events:\s*none\s*(?:;|$)/);
   assert.doesNotMatch(desktop, /(?:^|[^\d.])5%/, 'Desktop header no longer reserves a percentage spacer');
   assert.match(declarations(desktop, '.menu-toggle'), /\bdisplay:\s*none\s*!important/);
-  assert.match(declarations(mobile, '.site-nav'), /\bflex-direction:\s*column\s*(?:;|$)/);
+  const mobileNav = declarations(mobile, '.site-nav');
+  assert.match(mobileNav, /\bflex-direction:\s*column\s*(?:;|$)/);
+  assert.match(mobileNav, /\bgap:\s*\.2rem\s*(?:;|$)/, 'Mobile menu spacing remains unchanged');
+  assert.match(mobileNav, /\bpadding-top:\s*1rem\s*(?:;|$)/);
+  assert.doesNotMatch(mobile, /\.site-nav::after|\.site-nav>:(?:not\(:last-child\)|last-child)/, 'Compact horizontal distribution is desktop-only');
   assert.match(declarations(mobile, '.js .site-nav:not(.open)'), /\bdisplay:\s*none\s*(?:;|$)/);
   assert.match(script, /desktopNavigation\.addEventListener\(['"]change['"],\s*closeMenu\)/);
   assert.equal(css, await source('dist/styles.css'));
   assert.equal(script, await source('dist/script.js'));
+});
+
+test('desktop spacing distribution retains eight top-level navigation items', async () => {
+  for (const path of ['index.html', 'dist/index.html', 'resume/index.html', 'dist/resume/index.html']) {
+    const html = await source(path);
+    assert.match(html, /<a class="brand"[^>]*><img[^>]*width="101" height="48"/, `${path}: logo dimensions stay unchanged`);
+    const navigation = html.match(/<nav\b[^>]*id="site-nav"[^>]*>([\s\S]*?)<\/nav>/)?.[1];
+    assert.ok(navigation, `${path}: main navigation exists`);
+    // Only links and divs can contain further links/divs in this navigation.
+    const topLevel = [];
+    let depth = 0;
+    for (const token of navigation.matchAll(/<(\/?)(a|div)\b([^>]*)>/g)) {
+      if (token[1]) depth--;
+      else {
+        if (depth === 0) topLevel.push({ tag: token[2], attributes: token[3] });
+        depth++;
+      }
+      assert.ok(depth >= 0, `${path}: navigation markup is balanced`);
+    }
+    assert.equal(depth, 0);
+    assert.equal(topLevel.length, 8, `${path}: seven gaps and one trailing spacer require eight items`);
+    assert.deepEqual(topLevel.map(item => item.tag), ['a', 'a', 'a', 'div', 'div', 'div', 'div', 'a']);
+    assert.match(topLevel[0].attributes, /href="(?:\.\/|\.\.\/)index\.html"/);
+    assert.match(topLevel[7].attributes, /href="(?:\.\/|\.\.\/)doctoral-research\/index\.html"/);
+  }
+});
+
+test('desktop flex distribution makes each visible gap exactly 75 percent of its previous size', async () => {
+  const css = await source('styles.css');
+  const desktop = blockAfter(css, /@media\s*\(min-width:\s*1320px\)\s*\{/);
+  const item = declarations(desktop, '.site-nav>:not(:last-child)');
+  const tail = declarations(desktop, '.site-nav::after');
+  const itemGrow = Number(item.match(/\bflex:\s*([\d.]+)\s+0\s+auto/)?.[1]);
+  const itemPaddingRem = Number(item.match(/\bpadding-inline-end:\s*([\d.]+)rem/)?.[1]);
+  const tailFlex = tail.match(/\bflex:\s*([\d.]+)\s+0\s+([\d.]+)rem/);
+  const tailGrow = Number(tailFlex?.[1]);
+  const tailBasisRem = Number(tailFlex?.[2]);
+  const gaps = 7;
+  for (const rootSize of [16, 18, 20]) {
+    const oldMinimumGap = 1.25 * rootSize;
+    const padding = itemPaddingRem * rootSize;
+    const tailBasis = tailBasisRem * rootSize;
+    assert.equal(gaps * padding + tailBasis, gaps * oldMinimumGap, 'Compacting titles preserves the minimum total navigation width');
+    for (const viewport of [1320, 1440, 1600, 1920]) {
+      const navWidth = Math.min(1440, viewport - 3 * rootSize) - 101 - 2 * rootSize;
+      for (const intrinsicWidth of [860, 960, 1060]) {
+        const oldGap = Math.max(oldMinimumGap, (navWidth - intrinsicWidth) / gaps);
+        const surplus = Math.max(0, navWidth - intrinsicWidth - gaps * padding - tailBasis);
+        const compactGap = padding + surplus * itemGrow / (gaps * itemGrow + tailGrow);
+        assert.ok(Math.abs(compactGap - oldGap * .75) < 1e-10, `Viewport ${viewport}, intrinsic width ${intrinsicWidth}, root size ${rootSize}: every gap is reduced by 25 percent`);
+      }
+    }
+  }
 });
 
 test('compact homepage wrappers retain introduction, skills, actions and project section order', async () => {

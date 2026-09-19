@@ -127,7 +127,11 @@
 .site-nav>a,.nav-heading>a{font-weight:700}
 @media(min-width:1320px){
   .header-inner{width:min(1440px,calc(100% - 3rem));gap:2rem;justify-content:flex-start}
-  .site-nav{flex:1;min-width:0;margin-inline-start:0;flex-wrap:nowrap;justify-content:space-between;gap:1.25rem}
+  .site-nav{flex:1;min-width:0;margin-inline-start:0;flex-wrap:nowrap;justify-content:flex-start;gap:0}
+  /* Keep 75% of each of the seven old gaps; move the remaining 25% after the last title. */
+  .site-nav>:not(:last-child){flex:3 0 auto;padding-inline-end:.9375rem}
+  .site-nav>:last-child{flex:0 0 auto}
+  .site-nav::after{content:"";flex:7 0 2.1875rem;pointer-events:none}
   .menu-toggle{display:none!important}
 }
 /* Keep this breakpoint in sync with the desktop navigation query in script.js. */
