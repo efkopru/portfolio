@@ -56,7 +56,7 @@ test('three featured projects precede the preserved original collection indexes'
   }
 });
 
-test('homepage places exactly four selected skills between the introduction and actions', async () => {
+test('homepage places exactly five selected skills between the introduction and actions', async () => {
   for (const path of ['index.html', 'dist/index.html']) {
     const html = body(await source(path));
     const intro = html.match(/<section\b[^>]*class="[^"]*\bhome-intro\b[^"]*"[^>]*>([\s\S]*?)<\/section>/)?.[1];
@@ -65,7 +65,7 @@ test('homepage places exactly four selected skills between the introduction and 
     assert.equal(skillLists.length, 1, `${path}: one accessible selected-skills list`);
     const [skills] = skillLists;
     const keywords = [...skills[1].matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/g)].map(match => match[1].replace(/<[^>]+>/g, '').trim());
-    assert.deepEqual(keywords, ['Python', 'SQL', 'Machine learning', 'ETL pipelines']);
+    assert.deepEqual(keywords, ['Python', 'SQL', 'Machine learning', 'ETL pipelines', 'Spatial Optimization']);
     const paragraphs = [...intro.matchAll(/<p\b[^>]*>[\s\S]*?<\/p>/g)];
     assert.ok(paragraphs.length >= 2, `${path}: specialty and introduction remain visible`);
     const lastParagraph = paragraphs.at(-1);

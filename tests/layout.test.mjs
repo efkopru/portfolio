@@ -56,10 +56,11 @@ test('compact homepage wrappers retain introduction, skills, actions and project
     const links = intro.slice(linksIndex);
     const skills = links.match(/<ul\b[^>]*aria-label="Selected skills"[^>]*>([\s\S]*?)<\/ul>/)?.[1];
     assert.ok(skills, `${path}: skills remain within the link column`);
-    assert.deepEqual([...skills.matchAll(/<li>([^<]+)<\/li>/g)].map(match => match[1]), ['Python', 'SQL', 'Machine learning', 'ETL pipelines']);
+    assert.deepEqual([...skills.matchAll(/<li>([^<]+)<\/li>/g)].map(match => match[1]), ['Python', 'SQL', 'Machine learning', 'ETL pipelines', 'Spatial Optimization']);
     const actions = links.match(/<div class="home-actions">([\s\S]*?)<\/div>/)?.[1];
     assert.ok(actions, `${path}: action links remain grouped`);
-    assert.deepEqual([...actions.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([^<]+)<\/a>/g)].map(match => [match[1], match[2]]), [['#selected-work', 'Highlighted work'], ['#projects', 'All projects']]);
+    assert.deepEqual([...actions.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([^<]+)<\/a>/g)].map(match => [match[1], match[2]]), [['#projects', 'All projects']]);
+    assert.doesNotMatch(intro, /href="#selected-work"|\bproject-button\b|Highlighted work/, `${path}: highlighted-work CTA is removed from the introduction`);
     const heading = html.match(/<div class="selected-work-heading">([\s\S]*?)<\/div>/);
     assert.ok(heading, `${path}: selected work has its compact heading wrapper`);
     assert.ok(heading[1].includes('<h2 id="selected-heading">Highlighted work</h2>'));
