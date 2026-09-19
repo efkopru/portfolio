@@ -67,6 +67,42 @@ test('resume loads the preview directly without an Open resume or external link'
   }
 });
 
+test('resume heading includes a small second-page hint associated with the document viewer', async () => {
+  const hintText = 'Scroll down for the second page of the resume';
+  for (const path of ['resume/index.html', 'dist/resume/index.html']) {
+    const html = await source(path);
+    const main = mainContent(html);
+    const header = main.match(/<header\b[^>]*class="[^"]*\bresume-header\b[^"]*"[^>]*>([\s\S]*?)<\/header>/)?.[1];
+    assert.ok(header, `${path}: the Resume heading and hint share a header`);
+    const hint = header.match(/<h1\b[^>]*>Resume<\/h1>\s*(<p\b[^>]*>)([^<]*)<\/p>/);
+    assert.ok(hint, `${path}: the hint immediately follows the Resume heading`);
+    assert.equal(hint[2], hintText);
+    const hintAttributes = attributes(hint[1]);
+    assert.equal(hintAttributes.id, 'resume-scroll-hint');
+    assert.match(hintAttributes.class, /(?:^|\s)resume-hint(?:\s|$)/);
+    assert.equal([...html.matchAll(/\sid="resume-scroll-hint"/g)].length, 1,
+      `${path}: the hint has a unique description target`);
+    assert.equal(html.split(hintText).length - 1, 1, `${path}: the hint is not repeated`);
+    const frame = attributes(main.match(/<iframe\b[^>]*>/)?.[0] ?? '');
+    assert.equal(frame['aria-describedby'], hintAttributes.id,
+      `${path}: assistive technology can associate the hint with the viewer`);
+  }
+  for (const path of ['styles.css', 'dist/styles.css']) {
+    const rules = [...(await source(path)).matchAll(/([^{}]+)\{([^{}]*)\}/g)];
+    const hint = rules.find(rule => rule[1].trim() === '.resume-hint')?.[2];
+    assert.ok(hint, `${path}: the hint has a scoped style rule`);
+    assert.match(hint, /(?:^|;)\s*font-size:\s*\.8125rem\s*(?:;|$)/,
+      `${path}: the hint remains smaller than regular text`);
+    assert.match(hint, /(?:^|;)\s*margin:\s*0\s*(?:;|$)/);
+    assert.match(hint, /(?:^|;)\s*color:\s*var\(--muted\)\s*(?:;|$)/);
+    const header = rules.find(rule => rule[1].trim() === '.resume-header')?.[2];
+    assert.match(header, /(?:^|;)\s*justify-content:\s*flex-start\s*(?:;|$)/,
+      `${path}: the hint stays near the heading`);
+    assert.match(header, /(?:^|;)\s*flex-wrap:\s*wrap\s*(?:;|$)/,
+      `${path}: the heading and hint can wrap on smaller screens`);
+  }
+});
+
 test('resume frame has scoped responsive sizing in both CSS outputs', async () => {
   const css = await source('styles.css');
   assert.equal(css, await source('dist/styles.css'));

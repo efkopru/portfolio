@@ -94,7 +94,7 @@ function collectionPage(collection) {
 }
 
 function resume() {
-  return layout({ title: 'Resume', description: 'View Esad Kopru’s resume, including geospatial experience, education, and technical skills.', route: 'resume', current: 'resume', body: `<div class="shell resume-page"><header class="resume-header"><h1>Resume</h1></header><iframe class="resume-frame" src="${esc(resumeDocument.previewUrl)}" title="Esad Kopru resume" referrerpolicy="no-referrer"></iframe></div>` });
+  return layout({ title: 'Resume', description: 'View Esad Kopru’s resume, including geospatial experience, education, and technical skills.', route: 'resume', current: 'resume', body: `<div class="shell resume-page"><header class="resume-header"><h1>Resume</h1><p class="resume-hint" id="resume-scroll-hint">Scroll down for the second page of the resume</p></header><iframe class="resume-frame" src="${esc(resumeDocument.previewUrl)}" title="Esad Kopru resume" aria-describedby="resume-scroll-hint" referrerpolicy="no-referrer"></iframe></div>` });
 }
 
 function about() {
