@@ -3,4 +3,4 @@
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: DENY
   Permissions-Policy: camera=(), microphone=(), geolocation=()
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-PK5dkybTggHp8GpH2d1CiVotWKiX/bV3OzHLM8ttPb0='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://formsubmit.co; frame-src https://maps.cityoflewisville.com https://experience.arcgis.com https://lewisville.maps.arcgis.com https://www.arcgis.com; object-src 'none'; base-uri 'self'; form-action https://formsubmit.co; frame-ancestors 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-PK5dkybTggHp8GpH2d1CiVotWKiX/bV3OzHLM8ttPb0='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://formsubmit.co; frame-src https://maps.cityoflewisville.com https://experience.arcgis.com https://lewisville.maps.arcgis.com https://www.arcgis.com https://docs.google.com; object-src 'none'; base-uri 'self'; form-action https://formsubmit.co; frame-ancestors 'none'

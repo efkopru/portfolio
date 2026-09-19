@@ -1,0 +1,121 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import { resumeDocument } from '../content/resume.mjs';
+
+const source = path => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
+const previewUrl = 'https://docs.google.com/document/d/19waV_6Qamkq_gO7rYNVEN7W9C8VLUpUc/preview';
+const attributes = tag => Object.fromEntries([...tag.matchAll(/\s([\w-]+)="([^"]*)"/g)].map(match => [match[1], match[2]]));
+const mainContent = html => {
+  const main = html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)?.[1];
+  assert.ok(main, 'The Resume page retains its main content region');
+  return main;
+};
+
+test('resume uses the original Google document preview without an editing endpoint', () => {
+  assert.equal(resumeDocument.previewUrl, previewUrl);
+  assert.equal(resumeDocument.openUrl, previewUrl);
+  for (const url of [resumeDocument.previewUrl, resumeDocument.openUrl]) {
+    const parsed = new URL(url);
+    assert.equal(parsed.origin, 'https://docs.google.com');
+    assert.ok(parsed.pathname.endsWith('/preview'));
+    assert.equal(parsed.search, '');
+    assert.equal(parsed.hash, '');
+    assert.doesNotMatch(url, /\/(?:edit|copy)(?:[/?#]|$)|(?:[?&])(?:usp|authuser|role)=/);
+  }
+});
+
+test('generated resume pages retain their route, navigation, and a single accessible Google preview', async () => {
+  const [rootHtml, builtHtml, manifestText] = await Promise.all([
+    source('resume/index.html'), source('dist/resume/index.html'), source('dist/build-manifest.json')
+  ]);
+  const manifest = JSON.parse(manifestText);
+  assert.equal(rootHtml, builtHtml, 'Local-file and built Resume pages remain identical');
+  assert.ok(manifest.pages.includes('resume/index.html'));
+  for (const html of [rootHtml, builtHtml]) {
+    assert.ok(html.includes(`<link rel="canonical" href="${manifest.origin}/resume/">`));
+    assert.match(html, /<title>Resume \| Esad Kopru<\/title>/);
+    const nav = html.match(/<nav\b[^>]*id="site-nav"[^>]*>[\s\S]*?<\/nav>/)?.[0];
+    assert.ok(nav);
+    assert.match(nav, /<a\b(?=[^>]*href="\.\.\/resume\/index\.html")(?=[^>]*aria-current="page")[^>]*>Resume<\/a>/);
+    const main = mainContent(html);
+    assert.match(main, /class="[^"]*\bresume-page\b[^"]*"/);
+    assert.match(main, /<h1\b[^>]*>Resume<\/h1>/);
+    const frames = [...main.matchAll(/<iframe\b[^>]*>[\s\S]*?<\/iframe>/g)];
+    assert.equal(frames.length, 1, 'Exactly one document preview replaces the maintained HTML resume');
+    const frame = attributes(frames[0][0].match(/^<iframe\b[^>]*>/)[0]);
+    assert.equal(frame.src, previewUrl);
+    assert.equal(frame.title, 'Esad Kopru resume');
+    assert.equal(frame.referrerpolicy, 'no-referrer');
+    assert.match(frame.class, /(?:^|\s)resume-frame(?:\s|$)/);
+    assert.equal(frame.srcdoc, undefined);
+    assert.doesNotMatch(main, /<h[1-6]\b[^>]*>\s*(?:Profile|Technical skills|Professional experience|Education|Certifications(?: &amp; recognition)?)\s*<\/h[1-6]>/i,
+      'The page must not keep a second, separately maintained resume');
+  }
+});
+
+test('resume provides a safe, visible Open resume link without JavaScript', async () => {
+  for (const path of ['resume/index.html', 'dist/resume/index.html']) {
+    const main = mainContent(await source(path));
+    const links = [...main.matchAll(/<a\b[^>]*>([\s\S]*?)<\/a>/g)].filter(match =>
+      match[1].replace(/<span\b[^>]*aria-hidden="true"[^>]*>[\s\S]*?<\/span>/g, '').trim() === 'Open resume'
+    );
+    assert.equal(links.length, 1, `${path}: one plain-text fallback link, optionally with a decorative icon`);
+    const startTag = links[0][0].match(/^<a\b[^>]*>/)[0];
+    const link = attributes(startTag);
+    assert.equal(link.href, previewUrl);
+    assert.equal(link.target, '_blank');
+    assert.deepEqual(link.rel.split(/\s+/).sort(), ['noopener', 'noreferrer']);
+    assert.match(link['aria-label'], /^Open resume.*new tab/i);
+    assert.doesNotMatch(startTag, /\s(?:hidden|disabled|download|on\w+)(?:\s|=|>)|aria-hidden="true"/i);
+    assert.doesNotMatch(main, /<details\b|data-load-embed|data-embed-src|<script\b/i,
+      `${path}: the document and fallback do not depend on an expansion or script`);
+  }
+});
+
+test('resume frame has scoped responsive sizing in both CSS outputs', async () => {
+  const css = await source('styles.css');
+  assert.equal(css, await source('dist/styles.css'));
+  const rules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].filter(rule => rule[1].includes('.resume-frame'));
+  assert.ok(rules.length > 0, 'The resume frame has its own style rule');
+  for (const rule of rules) {
+    assert.ok(rule[1].trim().split(',').every(selector => selector.trim().includes('.resume-frame')),
+      'Resume frame changes do not resize unrelated embedded maps');
+  }
+  const base = rules.find(rule => rule[1].trim() === '.resume-frame')?.[2];
+  assert.ok(base);
+  assert.match(base, /(?:^|;)\s*width:\s*100%\s*(?:;|$)/);
+  assert.match(base, /(?:^|;)\s*height:\s*clamp\(32rem,\s*78vh,\s*70rem\)\s*(?:;|$)/);
+  assert.match(base, /(?:^|;)\s*border:\s*[^;]+/);
+  assert.doesNotMatch(base, /(?:^|;)\s*min-width:\s*\d+(?:px|rem)/);
+});
+
+test('published security policy permits only the specific Google frame origin and existing maps', async () => {
+  const rootHeaders = await source('_headers');
+  assert.equal(rootHeaders, await source('dist/_headers'));
+  const policy = rootHeaders.match(/Content-Security-Policy:\s*([^\r\n]+)/)?.[1];
+  assert.ok(policy);
+  const directives = policy.split(';').map(value => value.trim()).filter(Boolean);
+  const frameDirectives = directives.filter(value => value.startsWith('frame-src '));
+  assert.equal(frameDirectives.length, 1);
+  const allowed = frameDirectives[0].split(/\s+/).slice(1);
+  assert.deepEqual(allowed.toSorted(), [
+    'https://maps.cityoflewisville.com',
+    'https://experience.arcgis.com',
+    'https://lewisville.maps.arcgis.com',
+    'https://www.arcgis.com',
+    'https://docs.google.com'
+  ].toSorted(), 'Google Docs adds one exact origin without wildcard or scheme-wide permissions');
+  assert.ok(directives.includes("default-src 'self'"));
+  assert.ok(directives.includes("object-src 'none'"));
+  assert.ok(directives.includes("frame-ancestors 'none'"));
+  assert.ok(directives.includes('connect-src https://formsubmit.co'));
+});
+
+test('direct privacy page discloses the automatically loaded Google resume separately from click-to-load maps', async () => {
+  for (const path of ['privacy/index.html', 'dist/privacy/index.html']) {
+    const main = mainContent(await source(path));
+    assert.match(main, /Resume page embeds Google Docs and connects to Google when you open the page/);
+    assert.match(main, /Other external services load only when you follow a link, submit the contact form, or select Load interactive application/);
+  }
+});
