@@ -85,14 +85,16 @@ test('resume frame has scoped responsive sizing in both CSS outputs', async () =
   const height = base.match(/(?:^|;)\s*height:\s*clamp\((\d+(?:\.\d+)?)rem,\s*(\d+(?:\.\d+)?)vh,\s*(\d+(?:\.\d+)?)rem\)\s*(?:;|$)/);
   assert.ok(height, 'The frame retains responsive minimum, viewport, and maximum heights');
   const dimensions = height.slice(1).map(Number);
-  const previousDimensions = [32, 78, 70];
-  assert.deepEqual(dimensions, previousDimensions.map(value => value * 0.75),
-    'Every height constraint is reduced by exactly 25%');
+  const previousDimensions = [24, 58.5, 52.5];
+  const withinTolerance = (actual, expected, message) =>
+    assert.ok(Math.abs(actual - expected) < 1e-9, `${message}: expected ${expected}, received ${actual}`);
+  dimensions.forEach((value, index) => withinTolerance(value, previousDimensions[index] * 1.2,
+    'Every height constraint is increased by 20%'));
   const clampHeight = ([minimum, viewport, maximum], viewportHeight) =>
     Math.max(minimum * 16, Math.min(viewport * viewportHeight / 100, maximum * 16));
   for (const viewportHeight of [400, 1000, 2000]) {
-    assert.equal(clampHeight(dimensions, viewportHeight), clampHeight(previousDimensions, viewportHeight) * 0.75,
-      `The computed frame height remains 25% smaller at a ${viewportHeight}px viewport height`);
+    withinTolerance(clampHeight(dimensions, viewportHeight), clampHeight(previousDimensions, viewportHeight) * 1.2,
+      `The computed frame height remains 20% taller at a ${viewportHeight}px viewport height`);
   }
   const header = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].find(rule => rule[1].trim() === '.resume-header')?.[2];
   assert.ok(header, 'The resume heading retains its scoped layout rule');
