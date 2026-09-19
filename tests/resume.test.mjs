@@ -14,8 +14,8 @@ const mainContent = html => {
 
 test('resume uses the original Google document preview without an editing endpoint', () => {
   assert.equal(resumeDocument.previewUrl, previewUrl);
-  assert.equal(resumeDocument.openUrl, previewUrl);
-  for (const url of [resumeDocument.previewUrl, resumeDocument.openUrl]) {
+  assert.equal(resumeDocument.openUrl, undefined);
+  for (const url of [resumeDocument.previewUrl]) {
     const parsed = new URL(url);
     assert.equal(parsed.origin, 'https://docs.google.com');
     assert.ok(parsed.pathname.endsWith('/preview'));
@@ -54,22 +54,16 @@ test('generated resume pages retain their route, navigation, and a single access
   }
 });
 
-test('resume provides a safe, visible Open resume link without JavaScript', async () => {
+test('resume loads the preview directly without an Open resume or external link', async () => {
   for (const path of ['resume/index.html', 'dist/resume/index.html']) {
     const main = mainContent(await source(path));
-    const links = [...main.matchAll(/<a\b[^>]*>([\s\S]*?)<\/a>/g)].filter(match =>
-      match[1].replace(/<span\b[^>]*aria-hidden="true"[^>]*>[\s\S]*?<\/span>/g, '').trim() === 'Open resume'
-    );
-    assert.equal(links.length, 1, `${path}: one plain-text fallback link, optionally with a decorative icon`);
-    const startTag = links[0][0].match(/^<a\b[^>]*>/)[0];
-    const link = attributes(startTag);
-    assert.equal(link.href, previewUrl);
-    assert.equal(link.target, '_blank');
-    assert.deepEqual(link.rel.split(/\s+/).sort(), ['noopener', 'noreferrer']);
-    assert.match(link['aria-label'], /^Open resume.*new tab/i);
-    assert.doesNotMatch(startTag, /\s(?:hidden|disabled|download|on\w+)(?:\s|=|>)|aria-hidden="true"/i);
+    assert.doesNotMatch(main, /Open resume/i, `${path}: the separate Open resume control is removed`);
+    const links = [...main.matchAll(/<a\b[^>]*>/g)].map(match => attributes(match[0]));
+    assert.ok(links.every(link => !/^(?:https?:)?\/\//i.test(link.href ?? '')),
+      `${path}: the resume content has no external anchor`);
+    assert.match(main, /<iframe\b[^>]*\ssrc="https:\/\/docs\.google\.com\/document\/d\/19waV_6Qamkq_gO7rYNVEN7W9C8VLUpUc\/preview"/);
     assert.doesNotMatch(main, /<details\b|data-load-embed|data-embed-src|<script\b/i,
-      `${path}: the document and fallback do not depend on an expansion or script`);
+      `${path}: the document does not depend on an expansion or script`);
   }
 });
 
