@@ -49,13 +49,13 @@ test('compact homepage wrappers retain introduction, skills, actions and project
     const copy = intro.match(/<div class="intro-copy">([\s\S]*?)<\/div>/);
     assert.ok(copy, `${path}: copy is grouped separately from links`);
     assert.ok(copy[1].includes('<h1>Esad Kopru</h1>'));
-    assert.ok(copy[1].includes('<p class="home-specialty">Geospatial data science, data engineering &amp; software engineering</p>'));
+    assert.ok(copy[1].includes('<p class="home-specialty">Geospatial data science, data engineering &amp; spatial analysis</p>'));
     assert.ok(copy[1].includes('<p>10+ years building GIS systems, analytical models, and automated data pipelines that turn location information into decisions.</p>'));
     const linksIndex = intro.indexOf('<div class="intro-links">');
     assert.ok(linksIndex >= copy.index + copy[0].length, `${path}: links follow introductory copy`);
     const links = intro.slice(linksIndex);
     const skills = links.match(/<ul\b[^>]*aria-label="Selected skills"[^>]*>([\s\S]*?)<\/ul>/)?.[1];
-    assert.ok(skills, `${path}: skills remain within the link column`);
+    assert.ok(skills, `${path}: skills remain within the links group below the introductory copy`);
     assert.deepEqual([...skills.matchAll(/<li>([^<]+)<\/li>/g)].map(match => match[1]), ['Python', 'SQL', 'Machine learning', 'ETL pipelines', 'Spatial Optimization']);
     const actions = links.match(/<div class="home-actions">([\s\S]*?)<\/div>/)?.[1];
     assert.ok(actions, `${path}: action links remain grouped`);
@@ -84,14 +84,26 @@ test('compact homepage wrappers retain introduction, skills, actions and project
   }
 });
 
-test('homepage skills use plain left-aligned text with separately grouped actions', async () => {
+test('homepage places plain skills and wrapping actions beneath the single-column introduction', async () => {
   const css = await source('styles.css');
+  assert.match(declarations(css, '.home-intro.evidence-intro'), /\bdisplay:\s*grid\s*(?:;|$)/);
+  assert.match(declarations(css, '.home-intro.evidence-intro'), /\bgrid-template-columns:\s*(?:1fr|minmax\(0,\s*1fr\))\s*(?:;|$)/);
+  for (const rule of css.matchAll(/\.home-intro\.evidence-intro\s*\{([^}]*)\}/g)) {
+    const columns = rule[1].match(/\bgrid-template-columns:\s*([^;]+)/)?.[1];
+    if (columns !== undefined) assert.match(columns.trim(), /^(?:1fr|minmax\(0,\s*1fr\))$/, 'No responsive override restores a sidebar');
+  }
   const keywords = declarations(css, '.home-keywords');
   assert.match(keywords, /\bdisplay:\s*flex\s*(?:;|$)/);
   assert.match(keywords, /\bjustify-content:\s*flex-start\s*(?:;|$)/);
   assert.match(keywords, /\bflex-wrap:\s*wrap\s*(?:;|$)/, 'Skills can wrap instead of overflowing on narrow screens');
   assert.match(declarations(css, '.home-actions'), /\bjustify-content:\s*flex-start\s*(?:;|$)/);
-  assert.match(declarations(css, '.intro-links'), /\bflex-direction:\s*column\s*(?:;|$)/, 'Skills and actions retain separate rows');
+  const links = declarations(css, '.intro-links');
+  assert.match(links, /\bdisplay:\s*flex\s*(?:;|$)/);
+  assert.match(links, /\bflex-wrap:\s*wrap\s*(?:;|$)/, 'Skills and actions may wrap into additional rows on narrow screens');
+  for (const rule of css.matchAll(/\.intro-links\s*\{([^}]*)\}/g)) {
+    const direction = rule[1].match(/\bflex-direction:\s*([^;]+)/)?.[1];
+    if (direction !== undefined) assert.equal(direction.trim(), 'row', 'Links use horizontal flow with wrapping, not a stacked sidebar');
+  }
   const plainSkills = declarations(css, '.home-keywords li');
   for (const [property, allowed] of [
     ['border', /^(?:0|none)$/],
