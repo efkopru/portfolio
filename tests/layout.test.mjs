@@ -117,6 +117,18 @@ test('homepage places plain skills and wrapping actions beneath the single-colum
   assert.equal(css, await source('dist/styles.css'));
 });
 
+test('homepage introduction uses available width without preventing natural text wrapping', async () => {
+  const css = await source('styles.css');
+  assert.match(declarations(css, '.intro-copy p'), /\bmax-width:\s*none\s*(?:;|$)/, 'The introductory paragraph has no artificial line-length cap');
+  const paragraphRules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].filter(rule => rule[1].includes('.intro-copy'));
+  assert.ok(paragraphRules.length > 0);
+  for (const rule of paragraphRules) {
+    const maxWidth = rule[2].match(/(?:^|;)\s*max-width\s*:\s*([^;]+)/)?.[1];
+    if (maxWidth !== undefined) assert.equal(maxWidth.trim(), 'none', 'Responsive intro rules do not restore an artificial paragraph width cap');
+    assert.doesNotMatch(rule[2], /(?:^|;)\s*(?:white-space|text-wrap)\s*:\s*(?:nowrap|pre)\s*(?:;|$)|(?:-webkit-)?line-clamp\s*:|text-overflow\s*:\s*ellipsis|(?:^|;)\s*overflow(?:-x|-y)?\s*:\s*(?:hidden|clip)/i, 'Intro copy wraps naturally instead of being clipped or forced onto one mobile line');
+  }
+});
+
 test('compact featured cards preserve complete content and keep their size changes locally scoped', async () => {
   const css = await source('styles.css');
   const rules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(match => ({ selectors: match[1].trim().split(',').map(selector => selector.trim()), body: match[2] }));

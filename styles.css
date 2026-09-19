@@ -38,7 +38,7 @@
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .home-intro.evidence-intro{width:min(var(--content),calc(100% - 3rem));max-width:var(--content);display:grid;grid-template-columns:1fr;gap:.4rem;margin-inline:auto;padding:.75rem 0 1rem}
 .home-intro.evidence-intro h1{font-size:2rem;letter-spacing:.02em;text-align:left;margin-bottom:.5rem}
-.intro-copy p{max-width:75ch;font-size:1rem;line-height:1.5;margin-bottom:0}
+.intro-copy p{max-width:none;font-size:1rem;line-height:1.5;margin-bottom:0}
 .intro-copy .home-specialty{font-weight:700;font-size:1rem;margin-bottom:.5rem}
 .intro-links{display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;gap:.25rem 1.5rem}
 .home-keywords{display:flex;justify-content:flex-start;flex-wrap:wrap;gap:.4rem 1rem;list-style:none;padding:0;margin:0}
