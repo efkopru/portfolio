@@ -96,6 +96,17 @@ export const projects = [
 
 projects.push(
   {
+    id: 'lead-service-line-evidence-workbench', title: 'Lead Service Line Evidence Workbench', type: 'Synthetic-data demonstration', roles: ['data-science', 'data-engineering', 'software-engineering'],
+    summary: 'A local Python workflow that connects document evidence, material predictions, and traceable human review.',
+    context: 'Independent project · Version 3 · Synthetic demonstration data', tools: ['Python', 'OCR', 'pandas', 'scikit-learn', 'Grouped evaluation', 'Data validation'],
+    problem: 'A material mention in a document is not enough to classify a service line. It must refer to the correct property, service side, and time, and unresolved evidence must remain visible.',
+    contribution: 'I developed a third version of the lead-service-line prototype with explicit contracts between page extraction, asset-side linking, model inputs, and reviewer decisions.',
+    approach: ['Preserve page-level text, extraction status, and source identifiers so reviewers can trace a material mention back to its evidence.', 'Link evidence to an asset and service side, with ambiguous matches retained for review.', 'Prepare dated snapshots and keep independently verified material labels separate from extracted mentions and model features.', 'Fit text and structured-data models with separate calibration groups and evaluate on held-out groups.', 'Use uncertainty and policy checks to create risk, learning, and random-audit queues; a prediction never becomes a verified material label.', 'Record the configuration, model environment, and output provenance needed to reproduce a local run.'],
+    result: 'The workbench produces a reproducible synthetic demonstration with evidence records, calibrated material predictions, and review queues that can be inspected locally.',
+    boundary: 'The published data and demonstration are synthetic. This is not a deployed utility system, a regulatory determination, or evidence of field accuracy or municipal savings. Real use requires locally verified labels, independent validation, and accountable human review.',
+    flow: ['Page evidence', 'Asset-side snapshot', 'Calibrated model', 'Review record'], links: []
+  },
+  {
     id: 'lead-service-review-prototype', title: 'Lead pipe prediction prototype', type: 'Synthetic-data demonstration', roles: ['data-science', 'data-engineering'],
     summary: 'A synthetic-data prototype for predicting pipe materials and organizing human review.',
     context: 'Independent prototype · Synthetic demonstration data', tools: ['Python', 'TF-IDF', 'Logistic regression', 'Gradient boosting', 'Grouped evaluation'],

@@ -7,6 +7,11 @@ export const featuredWork = [
 ];
 
 export const methodDiagrams = {
+  'lead-service-line-evidence-workbench': {
+    src: 'assets/evidence/lead-service-line-workbench.svg',
+    title: 'Six stages from source pages to an accountable review record',
+    caption: 'Version 3 workflow diagram. Extracted material mentions, verified labels, model predictions, and reviewer decisions remain distinct. The published demonstration uses invented records.'
+  },
   'utility-inspection-etl': {
     src: 'assets/evidence/utility-inspection-pipeline.svg',
     title: 'How inspection data reaches the map',
@@ -40,6 +45,14 @@ export const companions = [
   }
 ];
 export const companionFiles = companion => ['README.md', 'demo.py', 'test_demo.py', 'report.json', ...(companion.id === 'spatial-etl' ? ['records.json'] : [])].map(name => `examples/${companion.id}/${name}`);
-export const evidenceAssets = [...Object.values(methodDiagrams).map(diagram => diagram.src), ...companions.map(companion => companion.diagram), ...companions.flatMap(companionFiles)];
+export const workbenchDemo = {
+  project: 'lead-service-line-evidence-workbench',
+  directory: 'assets/demos/lead-service-line-workbench',
+  title: 'Inspect a synthetic review work plan',
+  summary: 'Explore 99 review records from a demonstration run using 480 invented asset-side snapshots. Filter queues, inspect evidence and material probabilities, and record a review decision.',
+  boundary: 'Use invented reviewer IDs and notes. Decisions stay in the browser tab until exported and are not submitted to a server. This demonstration does not establish field performance.'
+};
+export const workbenchAssets = ['index.html', 'review.css', 'review.js', 'provenance.json'].map(name => `${workbenchDemo.directory}/${name}`);
+export const evidenceAssets = [...Object.values(methodDiagrams).map(diagram => diagram.src), ...companions.map(companion => companion.diagram), ...companions.flatMap(companionFiles), ...workbenchAssets];
 export const companionRoute = id => `example-${id}`;
 export const sourceRoute = (id, name) => `example-${id}-${({ 'README.md': 'guide', 'demo.py': 'code', 'test_demo.py': 'tests' })[name]}`;

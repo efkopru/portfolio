@@ -1,5 +1,5 @@
 import { projects } from '../content/portfolio.mjs';
-import { featuredWork, methodDiagrams, companions, companionRoute, sourceRoute } from '../content/evidence.mjs';
+import { featuredWork, methodDiagrams, companions, companionRoute, sourceRoute, workbenchDemo } from '../content/evidence.mjs';
 
 const sources = new Map(projects.map(project => [project.id, project]));
 
@@ -31,6 +31,7 @@ export function projectEvidence(project, ui) {
   if (project.id === 'doctoral-research') return '';
   const diagram = methodDiagrams[project.id];
   const companion = companions.find(item => item.project === project.id);
+  if (project.id === workbenchDemo.project) return `<section class="project-evidence" aria-labelledby="evidence-heading"><h2 id="evidence-heading">Workflow and working demonstration</h2><div class="companion-callout"><h3>${esc(workbenchDemo.title)}</h3><p>${esc(workbenchDemo.summary)}</p><p class="evidence-note">${esc(workbenchDemo.boundary)}</p><a class="text-link" href="../${workbenchDemo.directory}/index.html">Open interactive demonstration <span aria-hidden="true">→</span></a></div>${figure(diagram.src, diagram.title, diagram.caption, esc)}</section>`;
   if (!diagram && !companion) return '';
   const heading = diagram && companion ? 'Workflow and example' : diagram ? 'Workflow' : 'Example';
   return `<section class="project-evidence" aria-labelledby="evidence-heading"><h2 id="evidence-heading">${heading}</h2>${diagram ? figure(diagram.src, diagram.title, diagram.caption, esc) : ''}${companion ? `<div class="companion-callout"><h3>${esc(companion.title)}</h3><p>${esc(companion.summary)}</p><p class="evidence-note">Uses invented data; separate from this project.</p><a class="text-link" href="../${companionRoute(companion.id)}/index.html">View example <span aria-hidden="true">→</span></a></div>` : ''}</section>`;

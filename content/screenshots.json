@@ -1008,5 +1008,17 @@
       "sourceUrl": "",
       "sourceNote": "Existing user-authored synthetic prototype documentation figure. No municipal records included."
     }
+  ],
+  "lead-service-line-evidence-workbench": [
+    {
+      "src": "assets/screenshots/lead-service-line-workbench.png",
+      "preview": "assets/screenshots/lead-service-line-workbench.png",
+      "caption": "Actual V3 synthetic review interface: a 99-record work plan, page-evidence summaries, uncertainty, and reviewer controls. Invented data; no field-performance claim.",
+      "width": 1905,
+      "height": 904,
+      "sourcePage": "",
+      "sourceUrl": "",
+      "sourceNote": "Desktop browser capture of the V3 release 0.3.0 synthetic review interface, adapted for the public portfolio with external same-origin assets. No municipal records included."
+    }
   ]
 }

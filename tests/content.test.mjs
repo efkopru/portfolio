@@ -57,3 +57,16 @@ test('lead prediction prototype remains separate from a deployed utility model a
 test('recruiting paths have relevant substantive work', () => {
   for (const role of profile.roles) assert.ok(projects.filter(p => p.roles.includes(role.id)).length >= 3);
 });
+
+test('V3 workbench keeps synthetic scope and review boundaries visible without transferring historical outcomes', async () => {
+  const project = projects.find(p => p.id === 'lead-service-line-evidence-workbench');
+  assert.match(project.type, /Synthetic/);
+  assert.match(project.context, /Version 3/);
+  const visible = await visibleContent(project.id);
+  assert.ok(visible.includes(esc(project.boundary)));
+  assert.match(visible, /published data and demonstration are synthetic/i);
+  assert.match(visible, /not a deployed utility system/);
+  assert.doesNotMatch(visible, /\$\d|TCEQ|1,000\+|1M\+/);
+  assert.doesNotMatch(visible, /href="https:\/\/github\.com\/efkopru\/lead-service-line-ml-gpt-v3/);
+  assert.ok(projects.some(p => p.id === 'lead-service-review-prototype'), 'The earlier prototype remains distinct');
+});

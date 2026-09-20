@@ -23,7 +23,7 @@ Open `http://127.0.0.1:4173/`. The development server binds only to this compute
 
 ## Where to edit
 
-- `content/portfolio.mjs`: profile, employment, skills, and 20 project case studies.
+- `content/portfolio.mjs`: profile, employment, skills, and 21 project case studies.
 - `content/site-structure.mjs`: original navigation order, separate page galleries, additional projects, and public application links.
 - `content/screenshots.json`: local screenshot paths, dimensions, captions, and original source URLs.
 - `content/evidence.mjs`: featured projects, educational companions, diagrams, and the explicit public-source file allowlist.
@@ -103,6 +103,14 @@ npm run build
 The ETL example validates invented local-grid observations and demonstrates quarantine, transactional revision-aware updates, idempotent replay, rollback, and recovery in SQLite. It does not claim PostGIS or real coordinate transformations. The ML example compares a grouped-split logistic model with a training-prevalence baseline and reports losses, confusion counts, reliability bins, and error slices. Its scores are not field accuracy. The network example contrasts independent shortest-path edges with an exhaustively optimized shared network on tiny graphs; timings are actual local measurements that vary between runs, not dissertation benchmarks.
 
 The research page cites the [UT Dallas doctoral record](https://graduate.utdallas.edu/fsa/doctoral-degrees-awarded/2023-2024-doctoral-degrees-awarded/) and [version-pinned public R source](https://github.com/efkopru/gemini-shortest-path/tree/bc917f2a679f0ef624b15d2e6b4a3dc5fc8db388). It does not claim a journal paper or DOI. Each example guide documents its exact constraints.
+
+## Lead-service-line workbench case study
+
+`lead-service-line-evidence-workbench/` presents the independent V3 workbench as a synthetic-data demonstration. It is separate from the earlier `lead-service-review-prototype/` page and the historical municipal OCR work. The case study follows the same navigation, theme, and accessible image viewer as the other projects. Its workflow diagram is a code-authored SVG in `assets/evidence/lead-service-line-workbench.svg`.
+
+The public page contains no customer records, historical documents, model pickle, or utility performance claim. The implementation repository remains private, so the page does not expose an inaccessible GitHub source link. Only reviewed synthetic assets should be added to this page; retain the visible validation and human-review limitations.
+
+The allowlisted `assets/demos/lead-service-line-workbench/` directory contains the actual 99-record synthetic review interface from V3 release 0.3.0. `scripts/import-workbench-demo.mjs` imports the reviewed HTML and extracts executable JavaScript and CSS into content-versioned, same-origin files to work under the portfolio's strict CSP. The demo also uses a restrictive meta CSP with `connect-src 'none'`; it stores decisions only in page memory until the visitor exports them. Its source hash and dataset ID are recorded in `provenance.json`. A new input needs a separate synthetic-data review; the importer intentionally checks the release's reviewed record count. The importer is not part of normal builds and must never receive real utility review records.
 
 ## Sharing images
 

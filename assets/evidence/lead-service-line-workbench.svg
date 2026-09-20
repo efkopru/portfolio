@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title description">
+  <title id="title">Lead Service Line Evidence Workbench</title>
+  <desc id="description">Six stages: retain source pages, link an asset and service side, construct a dated snapshot, add independent verified labels, calibrate and evaluate models, and record human review. Uncertainty is retained at every stage. Demonstration records are synthetic.</desc>
+  <defs>
+    <style>
+      text{font-family:Arial,Helvetica,sans-serif;fill:#172b3b} .kicker{font-size:17px;font-weight:700;letter-spacing:2px;fill:#47716f}.title{font-size:36px;font-weight:700}.sub{font-size:21px;fill:#4d626c}.heading{font-size:24px;font-weight:700}.body{font-size:20px;fill:#405862}.num{font-size:17px;font-weight:700;fill:#fff}.tag{font-size:16px;font-weight:700;fill:#446964}.foot{font-size:18px;fill:#405862}.card{fill:#fff;stroke:#c8d5d8;stroke-width:1.5}
+    </style>
+  </defs>
+  <rect width="1200" height="760" fill="#edf3f3"/>
+  <rect width="12" height="760" fill="#416d67"/>
+  <text x="48" y="52" class="kicker">VERSION 3 · LOCAL PYTHON WORKFLOW</text>
+  <text x="48" y="101" class="title">Evidence first. Human review throughout.</text>
+  <text x="48" y="139" class="sub">Keep the source, the model, and the decision connected without treating them as equivalent.</text>
+
+  <g transform="translate(48 182)">
+    <rect class="card" width="352" height="218" rx="10"/>
+    <rect x="22" y="23" width="40" height="32" rx="5" fill="#416d67"/><text class="num" x="32" y="45">01</text>
+    <text class="heading" x="22" y="92">Retain source pages</text>
+    <text class="body" x="22" y="128">Page text and extraction status</text>
+    <text class="body" x="22" y="156">stay attached to source IDs.</text>
+    <text class="tag" x="22" y="194">OUTPUT: DOCUMENT EVIDENCE</text>
+  </g>
+  <g transform="translate(424 182)">
+    <rect class="card" width="352" height="218" rx="10"/>
+    <rect x="22" y="23" width="40" height="32" rx="5" fill="#416d67"/><text class="num" x="32" y="45">02</text>
+    <text class="heading" x="22" y="92">Resolve asset + side</text>
+    <text class="body" x="22" y="128">Connect the record to a location.</text>
+    <text class="body" x="22" y="156">Keep ambiguous links unresolved.</text>
+    <text class="tag" x="22" y="194">OUTPUT: LINKED EVIDENCE</text>
+  </g>
+  <g transform="translate(800 182)">
+    <rect class="card" width="352" height="218" rx="10"/>
+    <rect x="22" y="23" width="40" height="32" rx="5" fill="#416d67"/><text class="num" x="32" y="45">03</text>
+    <text class="heading" x="22" y="92">Construct a snapshot</text>
+    <text class="body" x="22" y="128">Validate identifiers, sides, dates,</text>
+    <text class="body" x="22" y="156">and the evidence available then.</text>
+    <text class="tag" x="22" y="194">OUTPUT: DATED MODEL INPUT</text>
+  </g>
+  <g transform="translate(48 424)">
+    <rect width="352" height="218" rx="10" fill="#e2efeb" stroke="#a5c4b8" stroke-width="1.5"/>
+    <rect x="22" y="23" width="40" height="32" rx="5" fill="#416d67"/><text class="num" x="32" y="45">04</text>
+    <text class="heading" x="22" y="92">Supply verified labels</text>
+    <text class="body" x="22" y="128">Independent material labels are</text>
+    <text class="body" x="22" y="156">separate from extracted mentions.</text>
+    <text class="tag" x="22" y="194">INPUT: INDEPENDENT VERIFICATION</text>
+  </g>
+  <g transform="translate(424 424)">
+    <rect class="card" width="352" height="218" rx="10"/>
+    <rect x="22" y="23" width="40" height="32" rx="5" fill="#416d67"/><text class="num" x="32" y="45">05</text>
+    <text class="heading" x="22" y="92">Calibrate + evaluate</text>
+    <text class="body" x="22" y="128">Separate training, calibration,</text>
+    <text class="body" x="22" y="156">and held-out evaluation groups.</text>
+    <text class="tag" x="22" y="194">OUTPUT: MATERIAL PROBABILITIES</text>
+  </g>
+  <g transform="translate(800 424)">
+    <rect class="card" width="352" height="218" rx="10"/>
+    <rect x="22" y="23" width="40" height="32" rx="5" fill="#416d67"/><text class="num" x="32" y="45">06</text>
+    <text class="heading" x="22" y="92">Organize human review</text>
+    <text class="body" x="22" y="128">Keep risk, learning, and random</text>
+    <text class="body" x="22" y="156">audit queues separately traceable.</text>
+    <text class="tag" x="22" y="194">OUTPUT: REVIEW PRIORITIES</text>
+  </g>
+  <line x1="48" y1="676" x2="1152" y2="676" stroke="#b8caca"/>
+  <text class="foot" x="48" y="711">Synthetic demonstration only. A prediction does not establish a verified pipe material.</text>
+</svg>

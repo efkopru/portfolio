@@ -29,6 +29,7 @@ const additionalCollectionIds = {
   'lead-service-line-ocr': 'spatial-and-data-analysis',
   'accessibility-analysis': 'spatial-and-data-analysis',
   'lead-service-review-prototype': 'ml-optimization',
+  'lead-service-line-evidence-workbench': 'ml-optimization',
   's2s-transformer-bias-correction': 'ml-optimization',
   'dask-ensemble-calibration': 'ml-optimization',
   'vit-heatwave-calibration': 'ml-optimization',
