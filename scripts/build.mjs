@@ -7,6 +7,7 @@ import { resumeDocument } from '../content/resume.mjs';
 import { collections, browseCollections, siteProjects, additionalProjects } from '../content/site-structure.mjs';
 import { companions, evidenceAssets, companionRoute, sourceRoute } from '../content/evidence.mjs';
 import { featuredSection, caseSummary, caseDetails, projectEvidence, companionPage, sourcePage } from './evidence-pages.mjs';
+import { caseEvidence, relatedCases } from './case-evidence.mjs';
 import { socialCards } from './social-cards.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
@@ -86,7 +87,7 @@ function embeddedApp(embed) {
 
 function projectPage(project) {
   const parent = project.collection;
-  return layout({ title: project.title, description: project.summary, route: project.id, body: `<div class="shell detail"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="../index.html#projects">Projects</a>${parent ? `<span aria-hidden="true">/</span><a href="../${parent.id}/index.html">${esc(parent.title)}</a>` : ''}</nav><header class="project-heading"><h1>${esc(project.title)}</h1><p>${esc(project.summary)}</p>${project.links?.length ? `<div class="project-links">${links(project.links)}</div>` : ''}</header>${caseSummary(project, { esc, chips })}${embeddedApp(project.embed)}${gallery(project)}${projectEvidence(project, { esc })}${caseDetails(project, { esc, list })}<p class="back-link"><a href="../index.html#projects">← Back to projects</a></p></div>` });
+  return layout({ title: project.title, description: project.summary, route: project.id, body: `<div class="shell detail"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="../index.html#projects">Projects</a>${parent ? `<span aria-hidden="true">/</span><a href="../${parent.id}/index.html">${esc(parent.title)}</a>` : ''}</nav><header class="project-heading"><h1>${esc(project.title)}</h1><p>${esc(project.summary)}</p>${project.links?.length ? `<div class="project-links">${links(project.links)}</div>` : ''}</header>${caseSummary(project, { esc, chips })}${caseEvidence(project, { esc })}${embeddedApp(project.embed)}${gallery(project)}${projectEvidence(project, { esc })}${caseDetails(project, { esc, list })}${relatedCases(project, siteProjects, { esc })}<p class="back-link"><a href="../index.html#projects">← Back to projects</a></p></div>` });
 }
 
 function collectionPage(collection) {

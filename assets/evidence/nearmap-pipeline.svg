@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
+  <title id="title">Imagery collection with a targeted recovery loop</title>
+  <desc id="desc">An area boundary defines the tile set. Python downloads the imagery and checks for blank responses. A coverage audit compares expected tiles with files on disk. Missing tiles are selected for retry passes, then checked again. GDAL assigns tile bounds, builds the mosaic, clips it to the boundary, and creates overviews. This is an original conceptual diagram, not licensed imagery or a system screenshot.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M1 1 9 5 1 9" fill="none" stroke="#64748b" stroke-width="1.6" stroke-linejoin="round"/></marker>
+    <marker id="retry-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M1 1 9 5 1 9" fill="none" stroke="#176354" stroke-width="1.6" stroke-linejoin="round"/></marker>
+  </defs>
+  <rect width="1200" height="560" fill="#ffffff"/>
+  <g font-family="Arial, Helvetica, sans-serif" fill="#253746">
+    <text x="44" y="53" font-size="28" font-weight="700">A complete tile set starts with a recoverable process</text>
+    <text x="44" y="86" font-size="18">Select the area, inspect what arrived, and target the gaps.</text>
+
+    <g fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)">
+      <path d="M284 221H328"/>
+      <path d="M576 221H620"/>
+      <path d="M868 221H912"/>
+    </g>
+    <g fill="#ffffff" stroke="#8b9ba5" stroke-width="1.3">
+      <rect x="44" y="142" width="240" height="158" rx="6"/>
+      <rect x="336" y="142" width="240" height="158" rx="6"/>
+      <rect x="628" y="142" width="240" height="158" rx="6"/>
+      <rect x="920" y="142" width="236" height="158" rx="6"/>
+    </g>
+    <g font-size="21" font-weight="700">
+      <text x="64" y="182">Select tiles</text>
+      <text x="356" y="182">Download imagery</text>
+      <text x="648" y="182">Check coverage</text>
+      <text x="940" y="182">Assemble raster</text>
+    </g>
+    <g font-size="17">
+      <text x="64" y="219">Boundary intersection</text>
+      <text x="64" y="248">Zoom and capture dates</text>
+      <text x="64" y="277">Expected tile set</text>
+      <text x="356" y="219">HTTP retries</text>
+      <text x="356" y="248">Blank-image checks</text>
+      <text x="356" y="277">Survey fallback</text>
+      <text x="648" y="219">Expected versus present</text>
+      <text x="648" y="248">File-size checks</text>
+      <text x="648" y="277">Missing-tile list</text>
+      <text x="940" y="219">Tile bounds and VRTs</text>
+      <text x="940" y="248">Boundary clip</text>
+      <text x="940" y="277">GeoTIFF and overviews</text>
+    </g>
+
+    <path d="M748 300V368" fill="none" stroke="#176354" stroke-width="2" marker-end="url(#retry-arrow)"/>
+    <rect x="424" y="376" width="444" height="114" rx="6" fill="#f1f7f3" stroke="#176354" stroke-width="1.3"/>
+    <text x="446" y="413" font-size="21" font-weight="700" fill="#176354">Recover only the missing tiles</text>
+    <text x="446" y="444" font-size="17">Keep completed files and retry the unresolved set.</text>
+    <text x="446" y="472" font-size="17">Run the coverage check again after each pass.</text>
+    <path d="M424 433H362Q322 433 322 393V334Q322 317 340 317H456V308" fill="none" stroke="#176354" stroke-width="2" marker-end="url(#retry-arrow)"/>
+
+    <text x="44" y="531" font-size="16" fill="#536674">Conceptual workflow. The recovery loop represents successive download and audit passes.</text>
+  </g>
+</svg>

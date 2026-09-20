@@ -109,6 +109,17 @@
 @media(max-width:900px){.home-intro.evidence-intro{padding-top:.5rem}.featured-grid{grid-template-columns:1fr}.featured-grid{max-width:600px;margin-inline:auto}}
 @media(max-width:650px){.home-intro.evidence-intro{width:calc(100% - 2rem)}.home-intro.evidence-intro h1{font-size:1.75rem}.intro-copy p{font-size:.95rem}.intro-copy .home-specialty{font-size:.95rem}.selected-work-heading .section-intro{display:none}.featured-flow{gap:1.1rem}.flow-arrow{right:-.95rem}.companion-callout{padding:1rem}.case-overview,.project-evidence{margin-block:1.5rem}.code-block{padding:.85rem}.table-scroll{font-size:.85rem}}
 .resume-page{max-width:1040px;padding-block:2rem 4rem}
+.case-evidence,.related-cases{max-width:900px;margin:2.5rem auto}
+.case-evidence>h2,.related-cases>h2{font-size:1.25rem;margin-bottom:.75rem}
+.case-evidence>p,.case-evidence>ul{font-size:.95rem;line-height:1.7}
+.case-evidence li+li{margin-top:.5rem}
+.case-evidence .evidence-table tbody th{font-weight:600;background:var(--surface)}
+.diagram-scroll{border:1px solid var(--line);border-radius:6px;background:#fff}
+.diagram-scroll>img{display:block}
+.diagram-scroll-hint{display:none}
+.diagram-scroll:focus-visible,.table-scroll:focus-visible{outline:3px solid var(--focus);outline-offset:4px}
+.related-cases ul{display:flex;flex-wrap:wrap;gap:.5rem 1.75rem;padding-left:1.25rem}
+@media(max-width:650px){.case-evidence,.related-cases{margin-block:1.75rem}.case-evidence .evidence-table th,.case-evidence .evidence-table td{padding:.65rem;min-width:100px}.diagram-scroll{overflow-x:auto}.diagram-scroll>img{min-width:620px}.diagram-scroll-hint{display:block}}
 .resume-header{display:flex;align-items:center;justify-content:flex-start;flex-wrap:wrap;gap:.5rem 1rem;width:75%;margin-inline:auto;margin-bottom:1rem}
 .resume-header h1{margin:0}
 .resume-hint{margin:0;font-size:.8125rem;color:var(--muted)}

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="750" viewBox="0 0 1200 750" role="img" aria-labelledby="title desc">
+  <title id="title">Utility inspection source-data flow</title>
+  <desc id="desc">Flight exports are normalized into timestamped points and ordered lines. Asset inventories are mapped to a common schema. Flight lines and asset locations meet in a 350-foot proximity analysis that produces candidate inspection coverage. Staged records are delivered through enterprise GIS to Portal. Proximity does not independently confirm an inspection.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M1 1 9 5 1 9" fill="none" stroke="#315f77" stroke-width="1.6" stroke-linejoin="round"/></marker>
+  </defs>
+  <rect width="1200" height="750" fill="#fff"/>
+  <g font-family="Arial, Helvetica, sans-serif" fill="#203748">
+    <text x="48" y="54" font-size="30" font-weight="700">From flight and asset data to GIS delivery</text>
+    <text x="48" y="88" font-size="20" fill="#526674">Two source streams meet in spatial coverage analysis.</text>
+
+    <g fill="none" stroke="#315f77" stroke-width="2" marker-end="url(#arrow)">
+      <path d="M348 205H390"/><path d="M708 205H750"/>
+      <path d="M348 390H390"/><path d="M708 390H750"/>
+      <path d="M960 275V310"/><path d="M960 465V518"/>
+    </g>
+    <g fill="#f0f5f8" stroke="#c0d1dc">
+      <rect x="48" y="135" width="300" height="140" rx="8"/>
+      <rect x="408" y="135" width="300" height="140" rx="8"/>
+      <rect x="768" y="135" width="384" height="140" rx="8"/>
+    </g>
+    <g font-size="16" font-weight="700" fill="#315f77" letter-spacing="1"><text x="70" y="165">FLIGHT INPUTS</text><text x="430" y="165">NORMALIZE</text><text x="790" y="165">CONSTRUCT GEOMETRY</text></g>
+    <g font-size="23" font-weight="700"><text x="70" y="206">Tracks and metadata</text><text x="430" y="206">Timestamped points</text><text x="790" y="206">Ordered flight lines</text></g>
+    <g font-size="18" fill="#526674"><text x="70" y="239">Exports and flight attributes</text><text x="430" y="239">Consistent fields and time filters</text><text x="790" y="239">Group and order points by flight</text></g>
+
+    <g fill="#edf6f3" stroke="#bfd7ce">
+      <rect x="48" y="325" width="300" height="140" rx="8"/>
+      <rect x="408" y="325" width="300" height="140" rx="8"/>
+    </g>
+    <rect x="768" y="325" width="384" height="140" rx="8" fill="#fbf6e9" stroke="#d7c89f"/>
+    <g font-size="16" font-weight="700" fill="#326654" letter-spacing="1"><text x="70" y="355">ASSET INPUTS</text><text x="430" y="355">CONSOLIDATE</text></g>
+    <text x="790" y="355" font-size="16" font-weight="700" fill="#745d29" letter-spacing="1">SPATIAL ASSOCIATION</text>
+    <g font-size="23" font-weight="700"><text x="70" y="396">Asset inventories</text><text x="430" y="396">Common asset schema</text><text x="790" y="396">Candidate coverage</text></g>
+    <g font-size="18" fill="#526674"><text x="70" y="429">Structures, poles, towers, stations</text><text x="430" y="429">Mapped attributes and locations</text><text x="790" y="429">350-foot proximity to flight lines</text></g>
+
+    <rect x="48" y="532" width="1104" height="96" rx="8" fill="#203748"/>
+    <text x="72" y="568" font-size="16" font-weight="700" fill="#bad8e9" letter-spacing="1">GIS DELIVERY</text>
+    <g font-size="23" font-weight="700" fill="#fff"><text x="72" y="603">Staged records</text><text x="442" y="603">Enterprise geodatabase</text><text x="868" y="603">ArcGIS Portal</text></g>
+    <g fill="none" stroke="#bad8e9" stroke-width="2"><path d="M296 594H402m-8-7 8 7-8 7"/><path d="M746 594H828m-8-7 8 7-8 7"/></g>
+
+    <text x="48" y="680" font-size="21" font-weight="700">Interpret coverage with the inspection records.</text>
+    <text x="48" y="713" font-size="18" fill="#526674">A nearby flight path does not independently confirm that an asset was inspected.</text>
+  </g>
+</svg>

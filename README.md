@@ -102,7 +102,15 @@ npm run build
 
 The ETL example validates invented local-grid observations and demonstrates quarantine, transactional revision-aware updates, idempotent replay, rollback, and recovery in SQLite. It does not claim PostGIS or real coordinate transformations. The ML example compares a grouped-split logistic model with a training-prevalence baseline and reports losses, confusion counts, reliability bins, and error slices. Its scores are not field accuracy. The network example contrasts independent shortest-path edges with an exhaustively optimized shared network on tiny graphs; timings are actual local measurements that vary between runs, not dissertation benchmarks.
 
-The research page cites the [UT Dallas doctoral record](https://graduate.utdallas.edu/fsa/doctoral-degrees-awarded/2023-2024-doctoral-degrees-awarded/) and [version-pinned public R source](https://github.com/efkopru/gemini-shortest-path/tree/bc917f2a679f0ef624b15d2e6b4a3dc5fc8db388). It does not claim a journal paper or DOI. Each example guide documents its exact constraints.
+The research page retains a plain dissertation citation and distinguishes the 2024 research from later synthetic-network experiments. Its 72 paired results are archived observations, with timing scopes stated next to the representative comparison table. It does not claim a journal paper or DOI. Each educational example guide documents its own constraints.
+
+## Archived project case studies
+
+The Nearmap imagery pipeline, ground patrol analytics, and parcel integration pages expand the original collections. The utility inspection and doctoral research pages include additional method and result evidence. Public copy lives in `content/nearmap-case.mjs`, `content/inspection-cases.mjs`, `content/parcel-case.mjs`, and `content/research-update.mjs`; `content/portfolio.mjs` integrates those records.
+
+Structured evidence sections are rendered by `scripts/case-evidence.mjs`. Tables have captions and row/column headers; diagrams are original explanatory SVGs. Diagram paths are included in the publication allowlist through `content/evidence.mjs`. Employer records, licensed imagery, internal addresses, source code, and local audit notes are not part of these additions. Saved-run counts and research timings are labeled as archived observations, not fresh benchmarks. Ground patrol reporting does not inherit the utility pipeline's scheduling or time-saving claims.
+
+To regenerate only selected sharing images, pass project IDs to the existing PowerShell authoring helper, for example `./scripts/create-social-previews.ps1 -Names nearmap-imagery-pipeline,ground-patrol-analytics,parcel-data-integration`. Routine builds use the committed PNGs and require Node.js only.
 
 ## Lead-service-line workbench case study
 

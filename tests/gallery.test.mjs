@@ -43,7 +43,7 @@ test('additional work appears once in the main index and in its category', async
   const index = home.match(/<section class="shell project-index"[^]*?<\/main>/)[0];
   const additionalPage = await readFile(new URL('../dist/additional-projects/index.html', import.meta.url), 'utf8');
   const additionalMain = additionalPage.match(/<main\b[^]*?<\/main>/)[0];
-  assert.deepEqual(new Set(additionalProjects.map(project => project.id)), new Set(['utility-inspection-etl', 'accessibility-analysis', 'lead-service-line-evidence-workbench', 'lead-service-review-prototype', 'workforce-participation', 'geospatial-processing-tools']), 'Preserve the selected projects and include the V3 workbench');
+  assert.deepEqual(new Set(additionalProjects.map(project => project.id)), new Set(['utility-inspection-etl', 'accessibility-analysis', 'lead-service-line-evidence-workbench', 'lead-service-review-prototype', 'workforce-participation', 'geospatial-processing-tools', 'nearmap-imagery-pipeline', 'ground-patrol-analytics', 'parcel-data-integration']), 'Preserve the selected projects and add the three archive-backed cases');
   for (const collection of browseCollections) {
     const original = collections.find(c => c.id === collection.id);
     assert.deepEqual(collection.entries.slice(0, original.entries.length), original.entries);

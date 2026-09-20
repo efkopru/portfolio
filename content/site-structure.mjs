@@ -35,6 +35,9 @@ const additionalCollectionIds = {
   'vit-heatwave-calibration': 'ml-optimization',
   'transformer-bias-correction': 'ml-optimization',
   'utility-inspection-etl': 'development-and-etl',
+  'nearmap-imagery-pipeline': 'development-and-etl',
+  'parcel-data-integration': 'development-and-etl',
+  'ground-patrol-analytics': 'spatial-and-data-analysis',
   'workforce-participation': 'development-and-etl',
   'geospatial-processing-tools': 'development-and-etl'
 };

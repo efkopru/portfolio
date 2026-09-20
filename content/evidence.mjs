@@ -1,5 +1,6 @@
 // Only public-safe companions are published. These are new educational examples,
 // never employer source or measurements of historical production systems.
+import { projects } from './portfolio.mjs';
 export const featuredWork = [
   { id: 'utility-inspection-etl', role: 'Data engineering', steps: ['Records', 'Process', 'Publish'] },
   { id: 'accessibility-analysis', role: 'Data science', steps: ['Network', 'Score', 'Compare'] },
@@ -13,9 +14,9 @@ export const methodDiagrams = {
     caption: 'Version 3 workflow diagram. Extracted material mentions, verified labels, model predictions, and reviewer decisions remain distinct. The published demonstration uses invented records.'
   },
   'utility-inspection-etl': {
-    src: 'assets/evidence/utility-inspection-pipeline.svg',
-    title: 'How inspection data reaches the map',
-    caption: 'A simplified view of the workflow, not a screenshot of the client system.'
+    src: 'assets/evidence/utility-data-flow.svg',
+    title: 'Flight and asset data meet in spatial coverage analysis before GIS publication',
+    caption: 'An original explanation of the source-data flow. It uses generic components and contains no client records or infrastructure locations.'
   },
   'accessibility-analysis': {
     src: 'assets/evidence/accessibility-method.svg',
@@ -53,6 +54,7 @@ export const workbenchDemo = {
   boundary: 'Use invented reviewer IDs and notes. Decisions stay in the browser tab until exported and are not submitted to a server. This demonstration does not establish field performance.'
 };
 export const workbenchAssets = ['index.html', 'review.css', 'review.js', 'provenance.json'].map(name => `${workbenchDemo.directory}/${name}`);
-export const evidenceAssets = [...Object.values(methodDiagrams).map(diagram => diagram.src), ...companions.map(companion => companion.diagram), ...companions.flatMap(companionFiles), ...workbenchAssets];
+export const caseEvidenceAssets = [...new Set(projects.flatMap(project => (project.evidenceSections || []).flatMap(section => section.diagram ? [section.diagram.src] : [])))];
+export const evidenceAssets = [...Object.values(methodDiagrams).map(diagram => diagram.src), ...companions.map(companion => companion.diagram), ...companions.flatMap(companionFiles), ...workbenchAssets, ...caseEvidenceAssets];
 export const companionRoute = id => `example-${id}`;
 export const sourceRoute = (id, name) => `example-${id}-${({ 'README.md': 'guide', 'demo.py': 'code', 'test_demo.py': 'tests' })[name]}`;

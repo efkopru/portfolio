@@ -1,5 +1,9 @@
 // Public portfolio copy. Local source evidence is recorded separately in docs/.
 import screenshotGroups from './screenshots.json' with { type: 'json' };
+import { nearMapProject } from './nearmap-case.mjs';
+import { parcelProject } from './parcel-case.mjs';
+import { groundPatrolProject, utilityInspectionUpdate } from './inspection-cases.mjs';
+import { doctoralResearchUpdate } from './research-update.mjs';
 export const profile = {
   name: 'Esad Kopru', location: 'Dallas, Texas', email: 'esad.kopru@gmail.com', github: 'https://github.com/efkopru',
   description: 'Geospatial data science, data engineering, and software engineering. Python, SQL, spatial optimization, automated data pipelines, and public web GIS.',
@@ -258,6 +262,11 @@ projects.push(
     links: [{ label: 'PDF conversion source', url: 'https://github.com/efkopru/pdf-to-image' }, { label: 'Raster packaging source', url: 'https://github.com/efkopru/aws-lambda-rasterio' }]
   }
 );
+
+projects.push(nearMapProject, groundPatrolProject, parcelProject);
+Object.assign(projects.find(project => project.id === 'utility-inspection-etl'), utilityInspectionUpdate);
+Object.assign(projects.find(project => project.id === 'doctoral-research'), doctoralResearchUpdate);
+projects.find(project => project.id === 'python-and-notebooks').relatedProjects = ['parcel-data-integration', 'nearmap-imagery-pipeline'];
 
 for (const [group, images] of Object.entries(screenshotGroups)) {
   for (const image of images) image.group = group;

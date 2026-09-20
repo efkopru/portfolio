@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 510" role="img" aria-labelledby="title desc">
+  <title id="title">Parcel integration from two county sources</title>
+  <desc id="desc">Denton REST data and Dallas shapefile and CSV data follow separate preparation paths. Spatial selection and field checks precede enterprise geodatabase updates and ArcGIS Online publication. This is an explanatory diagram without source records.</desc>
+  <rect width="1000" height="510" rx="12" fill="#f5f8fa"/>
+  <g font-family="Arial, sans-serif" fill="#163747">
+    <text x="36" y="45" font-size="24" font-weight="700">Two sources. A consistent municipal layer.</text>
+    <text x="36" y="74" font-size="16" fill="#46616e">Historical parcel workflow · simplified architecture</text>
+    <g fill="#fff" stroke="#7d9ca9" stroke-width="2">
+      <rect x="36" y="108" width="270" height="94" rx="6"/>
+      <rect x="36" y="237" width="270" height="94" rx="6"/>
+      <rect x="374" y="108" width="270" height="94" rx="6"/>
+      <rect x="374" y="237" width="270" height="94" rx="6"/>
+      <rect x="709" y="163" width="255" height="112" rx="6"/>
+      <rect x="709" y="362" width="255" height="106" rx="6"/>
+    </g>
+    <g font-size="19" font-weight="700">
+      <text x="54" y="143">Denton County</text>
+      <text x="54" y="272">Dallas County</text>
+      <text x="392" y="143">Extract and select</text>
+      <text x="392" y="272">Join and select</text>
+      <text x="727" y="198">Validate and transform</text>
+      <text x="727" y="397">Publish</text>
+    </g>
+    <g font-size="16" fill="#46616e">
+      <text x="54" y="176">REST geometry + attributes</text>
+      <text x="54" y="305">Shapefile + appraisal CSVs</text>
+      <text x="392" y="176">Centroids + explicit records</text>
+      <text x="392" y="305">Appraisal join + city subset</text>
+      <text x="727" y="230">Count and population checks</text>
+      <text x="727" y="252">Derived municipal fields</text>
+      <text x="727" y="429">Enterprise geodatabases</text>
+      <text x="727" y="451">ArcGIS Online</text>
+    </g>
+    <g stroke="#19718d" fill="none" stroke-width="3">
+      <path d="M306 155H361m-10-7 10 7-10 7M306 284H361m-10-7 10 7-10 7"/>
+      <path d="M644 155H671V219H696m-10-7 10 7-10 7M644 284H671V219"/>
+      <path d="M837 275V348m-7-10 7 10 7-10"/>
+    </g>
+    <text x="36" y="398" font-size="18" font-weight="700">Recurring execution</text>
+    <text x="36" y="427" font-size="16" fill="#46616e">Scheduled Python jobs with saved stage and completion logs.</text>
+    <text x="36" y="452" font-size="16" fill="#46616e">Source-specific preparation feeds common GIS destinations.</text>
+  </g>
+</svg>

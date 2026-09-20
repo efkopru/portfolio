@@ -1,11 +1,18 @@
 # Optional asset-authoring utility. Normal Node builds use the checked-in PNGs.
 # Reuses reviewed public portfolio images; never reads private data or downloads assets.
+param([string[]]$Names = @())
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Drawing
 $taskAssetRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../assets/social'))
 New-Item -ItemType Directory -Path $taskAssetRoot -Force | Out-Null
 $taskCovers = node (Join-Path $PSScriptRoot 'social-cards.mjs') | ConvertFrom-Json
 if ($LASTEXITCODE -ne 0 -or $taskCovers.Count -eq 0) { throw 'Could not load reviewed social-cover metadata.' }
+if ($Names.Count -gt 0) {
+    foreach ($taskName in $Names) {
+        if ($taskName -notin $taskCovers.Name) { throw "Unknown project cover: $taskName" }
+    }
+    $taskCovers = @($taskCovers | Where-Object { $_.Name -in $Names })
+}
 foreach ($taskCover in $taskCovers) {
     $taskBitmap = [System.Drawing.Bitmap]::new(1200, 630)
     $taskGraphics = [System.Drawing.Graphics]::FromImage($taskBitmap)
