@@ -6,7 +6,10 @@ import { fileURLToPath } from 'node:url';
 
 const sourcePath = process.argv[2];
 if (!sourcePath) throw new Error('Usage: node scripts/import-workbench-demo.mjs <synthetic-review.html>');
-const source = await readFile(sourcePath, 'utf8');
+const sourceBytes = await readFile(sourcePath);
+// Git checkouts may use CRLF on Windows and LF on the deployment host.
+// Canonical LF keeps the public assets and their version tokens platform-independent.
+const source = sourceBytes.toString('utf8').replace(/\r\n?/g, '\n');
 const datasetMatch = source.match(/<script id="dataset" type="application\/json">([\s\S]*?)<\/script>/);
 const styles = source.match(/<style>([\s\S]*?)<\/style>/g);
 const scripts = [...source.matchAll(/<script>([\s\S]*?)<\/script>/g)];
@@ -36,8 +39,9 @@ await writeFile(resolve(directory, 'review.css'), stylesheet);
 await writeFile(resolve(directory, 'review.js'), javascript);
 await writeFile(resolve(directory, 'provenance.json'), JSON.stringify({
   release: '0.3.0', disclosure: 'Invented synthetic records only. Not utility field performance.',
-  source_sha256: createHash('sha256').update(source).digest('hex'),
+  source_sha256: createHash('sha256').update(sourceBytes).digest('hex'),
+  source_normalized_sha256: createHash('sha256').update(source).digest('hex'),
   dataset_id: dataset.dataset_id, schema_version: dataset.schema_version, work_plan_records: dataset.records.length,
-  adaptations: ['External same-origin stylesheet and executable script for portfolio CSP compatibility.', 'Public synthetic-demo notice and relative return link.']
+  adaptations: ['External same-origin stylesheet and executable script for portfolio CSP compatibility.', 'Canonical LF line endings for stable asset-version hashes across checkouts.', 'Public synthetic-demo notice and relative return link.']
 }, null, 2) + '\n');
 console.log(`Imported ${dataset.records.length} reviewed synthetic work-plan records with external scripts and styles.`);

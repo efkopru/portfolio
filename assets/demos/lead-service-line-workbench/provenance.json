@@ -2,11 +2,13 @@
   "release": "0.3.0",
   "disclosure": "Invented synthetic records only. Not utility field performance.",
   "source_sha256": "69f8f33f24ee1d4b1ce02dc92d2329995680051f4c36ef4c900c12c7a43cbaa4",
+  "source_normalized_sha256": "b590c5554634b64ffe7494721b6b48b0222ca47061bbbc1e10b76fd008092c91",
   "dataset_id": "e04b4aac0616446e8ce744894835315f247d9604b062e153ec49aace3065ee41",
   "schema_version": "3.0",
   "work_plan_records": 99,
   "adaptations": [
     "External same-origin stylesheet and executable script for portfolio CSP compatibility.",
+    "Canonical LF line endings for stable asset-version hashes across checkouts.",
     "Public synthetic-demo notice and relative return link."
   ]
 }
