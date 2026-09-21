@@ -119,6 +119,7 @@
 .diagram-scroll-hint{display:none}
 .diagram-scroll:focus-visible,.table-scroll:focus-visible{outline:3px solid var(--focus);outline-offset:4px}
 .related-cases ul{display:flex;flex-wrap:wrap;gap:.5rem 1.75rem;padding-left:1.25rem}
+.related-cases li{margin:0}
 @media(max-width:650px){.case-evidence,.related-cases{margin-block:1.75rem}.case-evidence .evidence-table th,.case-evidence .evidence-table td{padding:.65rem;min-width:100px}.diagram-scroll{overflow-x:auto}.diagram-scroll>img{min-width:620px}.diagram-scroll-hint{display:block}}
 .resume-header{display:flex;align-items:center;justify-content:flex-start;flex-wrap:wrap;gap:.5rem 1rem;width:75%;margin-inline:auto;margin-bottom:1rem}
 .resume-header h1{margin:0}
