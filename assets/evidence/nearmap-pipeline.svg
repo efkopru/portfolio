@@ -1,14 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
-  <title id="title">Imagery collection with a targeted recovery loop</title>
-  <desc id="desc">An area boundary defines the tile set. Python downloads the imagery and checks for blank responses. A coverage audit compares expected tiles with files on disk. Missing tiles are selected for retry passes, then checked again. GDAL assigns tile bounds, builds the mosaic, clips it to the boundary, and creates overviews. This is an original conceptual diagram, not licensed imagery or a system screenshot.</desc>
+  <title id="title">Imagery recovery and mosaic assembly feed deep learning feature extraction</title>
+  <desc id="desc">An area boundary defines the tile set. Python downloads the imagery and checks for blank responses. A coverage audit compares expected tiles with files on disk. Missing tiles are selected for retry passes, then checked again. GDAL assembles and clips the raster mosaic. The prepared imagery feeds deep learning algorithms that extract building footprints and roads. This is an original conceptual diagram, not licensed imagery or a system screenshot.</desc>
   <defs>
     <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M1 1 9 5 1 9" fill="none" stroke="#64748b" stroke-width="1.6" stroke-linejoin="round"/></marker>
     <marker id="retry-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M1 1 9 5 1 9" fill="none" stroke="#176354" stroke-width="1.6" stroke-linejoin="round"/></marker>
   </defs>
   <rect width="1200" height="560" fill="#ffffff"/>
   <g font-family="Arial, Helvetica, sans-serif" fill="#253746">
-    <text x="44" y="53" font-size="28" font-weight="700">A complete tile set starts with a recoverable process</text>
-    <text x="44" y="86" font-size="18">Select the area, inspect what arrived, and target the gaps.</text>
+    <text x="44" y="53" font-size="28" font-weight="700">From imagery tiles to mapped features</text>
+    <text x="44" y="86" font-size="18">Recover imagery, assemble the raster, then extract buildings and roads.</text>
 
     <g fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)">
       <path d="M284 221H328"/>
@@ -49,6 +49,12 @@
     <text x="446" y="472" font-size="17">Run the coverage check again after each pass.</text>
     <path d="M424 433H362Q322 433 322 393V334Q322 317 340 317H456V308" fill="none" stroke="#176354" stroke-width="2" marker-end="url(#retry-arrow)"/>
 
-    <text x="44" y="531" font-size="16" fill="#536674">Conceptual workflow. The recovery loop represents successive download and audit passes.</text>
+    <path d="M1038 300V368" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="920" y="376" width="236" height="114" rx="6" fill="#f0f5fa" stroke="#64748b" stroke-width="1.3"/>
+    <text x="940" y="413" font-size="21" font-weight="700">Deep learning</text>
+    <text x="940" y="444" font-size="17">Building footprints</text>
+    <text x="940" y="472" font-size="17">Roads</text>
+
+    <text x="44" y="531" font-size="16" fill="#536674">Conceptual workflow. Tile coverage checks and feature extraction are separate stages.</text>
   </g>
 </svg>

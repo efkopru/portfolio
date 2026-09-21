@@ -176,15 +176,15 @@ projects.push(
     links: [{ label: 'View R source', url: 'https://github.com/efkopru/ILPrediction' }, { label: 'View original presentation', url: 'https://docs.google.com/presentation/d/1TP-t51nEhcaOQrtdFjXIwcz5CdQMXi_Y/htmlpresent' }]
   },
   {
-    id: 'workforce-participation', title: 'An interactive workforce atlas', type: 'Public application', roles: ['software-engineering', 'data-science'],
-    summary: 'An interactive atlas for comparing labor-market patterns across states and time.',
-    context: 'Independent portfolio project', tools: ['JavaScript', 'D3', 'Data visualization', 'Interactive maps'],
-    problem: 'A single static chart makes it difficult to compare changes across states and dates.',
-    contribution: 'I built an atlas with geographic maps, tile maps, time controls, and state comparisons.',
-    approach: ['Show the data in linked maps and charts.', 'Use time controls to compare periods.', 'Compare states in the browser.'],
-    result: 'The public app covers January 2020 through January 2026, with source code available.',
-    boundary: 'The app uses a fixed dataset snapshot, not a continuously updated feed.',
-    links: [{ label: 'Open workforce atlas', url: 'https://efkopru.github.io/workforce-participation/' }, { label: 'View source', url: 'https://github.com/efkopru/workforce-participation' }]
+    id: 'workforce-participation', title: 'Interactive workforce atlas', type: 'Public application', roles: ['software-engineering', 'data-science'],
+    summary: 'An interactive D3 atlas comparing U.S. state labor-market patterns from January 2020 through January 2026.',
+    context: 'Independent portfolio project', tools: ['JavaScript', 'D3', 'TopoJSON', 'Data visualization', 'Interactive maps'],
+    problem: 'A single static chart makes it difficult to compare changes across states, dates, and labor-market indicators.',
+    contribution: 'I built an atlas with geographic and tile-grid maps, linked trend charts, time controls, state profiles, and shareable views.',
+    approach: ['Read the monthly CSV snapshot and preserve missing observations as gaps.', 'Calculate national rates from summed state counts instead of averaging state percentages.', 'Keep color scales fixed across the time series so map colors remain comparable during animation.', 'Synchronize the metric, month, selected state, and map view through a shared application state and URL hash.'],
+    result: 'The published application covers 50 states and Washington, DC across 73 monthly periods. Visitors can compare metrics, animate the timeline, inspect state trends, and share a selected view. The app and source are available on GitHub.',
+    boundary: 'The app uses a fixed dataset snapshot, not a continuously updated feed. Missing observations remain visible as gaps.',
+    links: [{ label: 'Open interactive atlas', url: 'https://efkopru.github.io/workforce-participation/' }, { label: 'View source on GitHub', url: 'https://github.com/efkopru/workforce-participation' }]
   },
   {
     id: 's2s-transformer-bias-correction', title: 'Space-time forecast calibration', type: 'Synthetic-data demonstration', roles: ['data-science', 'software-engineering'],
