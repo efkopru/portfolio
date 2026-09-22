@@ -198,6 +198,40 @@ test('homepage introduction uses available width without preventing natural text
   }
 });
 
+test('highlighted-work category labels are larger and bolder than project titles without changing other page labels', async () => {
+  const css = await source('styles.css');
+  const category = declarations(css, '.featured-body .project-kind');
+  const title = declarations(css, '.featured-body h3');
+  const remSize = rule => Number(rule.match(/\bfont-size:\s*([\d.]+)rem\s*(?:;|$)/)?.[1]);
+  const weight = rule => Number(rule.match(/\bfont-weight:\s*(\d+)\s*(?:;|$)/)?.[1]);
+  assert.equal(remSize(category), 1.25, 'Featured categories use a clearly larger size');
+  assert.equal(weight(category), 800, 'Featured categories use an extra-bold weight');
+  assert.equal(remSize(title), 1, 'Project titles retain their compact size');
+  assert.equal(weight(title), 600, 'Project titles stay visually secondary');
+  assert.ok(remSize(category) > remSize(title));
+  assert.ok(weight(category) > weight(title));
+  for (const rule of [/\bline-height:\s*1\.3\s*(?:;|$)/, /\bletter-spacing:\s*0\s*(?:;|$)/, /\bcolor:\s*var\(--ink\)\s*(?:;|$)/, /\bmargin-bottom:\s*\.35rem\s*(?:;|$)/]) {
+    assert.match(category, rule);
+  }
+  const globalCategory = declarations(css, '.project-kind');
+  assert.equal(remSize(globalCategory), .8, 'Category labels outside highlighted work keep their original size');
+  assert.equal(weight(globalCategory), 700, 'Category labels outside highlighted work keep their original weight');
+  assert.match(globalCategory, /\bletter-spacing:\s*\.04em\s*(?:;|$)/);
+  assert.match(globalCategory, /\bcolor:\s*var\(--muted\)\s*(?:;|$)/);
+  assert.match(globalCategory, /\bmargin-bottom:\s*\.6rem\s*(?:;|$)/);
+  for (const path of ['index.html', 'dist/index.html']) {
+    const cards = [...(await source(path)).matchAll(/<article class="featured-card">([\s\S]*?)<\/article>/g)];
+    assert.equal(cards.length, 3);
+    assert.deepEqual(cards.map(card => card[1].match(/<p class="project-kind">([^<]+)<\/p>/)?.[1]), ['Data engineering', 'Data science', 'Software engineering']);
+    for (const [index, card] of cards.entries()) {
+      const item = featuredWork[index];
+      const project = projects.find(project => project.id === item.id);
+      assert.ok(card[1].includes(`<p class="project-kind">${esc(item.role)}</p><h3><a href="./${item.id}/index.html">${esc(project.title)}</a></h3>`), `${path}: categories remain above the unchanged linked project titles`);
+    }
+  }
+  assert.equal(css, await source('dist/styles.css'));
+});
+
 test('highlighted-work SVG arrows use a fixed stroke without repositioning or bolding their labels', async () => {
   const css = await source('styles.css');
   const icon = declarations(css, '.featured-card .project-arrow');
