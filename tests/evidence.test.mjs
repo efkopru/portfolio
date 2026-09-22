@@ -75,7 +75,7 @@ test('homepage places exactly five selected skills between the introduction and 
   }
 });
 
-test('featured cards use accessible three-step HTML flows instead of illustration assets', async () => {
+test('featured cards retain accessible three-step HTML flows with decorative SVG arrows', async () => {
   const attribute = (tag, name) => tag.match(new RegExp(`\\b${name}="([^"]*)"`))?.[1];
   const expectedSteps = [['Records', 'Process', 'Publish'], ['Network', 'Score', 'Compare'], ['GIS data', 'Tools', 'Web map']];
   assert.deepEqual(featuredWork.map(item => item.steps), expectedSteps);
@@ -86,11 +86,24 @@ test('featured cards use accessible three-step HTML flows instead of illustratio
   assert.equal(await source('index.html'), await source('dist/index.html'));
   for (const path of ['index.html', 'dist/index.html']) {
     const html = body(await source(path));
-    assert.doesNotMatch(html, /<(?:img|svg)\b/i, `${path}: homepage content uses plain HTML visuals`);
+    assert.doesNotMatch(html, /<img\b/i, `${path}: homepage content has no illustration images`);
     const cards = [...html.matchAll(/<article\b[^>]*class="[^"]*\bfeatured-card\b[^"]*"[^>]*>([\s\S]*?)<\/article>/g)];
     assert.equal(cards.length, featuredWork.length);
+    assert.equal((html.match(/<svg\b/g) || []).length, 9, `${path}: six workflow arrows and three case-study arrows`);
+    assert.doesNotMatch(cards.reduce((remaining, card) => remaining.replace(card[0], ''), html), /<svg\b/i, `${path}: homepage SVGs are scoped to featured cards`);
     for (const [index, card] of cards.entries()) {
       const item = featuredWork[index];
+      const project = projects.find(project => project.id === item.id);
+      const icons = [...card[1].matchAll(/(<svg\b[^>]*>)([\s\S]*?)<\/svg>/g)];
+      assert.equal(icons.length, 3, `${path}: ${item.id} has exactly three arrow icons`);
+      for (const icon of icons) {
+        assert.match(attribute(icon[1], 'class'), /^project-arrow(?: flow-arrow)?$/);
+        assert.equal(attribute(icon[1], 'viewBox'), '0 0 24 24');
+        assert.equal(attribute(icon[1], 'aria-hidden'), 'true');
+        assert.equal(attribute(icon[1], 'focusable'), 'false');
+        assert.equal(icon[2], '<path d="M4 12h16m-6-6 6 6-6 6"/>');
+      }
+      assert.doesNotMatch(card[1], /(?:→|&rarr;|&#8594;|&#x2192;)/i, `${path}: arrow rendering does not depend on a font glyph`);
       const flows = [...card[1].matchAll(/(<ol\b[^>]*class="[^"]*\bfeatured-flow\b[^"]*"[^>]*>)([\s\S]*?)<\/ol>/g)];
       assert.equal(flows.length, 1, `${path}: ${item.id} has one semantic workflow list`);
       const [flow] = flows;
@@ -103,13 +116,14 @@ test('featured cards use accessible three-step HTML flows instead of illustratio
         assert.equal(labels.length, 1, `${item.id}: each list item has one text step`);
         return labels[0][1].trim();
       }), expectedSteps[index]);
-      const arrows = [...flow[2].matchAll(/(<span\b[^>]*class="[^"]*\bflow-arrow\b[^"]*"[^>]*>)([^<]+)<\/span>/g)];
+      const arrows = [...flow[2].matchAll(/<svg\b[^>]*class="project-arrow flow-arrow"[^>]*>[\s\S]*?<\/svg>/g)];
       assert.equal(arrows.length, 2, `${path}: ${item.id} has only two connecting arrows`);
-      for (const arrow of arrows) {
-        assert.equal(attribute(arrow[1], 'aria-hidden'), 'true');
-        assert.match(arrow[2].trim(), /^(?:→|&rarr;|&#8594;|&#x2192;)$/i);
-      }
-      assert.ok(card[1].includes(`href="./${item.id}/index.html"`));
+      assert.deepEqual(steps.map(step => (step[1].match(/<svg\b/g) || []).length), [1, 1, 0], `${path}: connectors follow only the first two workflow steps`);
+      const link = card[1].match(/(<a class="text-link"[^>]*>)([\s\S]*?)<\/a>/);
+      assert.ok(link, `${path}: ${item.id} keeps its case-study link`);
+      assert.equal(attribute(link[1], 'href'), `./${item.id}/index.html`);
+      assert.ok(link[2].startsWith(`Read case study<span class="sr-only">: ${esc(project.title)}</span> `), `${path}: case-study label and accessible project name remain unchanged`);
+      assert.equal((link[2].match(/<svg\b[^>]*class="project-arrow"[^>]*>/g) || []).length, 1, `${path}: case-study link has one decorative SVG arrow`);
     }
   }
 });

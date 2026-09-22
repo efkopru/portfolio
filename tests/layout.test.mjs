@@ -198,29 +198,23 @@ test('homepage introduction uses available width without preventing natural text
   }
 });
 
-test('highlighted-work arrows are stronger without resizing, repositioning or bolding their labels', async () => {
+test('highlighted-work SVG arrows use a fixed stroke without repositioning or bolding their labels', async () => {
   const css = await source('styles.css');
+  const icon = declarations(css, '.featured-card .project-arrow');
+  for (const rule of [/\bdisplay:\s*block\s*(?:;|$)/, /\bwidth:\s*1\.125rem\s*(?:;|$)/, /\bheight:\s*1\.125rem\s*(?:;|$)/, /\bflex-shrink:\s*0\s*(?:;|$)/, /\bfill:\s*none\s*(?:;|$)/, /\bstroke:\s*currentColor\s*(?:;|$)/, /\bstroke-width:\s*3\s*(?:;|$)/, /\bstroke-linecap:\s*round\s*(?:;|$)/, /\bstroke-linejoin:\s*round\s*(?:;|$)/]) {
+    assert.match(icon, rule, 'Decorative arrows have consistent dimensions and a visible stroke');
+  }
   const arrow = declarations(css, '.flow-arrow');
   assert.match(arrow, /\bcolor:\s*var\(--ink\)\s*(?:;|$)/);
-  assert.match(arrow, /\bfont-weight:\s*700\s*(?:;|$)/);
-  for (const rule of [/\bposition:\s*absolute\s*(?:;|$)/, /\bright:\s*-1\.05rem\s*(?:;|$)/, /\btop:\s*50%\s*(?:;|$)/, /\btransform:\s*translateY\(-50%\)\s*(?:;|$)/, /\bfont-size:\s*1rem\s*(?:;|$)/]) {
-    assert.match(arrow, rule, 'Workflow arrows retain their existing size and position');
+  assert.doesNotMatch(arrow, /\bfont(?:-[\w-]+)?\s*:/, 'SVG visibility does not depend on font glyph weight');
+  for (const rule of [/\bposition:\s*absolute\s*(?:;|$)/, /\bright:\s*-1\.05rem\s*(?:;|$)/, /\btop:\s*50%\s*(?:;|$)/, /\btransform:\s*translateY\(-50%\)\s*(?:;|$)/]) {
+    assert.match(arrow, rule, 'Workflow arrows retain their existing position');
   }
   const mobile = blockAfter(css, /@media\s*\(max-width:\s*650px\)\s*\{/);
   assert.match(declarations(mobile, '.flow-arrow'), /\bright:\s*-\.95rem\s*(?:;|$)/);
-  assert.match(declarations(css, '.featured-card .text-link>[aria-hidden="true"]'), /^\s*font-weight:\s*700\s*;?\s*$/, 'Case-study arrow emphasis is scoped to the decorative child');
+  assert.doesNotMatch(css, /\.featured-card\s+\.text-link\s*>\s*\[aria-hidden=["']true["']\]/, 'Obsolete font-weight override is removed');
   for (const selector of ['.text-link', '.featured-body .text-link', '.featured-flow li', '.flow-step']) {
     assert.doesNotMatch(declarations(css, selector), /\bfont-weight\s*:/, `${selector}: adjacent text retains its existing weight`);
-  }
-  for (const path of ['index.html', 'dist/index.html']) {
-    const cards = [...(await source(path)).matchAll(/<article class="featured-card">([\s\S]*?)<\/article>/g)];
-    assert.equal(cards.length, featuredWork.length);
-    for (const [index, card] of cards.entries()) {
-      const item = featuredWork[index];
-      assert.deepEqual([...card[1].matchAll(/<span class="flow-step">([^<]+)<\/span>/g)].map(match => match[1]), item.steps.map(esc), `${path}: workflow labels remain unchanged`);
-      assert.equal((card[1].match(/<span class="flow-arrow" aria-hidden="true">→<\/span>/g) || []).length, item.steps.length - 1, `${path}: workflow arrows remain decorative`);
-      assert.match(card[1], /<a class="text-link"[^>]*>Read case study<span class="sr-only">:[^<]+<\/span> <span aria-hidden="true">→<\/span><\/a>/, `${path}: case-study label and decorative arrow remain separate`);
-    }
   }
 });
 
@@ -241,6 +235,7 @@ test('compact featured cards preserve complete content and keep their size chang
   assert.match(declarations(css, '.text-link'), /\bmin-height:\s*44px\s*(?:;|$)/);
   const featuredRules = rules.filter(rule => rule.selectors.some(selector => /^\.(?:featured-|flow-)/.test(selector)));
   for (const rule of featuredRules) {
+    if (rule.selectors.length === 1 && rule.selectors[0] === '.featured-card .project-arrow') continue; // Icons have explicit dimensions; card content stays flexible.
     assert.doesNotMatch(rule.body, /(?:^|;)\s*(?:height|max-height|block-size|max-block-size)\s*:|(?:-webkit-)?line-clamp\s*:|text-overflow\s*:\s*ellipsis/i, 'Cards do not use fixed height or text truncation to appear smaller');
     const targetMinHeight = rule.body.match(/(?:^|;)\s*min-height\s*:\s*([^;]+)/)?.[1];
     if (rule.selectors.some(selector => selector.endsWith('.text-link')) && targetMinHeight) {
