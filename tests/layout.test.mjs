@@ -204,11 +204,11 @@ test('highlighted-work category labels are larger and bolder than project titles
   const title = declarations(css, '.featured-body h3');
   const remSize = rule => Number(rule.match(/\bfont-size:\s*([\d.]+)rem\s*(?:;|$)/)?.[1]);
   const weight = rule => Number(rule.match(/\bfont-weight:\s*(\d+)\s*(?:;|$)/)?.[1]);
-  assert.equal(remSize(category), 1.25, 'Featured categories use a clearly larger size');
+  assert.equal(remSize(category), 1.15, 'Featured categories are 15 percent larger than project titles');
   assert.equal(weight(category), 800, 'Featured categories use an extra-bold weight');
   assert.equal(remSize(title), 1, 'Project titles retain their compact size');
   assert.equal(weight(title), 600, 'Project titles stay visually secondary');
-  assert.ok(remSize(category) > remSize(title));
+  assert.equal(remSize(category) / remSize(title), 1.15, 'Category-to-project title size ratio is exactly 115 percent');
   assert.ok(weight(category) > weight(title));
   for (const rule of [/\bline-height:\s*1\.3\s*(?:;|$)/, /\bletter-spacing:\s*0\s*(?:;|$)/, /\bcolor:\s*var\(--ink\)\s*(?:;|$)/, /\bmargin-bottom:\s*\.35rem\s*(?:;|$)/]) {
     assert.match(category, rule);
