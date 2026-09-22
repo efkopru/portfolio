@@ -54,6 +54,20 @@ test('lead prediction prototype remains separate from a deployed utility model a
   assert.match(project.approach.join(' '), /Match records and prepare data snapshots separately from the training command/);
   assert.ok((await visibleContent(project.id)).includes(esc(project.boundary)));
 });
+test('public web map credits nine delivered widgets with concrete visible examples', async () => {
+  const project = projects.find(p => p.id === 'interactive-maps-a-custom-js-app');
+  const cityRole = profile.experience.find(role => role.employer === 'City of Lewisville' && role.title === 'Software Developer - GIS');
+  const profilePoint = cityRole.points.find(point => /widgets/i.test(point));
+  const visible = await visibleContent(project.id);
+  const contribution = visible.match(/<h2>What I did<\/h2><p>([\s\S]*?)<\/p>/)?.[1];
+  assert.ok(contribution, 'The project contribution remains visible under What I did');
+  for (const text of [project.contribution, profilePoint, contribution]) {
+    assert.match(text, /\bnine widgets\b/i);
+    for (const widget of ['navigation', 'swipe', 'measurement', 'legend']) {
+      assert.ok(text.toLowerCase().includes(widget), `${widget} is named among the nine delivered widgets`);
+    }
+  }
+});
 test('recruiting paths have relevant substantive work', () => {
   for (const role of profile.roles) assert.ok(projects.filter(p => p.roles.includes(role.id)).length >= 3);
 });
