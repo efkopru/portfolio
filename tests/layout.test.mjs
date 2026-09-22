@@ -198,6 +198,32 @@ test('homepage introduction uses available width without preventing natural text
   }
 });
 
+test('highlighted-work arrows are stronger without resizing, repositioning or bolding their labels', async () => {
+  const css = await source('styles.css');
+  const arrow = declarations(css, '.flow-arrow');
+  assert.match(arrow, /\bcolor:\s*var\(--ink\)\s*(?:;|$)/);
+  assert.match(arrow, /\bfont-weight:\s*700\s*(?:;|$)/);
+  for (const rule of [/\bposition:\s*absolute\s*(?:;|$)/, /\bright:\s*-1\.05rem\s*(?:;|$)/, /\btop:\s*50%\s*(?:;|$)/, /\btransform:\s*translateY\(-50%\)\s*(?:;|$)/, /\bfont-size:\s*1rem\s*(?:;|$)/]) {
+    assert.match(arrow, rule, 'Workflow arrows retain their existing size and position');
+  }
+  const mobile = blockAfter(css, /@media\s*\(max-width:\s*650px\)\s*\{/);
+  assert.match(declarations(mobile, '.flow-arrow'), /\bright:\s*-\.95rem\s*(?:;|$)/);
+  assert.match(declarations(css, '.featured-card .text-link>[aria-hidden="true"]'), /^\s*font-weight:\s*700\s*;?\s*$/, 'Case-study arrow emphasis is scoped to the decorative child');
+  for (const selector of ['.text-link', '.featured-body .text-link', '.featured-flow li', '.flow-step']) {
+    assert.doesNotMatch(declarations(css, selector), /\bfont-weight\s*:/, `${selector}: adjacent text retains its existing weight`);
+  }
+  for (const path of ['index.html', 'dist/index.html']) {
+    const cards = [...(await source(path)).matchAll(/<article class="featured-card">([\s\S]*?)<\/article>/g)];
+    assert.equal(cards.length, featuredWork.length);
+    for (const [index, card] of cards.entries()) {
+      const item = featuredWork[index];
+      assert.deepEqual([...card[1].matchAll(/<span class="flow-step">([^<]+)<\/span>/g)].map(match => match[1]), item.steps.map(esc), `${path}: workflow labels remain unchanged`);
+      assert.equal((card[1].match(/<span class="flow-arrow" aria-hidden="true">→<\/span>/g) || []).length, item.steps.length - 1, `${path}: workflow arrows remain decorative`);
+      assert.match(card[1], /<a class="text-link"[^>]*>Read case study<span class="sr-only">:[^<]+<\/span> <span aria-hidden="true">→<\/span><\/a>/, `${path}: case-study label and decorative arrow remain separate`);
+    }
+  }
+});
+
 test('compact featured cards preserve complete content and keep their size changes locally scoped', async () => {
   const css = await source('styles.css');
   const rules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(match => ({ selectors: match[1].trim().split(',').map(selector => selector.trim()), body: match[2] }));
