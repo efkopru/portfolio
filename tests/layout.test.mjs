@@ -206,8 +206,8 @@ test('highlighted-work category labels are larger and bolder than project titles
   const weight = rule => Number(rule.match(/\bfont-weight:\s*(\d+)\s*(?:;|$)/)?.[1]);
   assert.equal(remSize(category), 1.15, 'Featured category size stays unchanged');
   assert.equal(weight(category), 800, 'Featured categories use an extra-bold weight');
-  assert.equal(remSize(title), .75, 'Project titles are 25 percent smaller than their previous 1rem size');
-  assert.equal((1 - remSize(title) / 1) * 100, 25, 'Project title size reduction is exactly 25 percent');
+  assert.equal(remSize(title), .825, 'Project titles are 10 percent larger than their previous .75rem size');
+  assert.ok(Math.abs(remSize(title) / .75 - 1.1) < 1e-12, 'Project title size increases by exactly 10 percent');
   assert.equal(weight(title), 600, 'Project titles stay visually secondary');
   assert.ok(remSize(category) > remSize(title), 'Featured categories remain larger than project titles');
   assert.ok(weight(category) > weight(title));
