@@ -52,14 +52,14 @@ test('nested evidence supports accessible h3 headings and distinct safe ID prefi
   }
 });
 
-test('Building Footprint Extraction preserves the full imagery workflow, evidence and scope', async () => {
+test('Building Footprint Extraction shows preprocessing before extraction and preserves complete run records', async () => {
   const child = projects.find(project => project.id === 'nearmap-imagery-pipeline');
   const parent = projects.find(project => project.id === 'building-footprint-extraction');
   for (const directory of ['', 'dist/']) {
     const html = await readFile(new URL(`../${directory}${parent.id}/index.html`, import.meta.url), 'utf8');
-    const startTag = `<section class="project-part" id="part-${child.id}" aria-labelledby="${child.id}-heading">`;
+    const startTag = `<section class="project-stage" id="part-${child.id}" aria-labelledby="preprocessing-heading">`;
     const start = html.indexOf(startTag);
-    assert.ok(start >= 0, `${directory}: the imagery case has a named section inside the parent page`);
+    assert.ok(start >= 0, `${directory}: preprocessing has a named stage inside the parent page`);
     let depth = 0;
     let end = -1;
     for (const match of html.slice(start).matchAll(/<\/?section\b[^>]*>/g)) {
@@ -69,27 +69,38 @@ test('Building Footprint Extraction preserves the full imagery workflow, evidenc
     assert.ok(end > start, 'The grouped section is well formed');
     const grouped = html.slice(start, end);
     const visible = grouped.replace(/<details\b[^>]*>[\s\S]*?<\/details>/g, '');
-    assert.ok(visible.includes(`<h2 id="${child.id}-heading">${esc(child.title)}</h2>`));
-    for (const text of [child.summary, child.contribution, child.result, child.boundary, ...child.tools]) {
-      assert.ok(visible.includes(esc(text)), `${directory}: grouped overview preserves ${text}`);
+    assert.ok(visible.includes('<h2 id="preprocessing-heading">1. Imagery preprocessing</h2>'));
+    assert.match(visible, /<(?:ol|ul)\b[^>]*>[\s\S]*?<li\b/, `${directory}: preprocessing has readable steps`);
+    assert.match(visible, /mosaic/i, `${directory}: preprocessing identifies its raster output`);
+    assert.match(visible, /deep.learning/i, `${directory}: preprocessing explains its connection to extraction`);
+    assert.doesNotMatch(visible, /class="project-gallery"|data-image-viewer/, 'Extraction results do not appear before preprocessing is explained');
+    assert.ok(visible.includes('<strong>Output:</strong> Prepared raster imagery for the deep-learning stage.'));
+    assert.ok(visible.includes('<strong>Coverage result:</strong> The final archived check accounted for all 120,426 expected tiles, with zero unresolved tiles.'));
+    for (const text of [child.boundary, ...child.tools.filter(tool => tool !== 'Deep learning')]) {
+      assert.ok(visible.includes(esc(text)), `${directory}: preprocessing overview preserves ${text}`);
     }
+    const details = grouped.match(/<details class="project-stage-details">([^]*?)<\/details>/)?.[1];
+    assert.ok(details?.includes('<summary>Preprocessing workflow and run records</summary>'));
+    for (const text of [child.title, child.summary, child.contribution, child.result, child.context, child.problem, ...child.approach, ...child.tools]) assert.ok(details.includes(esc(text)), `${directory}: complete imagery context and method remain accessible`);
     for (const [index, section] of child.evidenceSections.entries()) {
       const headingId = `${child.id}-evidence-${index + 1}`;
-      assert.ok(visible.includes(`aria-labelledby="${headingId}"`));
-      assert.ok(visible.includes(`<h3 id="${headingId}">${esc(section.heading)}</h3>`));
-      for (const text of [...(section.paragraphs || []), ...(section.bullets || [])]) assert.ok(visible.includes(esc(text)), `${directory}: complete visible imagery evidence`);
+      assert.ok(details.includes(`aria-labelledby="${headingId}"`));
+      assert.ok(details.includes(`<h3 id="${headingId}">${esc(section.heading)}</h3>`));
+      for (const text of [...(section.paragraphs || []), ...(section.bullets || [])]) assert.ok(details.includes(esc(text)), `${directory}: complete imagery evidence remains accessible`);
       if (section.table) {
-        for (const text of [section.table.caption, ...section.table.headers, ...section.table.rows.flat()]) assert.ok(visible.includes(esc(text)), `${directory}: complete archived-results table`);
+        for (const text of [section.table.caption, ...section.table.headers, ...section.table.rows.flat()]) assert.ok(details.includes(esc(text)), `${directory}: complete archived-results table`);
       }
       if (section.diagram) {
-        assert.ok(visible.includes(`src="../${section.diagram.src}"`));
-        assert.ok(visible.includes(`alt="${esc(section.diagram.title)}"`));
-        assert.ok(visible.includes(esc(section.diagram.caption)));
+        assert.ok(details.includes(`src="../${section.diagram.src}"`));
+        assert.ok(details.includes(`alt="${esc(section.diagram.title)}"`));
+        assert.ok(details.includes(esc(section.diagram.caption)));
       }
     }
-    const details = grouped.match(/<details class="project-part-details">([^]*?)<\/details>/)?.[1];
-    assert.ok(details?.includes('<summary>Imagery workflow details</summary>'));
-    for (const text of [child.context, child.problem, ...child.approach]) assert.ok(details.includes(esc(text)), `${directory}: complete imagery technical details`);
+    const extractionStart = html.indexOf('<section class="project-stage" id="deep-learning-extraction"');
+    assert.ok(extractionStart >= end, `${directory}: extraction follows preprocessing`);
+    assert.ok(html.indexOf('class="project-gallery"') > extractionStart, `${directory}: gallery belongs to the extraction stage`);
+    assert.match(html.slice(extractionStart), /<h2\b[^>]*>2\. Deep-learning extraction<\/h2>/);
+    assert.ok(html.includes('<h3 id="screenshots-heading">Project gallery</h3>'), 'The extraction gallery has a nested heading');
     assert.ok(html.includes(esc(parent.contribution)), 'Keep the original extraction work');
     assert.ok(html.includes(esc(parent.boundary)), 'Keep the pretrained-model scope limitation');
     const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);

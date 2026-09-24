@@ -144,7 +144,7 @@ projects.push(
   },
   {
     id: 'building-footprint-extraction', title: 'Building footprints from aerial imagery', type: 'Public code', roles: ['data-science', 'data-engineering'],
-    summary: 'Extracting building outlines from aerial imagery with ESRI’s pretrained US buildings model.',
+    summary: 'A two-stage workflow: prepare aerial imagery, then extract building footprints with ESRI’s pretrained deep-learning model.',
     context: 'Independent portfolio project', tools: ['ArcGIS Pro', 'Raster processing', 'Pretrained deep learning'],
     problem: 'The imagery needs preparation, and extracted building outlines need to be checked.',
     contribution: 'I prepared the imagery, applied ESRI’s pretrained model, and inspected the building outlines it produced.',

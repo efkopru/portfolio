@@ -84,6 +84,7 @@ test('imagery work is grouped under Building Footprint Extraction instead of sta
   const legacyRoutes = [...script.match(/const routes = new Set\(\[([^\]]+)\]\)/)[1].matchAll(/'([^']+)'/g)].map(match => match[1]);
   assert.ok(!siteProjects.some(project => project.id === groupedAnchor), 'The grouped anchor must not match a project ID');
   assert.ok(!legacyRoutes.includes(groupedAnchor), 'The grouped anchor must not trigger legacy hash-route navigation');
+  assert.ok(!legacyRoutes.includes('deep-learning-extraction'), 'The extraction anchor must not trigger legacy hash-route navigation');
   assert.equal(child.parentProjectId, parent.id);
   assert.equal(child.collection.id, parent.collection.id);
   assert.equal(child.collection.id, 'ml-optimization');
@@ -115,8 +116,19 @@ test('imagery work is grouped under Building Footprint Extraction instead of sta
     const parentHtml = await readFile(new URL(`../${directory}${parent.id}/index.html`, import.meta.url), 'utf8');
     assert.ok(parentHtml.includes(`id="${groupedAnchor}"`), 'The grouped jump link has a matching non-route section anchor');
     assert.ok(!parentHtml.includes(`href="#${child.id}"`), 'The jump link must not navigate to the standalone legacy route');
-    const jumpIndex = parentHtml.indexOf(`href="#${groupedAnchor}"`);
-    assert.ok(jumpIndex >= 0 && jumpIndex < parentHtml.indexOf('class="project-gallery"'), 'The grouped imagery work is reachable before the gallery');
+    const stagesNav = parentHtml.match(/<nav\b[^>]*aria-label="Project stages"[^>]*>([^]*?)<\/nav>/);
+    assert.ok(stagesNav, `${directory}: both stages are immediately discoverable`);
+    assert.ok(stagesNav[1].includes(`href="#${groupedAnchor}">1. Preprocessing</a>`));
+    assert.ok(stagesNav[1].includes('href="#deep-learning-extraction">2. Deep learning</a>'));
+    assert.ok(stagesNav.index < parentHtml.indexOf(`id="${groupedAnchor}"`), 'The stage navigation comes before both stages');
+    assert.ok(parentHtml.indexOf(`id="${groupedAnchor}"`) < parentHtml.indexOf('id="deep-learning-extraction"'), 'Preprocessing precedes deep learning');
+    assert.ok(parentHtml.indexOf('id="deep-learning-extraction"') < parentHtml.indexOf('class="project-gallery"'), 'Extraction results are inside the second stage');
+    assert.ok(!parentHtml.includes('Earlier project stages'), 'The imagery workflow is a first-class stage, not a buried earlier-stage footnote');
+    assert.equal((parentHtml.match(/class="project-stage"/g) || []).length, 2, `${directory}: exactly two workflow stages`);
+    for (const image of parent.gallery) {
+      assert.ok(parentHtml.includes(`href="../${image.src}"`), `${directory}: extraction screenshot remains openable`);
+      assert.ok(parentHtml.includes(`src="../${image.preview}"`), `${directory}: extraction screenshot preview remains published`);
+    }
   }
 });
 

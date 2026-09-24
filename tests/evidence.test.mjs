@@ -131,7 +131,8 @@ test('featured cards retain accessible three-step HTML flows with decorative SVG
 test('case studies keep concise ownership and limits visible with technical details after galleries and examples', async () => {
   for (const project of siteProjects) {
     const html = body(await source(`${project.id}/index.html`));
-    const summaryIndex = html.indexOf('class="case-overview"');
+    const hasStages = siteProjects.some(child => child.parentProjectId === project.id);
+    const summaryIndex = html.indexOf(hasStages ? 'id="deep-learning-extraction"' : 'class="case-overview"');
     const details = [...html.matchAll(/<details\b([^>]*class="[^"]*\bproject-details\b[^"]*"[^>]*)>([\s\S]*?)<\/details>/g)];
     assert.equal(details.length, 1, `${project.id}: one optional technical-details disclosure`);
     const [technical] = details;
@@ -147,10 +148,11 @@ test('case studies keep concise ownership and limits visible with technical deta
     }
     if (project.contribution) {
       assert.ok(summaryIndex >= 0, `${project.id}: concise overview remains present`);
-      const summary = html.slice(summaryIndex, html.indexOf('</section>', summaryIndex));
-      assert.doesNotMatch(summary, /<details\b|\bhidden(?:\s|>|=)|class="case-context"|class="case-methods"/);
+      const summary = html.slice(summaryIndex, hasStages ? html.indexOf('<section class="project-gallery"', summaryIndex) : html.indexOf('</section>', summaryIndex));
+      assert.doesNotMatch(summary, /<details\b|\shidden(?:\s|>|=)|class="case-context"|class="case-methods"/);
       for (const heading of ['What I did', 'Tools']) {
-        assert.ok(summary.includes(`<h2>${heading}</h2>`), `${project.id}: ${heading} visible`);
+        const level = hasStages ? 3 : 2;
+        assert.ok(summary.includes(`<h${level}>${heading}</h${level}>`), `${project.id}: ${heading} visible`);
       }
       assert.ok(summary.includes('<strong>Result:</strong>'));
       for (const value of [project.contribution, project.result, project.boundary, ...project.tools]) {

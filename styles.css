@@ -115,14 +115,16 @@
 @media(max-width:650px){.home-intro.evidence-intro{width:calc(100% - 2rem)}.home-intro.evidence-intro h1{font-size:1.75rem}.intro-copy p{font-size:.95rem}.intro-copy .home-specialty{font-size:.95rem}.selected-work-heading .section-intro{display:none}.featured-flow{gap:1.1rem}.flow-arrow{right:-.95rem}.companion-callout{padding:1rem}.case-overview,.project-evidence{margin-block:1.5rem}.code-block{padding:.85rem}.table-scroll{font-size:.85rem}}
 .resume-page{max-width:1040px;padding-block:2rem 4rem}
 .case-evidence,.related-cases{max-width:900px;margin:2.5rem auto}
-.project-part{max-width:900px;margin:2.5rem auto;padding-top:1.5rem;border-top:1px solid var(--line);scroll-margin-top:1.5rem}
-.project-part>h2{font-size:1.4rem;margin-bottom:.75rem}
-.project-part>p,.project-part-details{font-size:.95rem;line-height:1.7}
-.project-part>h3,.project-part .case-evidence>h3{font-size:1.15rem;margin-bottom:.75rem}
-.project-parts-nav{max-width:900px;margin:1.25rem auto;font-size:.95rem}
-.project-part-details{border-top:1px solid var(--line);padding-top:1rem}
-.project-part-details summary{cursor:pointer;min-height:44px;line-height:1.6}
-.project-part-details[open] summary{margin-bottom:1rem}
+.project-stage{max-width:900px;margin:2rem auto;padding-top:1.5rem;border-top:1px solid var(--line);scroll-margin-top:1.5rem}
+.project-stage>h2{font-size:1.4rem;margin-bottom:.75rem}
+.project-stage>p,.project-stage-details,.stage-steps{font-size:.95rem;line-height:1.7}
+.project-stage>h3,.project-stage-details h3,.project-stage .gallery-heading h3{font-size:1.15rem;margin-bottom:.75rem}
+.stage-steps{padding-left:1.4rem}.stage-steps li+li{margin-top:.55rem}
+.project-parts-nav{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;max-width:900px;margin:1.25rem auto;font-size:.95rem}
+.project-parts-nav a{display:inline-flex;align-items:center;min-height:44px;font-weight:700}
+.project-stage-details{border-top:1px solid var(--line);padding-top:1rem;margin-top:1.5rem}
+.project-stage-details summary{cursor:pointer;min-height:44px;line-height:1.6}
+.project-stage-details[open] summary{margin-bottom:1rem}
 .case-evidence>h2,.related-cases>h2{font-size:1.25rem;margin-bottom:.75rem}
 .case-evidence>p,.case-evidence>ul{font-size:.95rem;line-height:1.7}
 .case-evidence li+li{margin-top:.5rem}
