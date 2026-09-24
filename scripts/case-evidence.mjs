@@ -1,5 +1,5 @@
 // Structured case-study evidence stays readable without scripts or collapsed panels.
-export function caseEvidence(project, { esc, headingLevel = 2, idPrefix = 'case-evidence' }) {
+export function caseEvidence(project, { esc, headingLevel = 2, idPrefix = 'case-evidence', assetVersions = {} }) {
   if (![2, 3].includes(headingLevel)) throw new Error(`${project.id}: evidence heading level must be 2 or 3.`);
   if (typeof idPrefix !== 'string' || !/^[a-z0-9][a-z0-9-]*$/.test(idPrefix)) throw new Error(`${project.id}: invalid evidence ID prefix.`);
   return (project.evidenceSections || []).map((section, index) => {
@@ -16,8 +16,11 @@ export function caseEvidence(project, { esc, headingLevel = 2, idPrefix = 'case-
     if (section.diagram) {
       const { src, title, caption } = section.diagram;
       if (!/^assets\/evidence\/[a-z0-9-]+\.svg$/.test(src)) throw new Error(`${project.id}: evidence diagrams must be local SVG assets.`);
-      const image = `<img src="../${esc(src)}" alt="${esc(title)}" loading="lazy" decoding="async">`;
-      const content = section.diagram.zoomable ? `<a data-image-viewer href="../${esc(src)}" data-caption="${esc(caption)}" aria-label="Open diagram: ${esc(title)}">${image}</a>` : image;
+      const version = assetVersions[src];
+      if (version && !/^[a-f0-9]{12}$/.test(version)) throw new Error(`${project.id}: invalid diagram asset version.`);
+      const url = `../${src}${version ? `?v=${version}` : ''}`;
+      const image = `<img src="${esc(url)}" alt="${esc(title)}" loading="lazy" decoding="async">`;
+      const content = section.diagram.zoomable ? `<a data-image-viewer href="${esc(url)}" data-caption="${esc(caption)}" aria-label="Open diagram: ${esc(title)}">${image}</a>` : image;
       diagram = `<figure class="evidence-figure case-diagram"><div class="diagram-scroll" tabindex="0" role="region" aria-label="${esc(title)}">${content}</div><figcaption>${esc(caption)} <span class="diagram-scroll-hint">Scroll horizontally to explore the diagram.</span></figcaption></figure>`;
     }
     return `<section class="case-evidence" aria-labelledby="${headingId}"><h${headingLevel} id="${headingId}">${esc(section.heading)}</h${headingLevel}>${paragraphs}${bullets}${diagram}${table}</section>`;

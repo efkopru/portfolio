@@ -12,8 +12,9 @@ import { socialCards } from './social-cards.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const output = resolve(root, 'dist');
-// New asset URLs prevent a fresh page from using cached styles or theme logic.
-const assetVersions = Object.fromEntries(await Promise.all(['theme.js', 'styles.css', 'script.js'].map(async file =>
+// New asset URLs prevent stale styles, scripts, and updated zoomable diagrams.
+const zoomableDiagrams = [...new Set(siteProjects.flatMap(project => (project.evidenceSections || []).filter(section => section.diagram?.zoomable).map(section => section.diagram.src)))];
+const assetVersions = Object.fromEntries(await Promise.all(['theme.js', 'styles.css', 'script.js', ...zoomableDiagrams].map(async file =>
   [file, createHash('sha256').update(await readFile(resolve(root, file))).digest('hex').slice(0, 12)]
 )));
 const socialAssets = socialCards.map(card => `assets/social/${card.Name}.png`);
@@ -97,7 +98,7 @@ function projectPage(project) {
   const parent = project.collection;
   const parentProject = siteProjects.find(candidate => candidate.id === project.parentProjectId);
   const stagedWorkflow = project.id === 'building-footprint-extraction';
-  const content = stagedWorkflow ? buildingFootprintStages(project, siteProjects.find(candidate => candidate.parentProjectId === project.id)) : `${caseSummary(project, { esc, chips })}${caseEvidence(project, { esc })}${embeddedApp(project.embed)}${gallery(project)}${projectEvidence(project, { esc })}${caseDetails(project, { esc, list })}`;
+  const content = stagedWorkflow ? buildingFootprintStages(project, siteProjects.find(candidate => candidate.parentProjectId === project.id)) : `${caseSummary(project, { esc, chips })}${caseEvidence(project, { esc, assetVersions })}${embeddedApp(project.embed)}${gallery(project)}${projectEvidence(project, { esc })}${caseDetails(project, { esc, list })}`;
   return layout({ title: project.title, description: project.summary, route: project.id, body: `<div class="shell detail"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="../index.html#projects">Projects</a>${parent ? `<span aria-hidden="true">/</span><a href="../${parent.id}/index.html">${esc(parent.title)}</a>` : ''}${parentProject ? `<span aria-hidden="true">/</span><a href="../${parentProject.id}/index.html#part-${esc(project.id)}">${esc(parentProject.title)}</a>` : ''}</nav><header class="project-heading"><h1>${esc(project.title)}</h1><p>${esc(project.summary)}</p>${!stagedWorkflow && project.links?.length ? `<div class="project-links">${links(project.links)}</div>` : ''}</header>${content}${relatedCases(project, siteProjects, { esc })}<p class="back-link"><a href="../index.html#projects">← Back to projects</a></p></div>` });
 }
 

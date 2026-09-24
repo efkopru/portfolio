@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import { caseEvidence, relatedCases } from '../scripts/case-evidence.mjs';
 import { projects } from '../content/portfolio.mjs';
 import { utilityInspectionUpdate } from '../content/inspection-cases.mjs';
@@ -169,6 +170,8 @@ test('utility workflow diagram appears once near the beginning and before the se
   const diagram = project.evidenceSections[0].diagram;
   assert.equal(diagram.src, 'assets/evidence/utility-data-flow.svg');
   assert.equal(diagram.zoomable, true, 'Keep full-size viewing when promoting the workflow');
+  const version = createHash('sha256').update(await readFile(new URL(`../${diagram.src}`, import.meta.url))).digest('hex').slice(0, 12);
+  const diagramUrl = `../${diagram.src}?v=${version}`;
   assert.equal(Object.hasOwn(methodDiagrams, project.id), false, 'Do not repeat the workflow in the lower evidence callout');
   assert.ok(caseEvidenceAssets.includes(diagram.src));
   assert.equal(evidenceAssets.filter(path => path === diagram.src).length, 1, 'Only one allowlisted copy of the diagram is published');
@@ -179,9 +182,9 @@ test('utility workflow diagram appears once near the beginning and before the se
     const main = html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)?.[1];
     assert.ok(main, `${label}: main content exists`);
     const visible = main.replace(/<details\b[^>]*>[\s\S]*?<\/details>/g, '');
-    const image = `src="../${diagram.src}"`;
+    const image = `src="${diagramUrl}"`;
     assert.equal(visible.split(image).length - 1, 1, `${label}: one visible workflow image`);
-    assert.ok(visible.includes(`<a data-image-viewer href="../${diagram.src}"`), `${label}: the diagram retains its full-size viewer`);
+    assert.ok(visible.includes(`<a data-image-viewer href="${diagramUrl}"`), `${label}: thumbnail and viewer both use the current content hash`);
     for (const control of ['data-viewer-close', 'data-zoom-in', 'data-zoom-out', 'data-zoom-reset']) assert.ok(html.includes(control));
     const workflow = visible.indexOf(esc(project.evidenceSections[0].heading));
     const imagePosition = visible.indexOf(image);
