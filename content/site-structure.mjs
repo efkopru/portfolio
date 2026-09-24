@@ -52,7 +52,7 @@ const embeds = {
   'interactive-maps-a-custom-js-app': { url: 'https://maps.cityoflewisville.com/', title: 'City of Lewisville public GIS map', note: 'The current public application may differ from its historical version.' },
   'interactive-maps-experience-builder': { url: 'https://experience.arcgis.com/experience/2134151cd819462f81f9aa605c5efb1f/', title: 'Public GIS Experience Builder application', note: 'Some layers may require an ArcGIS account. The public application is maintained externally.' },
   'code-enforcement-violations': { url: 'https://lewisville.maps.arcgis.com/apps/MapSeries/index.html?appid=40438ef704624fc4a8cc1f06173b8e03', title: 'Code enforcement analysis', note: 'This historical application uses a retired ArcGIS template and may no longer load. The original map is preserved below.' },
-  'crime-analysis': { url: 'https://www.arcgis.com/apps/dashboards/02de6953d7c54527b0e8259823df2ae6', title: 'Public crime-analysis dashboard', note: 'My contribution was the automated SQL Server to ArcGIS Online data workflow. The current dashboard credits Ashley Pavey; its interface is not presented as my design.' }
+  'crime-analysis': { url: 'https://www.arcgis.com/apps/dashboards/02de6953d7c54527b0e8259823df2ae6', title: 'Public crime-analysis dashboard', expanded: true }
 };
 export const siteProjects = [...projects, ...extraPages].map(project => ({
   ...project,

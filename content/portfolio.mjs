@@ -245,7 +245,7 @@ projects.push(
     summary: 'Automatic updates from SQL Server to an ArcGIS Online crime dashboard.',
     context: 'Historical GIS dashboard portfolio', tools: ['SQL Server', 'ETL', 'ArcGIS Online', 'Dashboards'],
     problem: 'The dashboard needed fresh data without repeated manual database exports.',
-    contribution: 'I built a workflow that turns SQL Server tables into ArcGIS Online layers and updates them automatically.',
+    contribution: 'I contributed to this project end to end, from automated SQL Server data updates and ArcGIS Online layers to dashboard design and implementation.',
     approach: ['Read records from SQL Server.', 'Convert the tables into GIS layers.', 'Update the hosted layers used by the dashboard.'],
     result: 'The automated workflow kept the dashboard layers connected to their source database.',
     boundary: 'This is a reporting workflow, not predictive policing or individual-risk scoring; incident records and authenticated dashboards are not included.', links: []

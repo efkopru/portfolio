@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { projects, profile } from '../content/portfolio.mjs';
+import { siteProjects } from '../content/site-structure.mjs';
 
 const esc = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
 const visibleContent = async id => {
@@ -68,6 +69,42 @@ test('public web map credits nine delivered widgets with concrete visible exampl
     }
   }
 });
+test('crime dashboard credits end-to-end contribution without a restrictive attribution note', async () => {
+  const project = siteProjects.find(p => p.id === 'crime-analysis');
+  const contribution = 'I contributed to this project end to end, from automated SQL Server data updates and ArcGIS Online layers to dashboard design and implementation.';
+  const dashboardUrl = 'https://www.arcgis.com/apps/dashboards/02de6953d7c54527b0e8259823df2ae6';
+  assert.equal(project.contribution, contribution);
+  assert.equal(project.embed.url, dashboardUrl);
+  assert.equal(project.embed.note, undefined, 'The restrictive crime-dashboard embed note is removed');
+  assert.equal(project.embed.expanded, true);
+  for (const prefix of ['', 'dist/']) {
+    const html = await readFile(new URL(`../${prefix}crime-analysis/index.html`, import.meta.url), 'utf8');
+    const visible = (html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)?.[1] || '').replace(/<details\b[^>]*>[\s\S]*?<\/details>/g, '');
+    assert.ok(visible.includes(`<h2>What I did</h2><p>${esc(contribution)}</p>`), `${prefix || 'source/'}: end-to-end contribution stays visible`);
+    assert.doesNotMatch(html, /My contribution was the automated SQL Server to ArcGIS Online data workflow|Ashley Pavey|its interface is not presented as my design/);
+    assert.doesNotMatch(html, /class="embed-note"/, 'An omitted note must not render an empty or undefined note paragraph');
+    assert.match(html, /<section class="embedded-app embedded-app--expanded"/);
+    assert.ok(html.includes(`href="${dashboardUrl}"`), 'The original dashboard link is preserved');
+    assert.ok(html.includes(`data-embed-src="${dashboardUrl}"`), 'The dashboard embed target is preserved');
+    assert.match(html, /<button\b[^>]*\bdata-load-embed\b[^>]*>Load interactive application<\/button>/);
+  }
+});
+
+test('other embedded applications retain their explanatory notes and regular size', async () => {
+  for (const id of ['interactive-maps-a-custom-js-app', 'interactive-maps-experience-builder', 'code-enforcement-violations']) {
+    const project = siteProjects.find(p => p.id === id);
+    assert.ok(project.embed.note, `${id}: the existing application note remains configured`);
+    assert.notEqual(project.embed.expanded, true, `${id}: the application does not opt into the larger crime-dashboard layout`);
+    for (const prefix of ['', 'dist/']) {
+      const html = await readFile(new URL(`../${prefix}${id}/index.html`, import.meta.url), 'utf8');
+      assert.ok(html.includes(`<p class="embed-note">${esc(project.embed.note)}</p>`), `${prefix}${id}: the existing note remains rendered`);
+      assert.doesNotMatch(html, /<p class="embed-note">(?:\s*|undefined|null)<\/p>/);
+      assert.match(html, /<section class="embedded-app"/);
+      assert.doesNotMatch(html, /embedded-app--expanded/);
+    }
+  }
+});
+
 test('recruiting paths have relevant substantive work', () => {
   for (const role of profile.roles) assert.ok(projects.filter(p => p.roles.includes(role.id)).length >= 3);
 });

@@ -245,7 +245,10 @@ test('highlighted-work SVG arrows use a fixed stroke without repositioning or bo
   for (const rule of [/\bposition:\s*absolute\s*(?:;|$)/, /\bright:\s*-1\.05rem\s*(?:;|$)/, /\btop:\s*50%\s*(?:;|$)/, /\btransform:\s*translateY\(-50%\)\s*(?:;|$)/]) {
     assert.match(arrow, rule, 'Workflow arrows retain their existing position');
   }
-  const mobile = blockAfter(css, /@media\s*\(max-width:\s*650px\)\s*\{/);
+  const mobile = [...css.matchAll(/@media\s*\(max-width:\s*650px\)\s*\{/g)]
+    .map(match => blockAfter(css.slice(match.index), /^@media\s*\(max-width:\s*650px\)\s*\{/))
+    .find(block => /\.flow-arrow\s*\{/.test(block));
+  assert.ok(mobile, 'Workflow arrows retain their mobile positioning rule');
   assert.match(declarations(mobile, '.flow-arrow'), /\bright:\s*-\.95rem\s*(?:;|$)/);
   assert.doesNotMatch(css, /\.featured-card\s+\.text-link\s*>\s*\[aria-hidden=["']true["']\]/, 'Obsolete font-weight override is removed');
   for (const selector of ['.text-link', '.featured-body .text-link', '.featured-flow li', '.flow-step']) {
@@ -293,4 +296,32 @@ test('compact featured cards preserve complete content and keep their size chang
       assert.equal((card[1].match(new RegExp(`href="\\./${item.id}/index\\.html"`, 'g')) || []).length, 2, `${path}: title and case-study links remain`);
     }
   }
+});
+
+test('expanded crime-analysis embed is 25 percent larger while other embeds retain their dimensions', async () => {
+  const css = await source('styles.css');
+  const rules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(match => ({ selectors: match[1].trim().split(',').map(selector => selector.trim()), body: match[2] }));
+  const exactRules = selector => rules.filter(rule => rule.selectors.includes(selector)).map(rule => rule.body);
+  const pixels = (body, property) => Number(body.match(new RegExp(`(?:^|;)\\s*${property}:\\s*([\\d.]+)px\\s*(?:;|$)`))?.[1]);
+  const base = declarations(css, '.embedded-app');
+  const expanded = declarations(css, '.embedded-app--expanded');
+  assert.equal(pixels(base, 'max-width'), 1040, 'Default embed width remains 1040px');
+  assert.match(base, /\bmargin:\s*2rem\s+auto\s*(?:;|$)/, 'Default embed margins remain unchanged');
+  assert.match(expanded, /\bwidth:\s*min\(1300px,\s*calc\(100vw\s*-\s*3rem\)\)\s*(?:;|$)/, 'Expanded embed grows to 1300px but fits inside the desktop viewport');
+  const expandedMaximum = Number(expanded.match(/\bwidth:\s*min\(([\d.]+)px,/)?.[1]);
+  assert.equal(expandedMaximum / pixels(base, 'max-width'), 1.25, 'Desktop maximum width increases by exactly 25 percent');
+  for (const rule of [/\bmax-width:\s*none\s*(?:;|$)/, /\bposition:\s*relative\s*(?:;|$)/, /\bleft:\s*50%\s*(?:;|$)/, /\btransform:\s*translateX\(-50%\)\s*(?:;|$)/, /\bmargin-inline:\s*0\s*(?:;|$)/]) {
+    assert.match(expanded, rule, 'Only the expanded embed is centered beyond its parent content width');
+  }
+  const baseHeights = exactRules('.embed-host iframe').map(body => pixels(body, 'height')).filter(Number.isFinite);
+  const expandedHeights = exactRules('.embedded-app--expanded .embed-host iframe').map(body => pixels(body, 'height')).filter(Number.isFinite);
+  assert.deepEqual(baseHeights, [620, 500], 'Default desktop and mobile iframe heights remain unchanged');
+  assert.deepEqual(expandedHeights, [775, 625], 'Expanded heights are scoped to the opted-in embed');
+  assert.deepEqual(expandedHeights.map((height, index) => height / baseHeights[index]), [1.25, 1.25], 'Both responsive iframe heights increase by exactly 25 percent');
+  const mobileBlocks = [...css.matchAll(/@media\s*\(max-width:\s*650px\)\s*\{/g)].map(match => blockAfter(css.slice(match.index), /^@media\s*\(max-width:\s*650px\)\s*\{/));
+  const expandedMobile = mobileBlocks.find(block => /\.embedded-app--expanded\s*\{/.test(block));
+  assert.ok(expandedMobile, 'Expanded viewport sizing has a mobile override');
+  assert.match(declarations(expandedMobile, '.embedded-app--expanded'), /\bwidth:\s*calc\(100vw\s*-\s*2rem\)\s*(?:;|$)/, 'Mobile embed keeps viewport gutters instead of overflowing');
+  assert.equal(pixels(declarations(expandedMobile, '.embedded-app--expanded .embed-host iframe'), 'height'), 625);
+  assert.equal(css, await source('dist/styles.css'));
 });

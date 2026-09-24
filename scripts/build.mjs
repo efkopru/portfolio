@@ -82,7 +82,7 @@ function home() {
 
 function embeddedApp(embed) {
   if (!embed) return '';
-  return `<section class="embedded-app" aria-label="${esc(embed.title)}"><p><a href="${esc(embed.url)}" rel="noopener noreferrer">Open original application ↗</a></p><p class="embed-note">${esc(embed.note)}</p><div class="embed-host" data-embed-src="${esc(embed.url)}" data-embed-title="${esc(embed.title)}"><button class="button" data-load-embed type="button" hidden>Load interactive application</button><p>Loading the application connects to the external provider. If it cannot load here, use the original application link above.</p></div></section>`;
+  return `<section class="embedded-app${embed.expanded ? ' embedded-app--expanded' : ''}" aria-label="${esc(embed.title)}"><p><a href="${esc(embed.url)}" rel="noopener noreferrer">Open original application ↗</a></p>${embed.note ? `<p class="embed-note">${esc(embed.note)}</p>` : ''}<div class="embed-host" data-embed-src="${esc(embed.url)}" data-embed-title="${esc(embed.title)}"><button class="button" data-load-embed type="button" hidden>Load interactive application</button><p>Loading the application connects to the external provider. If it cannot load here, use the original application link above.</p></div></section>`;
 }
 
 function projectPage(project) {
