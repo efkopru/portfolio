@@ -76,6 +76,31 @@ test('newer work appears once in the main index and category without duplicate A
   }
 });
 
+test('all unframed galleries preserve original images, dimensions, captions and viewer controls', async () => {
+  const esc = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+  const assets = new Set();
+  for (const project of siteProjects.filter(project => project.gallery.length)) {
+    for (const directory of ['', 'dist/']) {
+      const html = await readFile(new URL(`../${directory}${project.id}/index.html`, import.meta.url), 'utf8');
+      const galleries = [...html.matchAll(/<section class="gallery-group"[^>]*>([^]*?)<\/section>/g)].map(match => match[1]).join('');
+      assert.equal((galleries.match(/<figure\b/g) || []).length, project.gallery.length, `${directory}${project.id}: retain every image without extra frames or duplicates`);
+      for (const image of project.gallery) {
+        const caption = esc(image.caption);
+        assert.ok(galleries.includes(`<a data-image-viewer href="../${esc(image.src)}" data-caption="${caption}" aria-label="Open image: ${caption}">`), `${directory}${project.id}: retain full-size image and accessible caption`);
+        assert.ok(galleries.includes(`<img src="../${esc(image.preview)}" width="${image.width}" height="${image.height}" alt="${caption}" loading="lazy" decoding="async">`), `${directory}${project.id}: retain original preview proportions, alt text and loading behavior`);
+        assert.ok(galleries.includes(`<figcaption>${caption}</figcaption>`), `${directory}${project.id}: retain visible caption`);
+        assets.add(image.src);
+        assets.add(image.preview);
+      }
+      for (const control of ['data-viewer-close', 'data-zoom-in', 'data-zoom-out', 'data-zoom-reset']) assert.ok(html.includes(control), `${directory}${project.id}: retain ${control}`);
+    }
+  }
+  for (const asset of assets) {
+    const [original, published] = await Promise.all(['', 'dist/'].map(directory => readFile(new URL(`../${directory}${asset}`, import.meta.url))));
+    assert.deepEqual(published, original, `${asset}: publish the source image without cropping or alteration`);
+  }
+});
+
 test('unframed building extraction images preserve their original assets, captions and full-size controls', async () => {
   const project = siteProjects.find(project => project.id === 'building-footprint-extraction');
   const expected = [
@@ -86,7 +111,7 @@ test('unframed building extraction images preserve their original assets, captio
   for (const directory of ['', 'dist/']) {
     const html = await readFile(new URL(`../${directory}${project.id}/index.html`, import.meta.url), 'utf8');
     const group = html.match(/<section class="gallery-group" id="gallery-building-footprint-extraction">([^]*?)<\/section>/)?.[1];
-    assert.ok(group, `${directory}: the unframed style targets the extraction gallery only`);
+    assert.ok(group, `${directory}: the extraction gallery remains independently addressable`);
     assert.equal((group.match(/<figure\b/g) || []).length, 2);
     for (const [src, preview, caption, width, height] of expected) {
       assert.ok(group.includes(`<a data-image-viewer href="../${src}" data-caption="${caption}" aria-label="Open image: ${caption}">`));

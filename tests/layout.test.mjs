@@ -329,25 +329,48 @@ test('shared expanded app layout is 25 percent larger while regular embeds retai
   assert.equal(css, await source('dist/styles.css'));
 });
 
-test('building extraction previews use natural image heights without white gallery frames', async () => {
+test('all project images use transparent unframed containers and natural image heights', async () => {
   const css = await source('styles.css');
-  const selector = '#gallery-building-footprint-extraction .screenshot-grid';
-  const frame = declarations(css, `${selector} a`);
-  for (const [property, value] of [
-    ['display', 'block'], ['height', 'auto'], ['padding', '0'],
-    ['background', 'transparent'], ['border', '0'], ['border-radius', '0']
-  ]) {
-    assert.match(frame, new RegExp(`(?:^|;)\\s*${property}:\\s*${value}\\s*(?:;|$)`), `Building extraction frame ${property} removes padding and letterboxing`);
+  for (const selector of ['.screenshot-grid a', '.evidence-figure>a', '.diagram-scroll']) {
+    const frame = declarations(css, selector);
+    for (const [property, value] of [['background', 'transparent'], ['border', '0'], ['border-radius', '0']]) {
+      assert.match(frame, new RegExp(`(?:^|;)\\s*${property}:\\s*${value}\\s*(?:;|$)`), `${selector}: no white surround, border or rounded clipping`);
+    }
+    if (selector !== '.diagram-scroll') {
+      assert.match(frame, /(?:^|;)\s*display:\s*block\s*(?:;|$)/);
+      assert.match(frame, /(?:^|;)\s*padding:\s*0\s*(?:;|$)/);
+      assert.match(frame, /(?:^|;)\s*cursor:\s*zoom-in\s*(?:;|$)/, `${selector}: keep the full-size viewer affordance`);
+    }
   }
-  assert.match(declarations(css, `${selector} img`), /(?:^|;)\s*height:\s*auto\s*(?:;|$)/, 'Preview height follows its source aspect ratio');
-  assert.match(declarations(css, '.screenshot-grid img'), /(?:^|;)\s*width:\s*100%\s*(?:;|$)/, 'Previews still fill their responsive gallery column');
-  assert.match(declarations(css, '.screenshot-grid a'), /(?:^|;)\s*height:\s*240px\s*(?:;|$)/, 'Other desktop galleries keep their fixed frame height');
-  assert.match(declarations(css, '.screenshot-grid a'), /(?:^|;)\s*background:\s*#fff\s*(?:;|$)/, 'The frame change is scoped to building extraction');
+  assert.match(declarations(css, '.screenshot-grid a'), /(?:^|;)\s*height:\s*auto\s*(?:;|$)/, 'Gallery frames follow their image instead of a fixed-height box');
+  for (const selector of ['.screenshot-grid img', '.evidence-figure img']) {
+    const image = declarations(css, selector);
+    assert.match(image, /(?:^|;)\s*width:\s*100%\s*(?:;|$)/, `${selector}: fill available width`);
+    assert.match(image, /(?:^|;)\s*height:\s*auto\s*(?:;|$)/, `${selector}: retain source aspect ratio`);
+    assert.match(image, /(?:^|;)\s*object-fit:\s*contain\s*(?:;|$)/, `${selector}: never crop the source image`);
+    assert.doesNotMatch(image, /(?:^|;)\s*max-height\s*:/, `${selector}: avoid a height cap that creates letterboxing`);
+  }
+  // Examine every applicable rule, including hover, theme and responsive overrides.
+  for (const rule of css.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+    const selectors = rule[1].split(',').map(selector => selector.trim());
+    const frameRule = selectors.some(selector => /(?:^|\s)(?:\.screenshot-grid\s+a|\.evidence-figure\s*>\s*a|\.diagram-scroll)(?::[\w-]+)?$/.test(selector));
+    const imageRule = selectors.some(selector => /(?:^|\s)(?:\.screenshot-grid\s+img|\.evidence-figure\s+img|\.diagram-scroll\s*>\s*img)$/.test(selector));
+    if (!frameRule && !imageRule) continue;
+    for (const property of rule[2].matchAll(/(?:^|;)\s*([\w-]+)\s*:\s*([^;]+)/g)) {
+      const [, name, rawValue] = property;
+      const value = rawValue.trim();
+      if (/^background(?:-color)?$/.test(name)) assert.match(value, /^(?:transparent|none)$/, `${rule[1]}: overrides cannot restore image backgrounds`);
+      if (frameRule && /^(?:padding(?:-[\w-]+)?|border(?:-(?:width|radius|color))?)$/.test(name)) assert.match(value, /^(?:0|none|transparent)$/, `${rule[1]}: overrides cannot restore a visible frame`);
+      if (/^(?:height|max-height)$/.test(name)) assert.match(value, /^(?:auto|none)$/, `${rule[1]}: desktop and responsive rules retain natural heights`);
+      if (name === 'object-fit') assert.equal(value, 'contain', `${rule[1]}: source images must not be cropped`);
+    }
+  }
+  assert.doesNotMatch(css, /#gallery-building-footprint-extraction/, 'The standard applies globally rather than to one project');
   const mobile = [...css.matchAll(/@media\s*\(max-width:\s*650px\)\s*\{/g)]
     .map(match => blockAfter(css.slice(match.index), /^@media\s*\(max-width:\s*650px\)\s*\{/))
-    .find(block => /\.screenshot-grid a\s*\{/.test(block));
-  assert.ok(mobile, 'The shared mobile gallery rule still exists');
-  assert.match(declarations(mobile, '.screenshot-grid a'), /(?:^|;)\s*height:\s*260px\s*(?:;|$)/, 'The ID-scoped auto height outranks the lower-specificity mobile frame height');
-  assert.doesNotMatch(declarations(mobile, '.screenshot-grid a'), /!important/, 'Mobile gallery defaults cannot override the scoped natural height');
+    .find(block => /\.diagram-scroll\s*\{/.test(block));
+  assert.ok(mobile, 'Wide diagrams still have a mobile scrolling rule');
+  assert.match(declarations(mobile, '.diagram-scroll'), /(?:^|;)\s*overflow-x:\s*auto\s*(?:;|$)/);
+  assert.match(declarations(mobile, '.diagram-scroll>img'), /(?:^|;)\s*min-width:\s*620px\s*(?:;|$)/, 'Diagram labels stay legible on small screens');
   assert.equal(css, await source('dist/styles.css'));
 });
