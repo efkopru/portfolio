@@ -57,12 +57,13 @@ test('header keeps its logo position and 1320px breakpoint while compacting desk
   assert.equal(script, await source('dist/script.js'));
 });
 
-test('desktop spacing distribution retains eight top-level navigation items', async () => {
+test('desktop spacing distribution uses seven top-level items when Additional projects is empty', async () => {
   for (const path of ['index.html', 'dist/index.html', 'resume/index.html', 'dist/resume/index.html']) {
     const html = await source(path);
     assert.match(html, /<a class="brand"[^>]*><img[^>]*width="101" height="48"/, `${path}: logo dimensions stay unchanged`);
     const navigation = html.match(/<nav\b[^>]*id="site-nav"[^>]*>([\s\S]*?)<\/nav>/)?.[1];
     assert.ok(navigation, `${path}: main navigation exists`);
+    assert.match(html, /<nav\b[^>]*id="site-nav"[^>]*class="site-nav site-nav--main-only"/, `${path}: seven-item spacing is scoped to the main-only navigation`);
     // Only links and divs can contain further links/divs in this navigation.
     const topLevel = [];
     let depth = 0;
@@ -75,10 +76,10 @@ test('desktop spacing distribution retains eight top-level navigation items', as
       assert.ok(depth >= 0, `${path}: navigation markup is balanced`);
     }
     assert.equal(depth, 0);
-    assert.equal(topLevel.length, 8, `${path}: seven gaps and one trailing spacer require eight items`);
-    assert.deepEqual(topLevel.map(item => item.tag), ['a', 'a', 'a', 'div', 'div', 'div', 'div', 'a']);
+    assert.equal(topLevel.length, 7, `${path}: the empty Additional projects item is omitted`);
+    assert.deepEqual(topLevel.map(item => item.tag), ['a', 'a', 'a', 'div', 'div', 'div', 'a']);
     assert.match(topLevel[0].attributes, /href="(?:\.\/|\.\.\/)index\.html"/);
-    assert.match(topLevel[7].attributes, /href="(?:\.\/|\.\.\/)doctoral-research\/index\.html"/);
+    assert.match(topLevel[6].attributes, /href="(?:\.\/|\.\.\/)doctoral-research\/index\.html"/);
   }
 });
 
@@ -86,25 +87,27 @@ test('desktop flex distribution makes each visible gap exactly 75 percent of its
   const css = await source('styles.css');
   const desktop = blockAfter(css, /@media\s*\(min-width:\s*1320px\)\s*\{/);
   const item = declarations(desktop, '.site-nav>:not(:last-child)');
-  const tail = declarations(desktop, '.site-nav::after');
   const itemGrow = Number(item.match(/\bflex:\s*([\d.]+)\s+0\s+auto/)?.[1]);
   const itemPaddingRem = Number(item.match(/\bpadding-inline-end:\s*([\d.]+)rem/)?.[1]);
-  const tailFlex = tail.match(/\bflex:\s*([\d.]+)\s+0\s+([\d.]+)rem/);
-  const tailGrow = Number(tailFlex?.[1]);
-  const tailBasisRem = Number(tailFlex?.[2]);
-  const gaps = 7;
-  for (const rootSize of [16, 18, 20]) {
-    const oldMinimumGap = 1.25 * rootSize;
-    const padding = itemPaddingRem * rootSize;
-    const tailBasis = tailBasisRem * rootSize;
-    assert.equal(gaps * padding + tailBasis, gaps * oldMinimumGap, 'Compacting titles preserves the minimum total navigation width');
-    for (const viewport of [1320, 1440, 1600, 1920]) {
-      const navWidth = Math.min(1440, viewport - 3 * rootSize) - 101 - 2 * rootSize;
-      for (const intrinsicWidth of [860, 960, 1060]) {
-        const oldGap = Math.max(oldMinimumGap, (navWidth - intrinsicWidth) / gaps);
-        const surplus = Math.max(0, navWidth - intrinsicWidth - gaps * padding - tailBasis);
-        const compactGap = padding + surplus * itemGrow / (gaps * itemGrow + tailGrow);
-        assert.ok(Math.abs(compactGap - oldGap * .75) < 1e-10, `Viewport ${viewport}, intrinsic width ${intrinsicWidth}, root size ${rootSize}: every gap is reduced by 25 percent`);
+  for (const [selector, gaps] of [['.site-nav::after', 7], ['.site-nav--main-only::after', 6]]) {
+    const tail = declarations(desktop, selector);
+    const tailFlex = tail.match(/\bflex:\s*([\d.]+)\s+0\s+([\d.]+)rem/);
+    const tailGrow = Number(tailFlex?.[1]);
+    const tailBasisRem = Number(tailFlex?.[2]);
+    assert.equal(tailGrow, gaps, `${selector}: trailing flex scales with the visible gaps`);
+    for (const rootSize of [16, 18, 20]) {
+      const oldMinimumGap = 1.25 * rootSize;
+      const padding = itemPaddingRem * rootSize;
+      const tailBasis = tailBasisRem * rootSize;
+      assert.equal(gaps * padding + tailBasis, gaps * oldMinimumGap, 'Compacting titles preserves the minimum total navigation width');
+      for (const viewport of [1320, 1440, 1600, 1920]) {
+        const navWidth = Math.min(1440, viewport - 3 * rootSize) - 101 - 2 * rootSize;
+        for (const intrinsicWidth of [860, 960, 1060]) {
+          const oldGap = Math.max(oldMinimumGap, (navWidth - intrinsicWidth) / gaps);
+          const surplus = Math.max(0, navWidth - intrinsicWidth - gaps * padding - tailBasis);
+          const compactGap = padding + surplus * itemGrow / (gaps * itemGrow + tailGrow);
+          assert.ok(Math.abs(compactGap - oldGap * .75) < 1e-10, `${selector}, viewport ${viewport}, intrinsic width ${intrinsicWidth}, root size ${rootSize}: every gap is reduced by 25 percent`);
+        }
       }
     }
   }

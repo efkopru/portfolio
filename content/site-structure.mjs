@@ -65,10 +65,12 @@ for (const project of siteProjects.filter(project => project.parentProjectId)) {
   const parent = siteProjects.find(candidate => candidate.id === project.parentProjectId);
   if (!parent || parent.id === project.id || parent.parentProjectId) throw new Error(`${project.id}: invalid parent project.`);
 }
-export const additionalProjects = siteProjects.filter(project => !project.original && !project.parentProjectId && !unlistedProjectIds.has(project.id));
+const listedProjects = siteProjects.filter(project => !project.original && !project.parentProjectId && !unlistedProjectIds.has(project.id));
 export const browseCollections = collections.map(collection => ({
   ...collection,
-  entries: [...collection.entries, ...additionalProjects
+  entries: [...collection.entries, ...listedProjects
     .filter(project => project.collection?.id === collection.id)
     .map(project => [project.id, project.title])]
 }));
+const collectionProjectIds = new Set(browseCollections.flatMap(collection => collection.entries.map(([id]) => id)));
+export const additionalProjects = listedProjects.filter(project => !collectionProjectIds.has(project.id));

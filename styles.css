@@ -158,6 +158,7 @@
   .site-nav>:not(:last-child){flex:3 0 auto;padding-inline-end:.9375rem}
   .site-nav>:last-child{flex:0 0 auto}
   .site-nav::after{content:"";flex:7 0 2.1875rem;pointer-events:none}
+  .site-nav--main-only::after{flex:6 0 1.875rem}
   .menu-toggle{display:none!important}
 }
 /* Keep this breakpoint in sync with the desktop navigation query in script.js. */

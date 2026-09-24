@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
+import { runInNewContext } from 'node:vm';
 import { siteProjects, collections, browseCollections, additionalProjects } from '../content/site-structure.mjs';
 import sourceGroups from '../content/screenshots.json' with { type: 'json' };
 
@@ -38,24 +39,40 @@ test('home retains the original three collections below selected work without ro
   }
 });
 
-test('additional work appears once in the main index and in its category', async () => {
-  const home = await readFile(new URL('../dist/index.html', import.meta.url), 'utf8');
-  const index = home.match(/<section class="shell project-index"[^]*?<\/main>/)[0];
-  const additionalPage = await readFile(new URL('../dist/additional-projects/index.html', import.meta.url), 'utf8');
-  const additionalMain = additionalPage.match(/<main\b[^]*?<\/main>/)[0];
-  assert.deepEqual(new Set(additionalProjects.map(project => project.id)), new Set(['utility-inspection-etl', 'accessibility-analysis', 'lead-service-line-evidence-workbench', 'lead-service-review-prototype', 'workforce-participation', 'geospatial-processing-tools', 'ground-patrol-analytics', 'parcel-data-integration']), 'Preserve standalone additional projects while grouping the imagery workflow under Building Footprint Extraction');
+test('newer work appears once in the main index and category without duplicate Additional projects listings', async () => {
+  const newerIds = ['utility-inspection-etl', 'accessibility-analysis', 'lead-service-line-evidence-workbench', 'lead-service-review-prototype', 'workforce-participation', 'geospatial-processing-tools', 'ground-patrol-analytics', 'parcel-data-integration'];
+  const listedIds = browseCollections.flatMap(collection => collection.entries.map(([id]) => id));
+  assert.deepEqual(additionalProjects, [], 'All current listed projects belong to a main category');
+  for (const project of additionalProjects) {
+    assert.ok(!listedIds.includes(project.id), `${project.id}: Additional projects never repeats a main-category project`);
+    assert.ok(!project.original && !project.parentProjectId, `${project.id}: original and grouped projects are excluded`);
+  }
   for (const collection of browseCollections) {
     const original = collections.find(c => c.id === collection.id);
     assert.deepEqual(collection.entries.slice(0, original.entries.length), original.entries);
   }
-  for (const project of additionalProjects) {
-    assert.equal(browseCollections.flatMap(c => c.entries).filter(([id]) => id === project.id).length, 1, project.id);
-    assert.equal(index.split(`href="./${project.id}/index.html"`).length - 1, 1, `${project.id}: homepage index`);
-    assert.ok(additionalMain.includes(`href="../${project.id}/index.html"`), `${project.id}: additional collection`);
-    const category = await readFile(new URL(`../dist/${project.collection.id}/index.html`, import.meta.url), 'utf8');
-    assert.ok(category.match(/<main\b[^]*?<\/main>/)[0].includes(`href="../${project.id}/index.html"`));
-    const detail = await readFile(new URL(`../dist/${project.id}/index.html`, import.meta.url), 'utf8');
-    assert.ok(detail.match(/<nav class="breadcrumbs"[^]*?<\/nav>/)[0].includes(`href="../${project.collection.id}/index.html"`));
+  assert.deepEqual(new Set(browseCollections.flatMap(collection => collection.entries.slice(collections.find(original => original.id === collection.id).entries.length).map(([id]) => id))), new Set(newerIds), 'All eight newer projects stay in the main categories');
+  const manifest = JSON.parse(await readFile(new URL('../dist/build-manifest.json', import.meta.url), 'utf8'));
+  for (const directory of ['', 'dist/']) {
+    const home = await readFile(new URL(`../${directory}index.html`, import.meta.url), 'utf8');
+    const index = home.match(/<section class="shell project-index"[^]*?<\/main>/)[0];
+    const additionalPage = await readFile(new URL(`../${directory}additional-projects/index.html`, import.meta.url), 'utf8');
+    const additionalMain = additionalPage.match(/<main\b[^]*?<\/main>/)[0];
+    assert.ok(additionalMain.includes('All projects are listed in the main categories.'), `${directory}: preserved Additional URL explains where projects live`);
+    for (const collection of collections) assert.ok(additionalMain.includes(`href="../${collection.id}/index.html"`), `${directory}: link to ${collection.id} overview`);
+    for (const project of siteProjects) assert.ok(!additionalMain.includes(`${project.id}/index.html`), `${directory}: Additional projects has no duplicate ${project.id} listing`);
+    for (const id of newerIds) {
+      const project = siteProjects.find(project => project.id === id);
+      assert.ok(project, `${id}: preserve the project record`);
+      assert.ok(manifest.pages.includes(`${id}/index.html`), `${id}: preserve the direct route`);
+      assert.equal(listedIds.filter(listedId => listedId === id).length, 1, id);
+      assert.equal(index.split(`href="./${id}/index.html"`).length - 1, 1, `${directory}${id}: homepage index`);
+      const category = await readFile(new URL(`../${directory}${project.collection.id}/index.html`, import.meta.url), 'utf8');
+      const categoryMain = category.match(/<main\b[^]*?<\/main>/)[0];
+      assert.equal(categoryMain.split(`href="../${id}/index.html"`).length - 1, 1, `${directory}${id}: category listing`);
+      const detail = await readFile(new URL(`../${directory}${id}/index.html`, import.meta.url), 'utf8');
+      assert.ok(detail.match(/<nav class="breadcrumbs"[^]*?<\/nav>/)[0].includes(`href="../${project.collection.id}/index.html"`));
+    }
   }
 });
 
@@ -122,22 +139,53 @@ test('removed projects are unlisted and the lead prediction prototype is clearly
   assert.ok(detail.includes('local synthetic-data prototype, not a deployed utility model'));
 });
 
-test('additional projects has a matching dropdown before Doctoral Research on every page', async () => {
+test('every page omits an empty Additional projects menu and lists each categorized project once', async () => {
   const manifest = JSON.parse(await readFile(new URL('../dist/build-manifest.json', import.meta.url), 'utf8'));
-  for (const page of manifest.pages) {
-    const html = await readFile(new URL(`../dist/${page}`, import.meta.url), 'utf8');
-    const nav = html.match(/<nav id="site-nav"[^]*?<\/nav>/)[0];
-    const prefix = page.includes('/') ? '../' : './';
-    const current = page === 'additional-projects/index.html' ? ' aria-current="page"' : '';
-    assert.ok(nav.includes(`<div class="nav-heading"><a href="${prefix}additional-projects/index.html"${current}>Additional projects</a><button`), page);
-    assert.ok(nav.includes('aria-label="Toggle Additional projects project menu" aria-expanded="false" aria-controls="nav-additional-projects"'), page);
-    const dropdown = nav.match(/<div class="dropdown" id="nav-additional-projects">([^]*?)<\/div>/)?.[1];
-    assert.ok(dropdown, `${page}: Additional projects dropdown`);
-    const hrefs = [...dropdown.matchAll(/href="([^"]+)"/g)].map(match => match[1]);
-    assert.deepEqual(hrefs, ['additional-projects', ...additionalProjects.map(project => project.id)].map(id => `${prefix}${id}/index.html`), `${page}: only listed projects appear`);
-    assert.ok(dropdown.includes('>Overview</a>'), page);
-    assert.ok(nav.indexOf('nav-development-and-etl') < nav.indexOf('nav-additional-projects'), page);
-    assert.ok(nav.indexOf('nav-additional-projects') < nav.indexOf(`${prefix}doctoral-research/index.html`), page);
+  for (const directory of ['', 'dist/']) {
+    for (const page of manifest.pages) {
+      const html = await readFile(new URL(`../${directory}${page}`, import.meta.url), 'utf8');
+      const nav = html.match(/<nav id="site-nav"[^]*?<\/nav>/)[0];
+      const prefix = page.includes('/') ? '../' : './';
+      assert.doesNotMatch(nav, /additional-projects|Additional projects/, `${directory}${page}: no empty menu or dropdown`);
+      assert.equal((nav.match(/class="nav-group"/g) || []).length, 3, `${directory}${page}: only the three main categories have dropdowns`);
+      for (const collection of browseCollections) {
+        const dropdown = nav.match(new RegExp(`<div class="dropdown" id="nav-${collection.id}">([^]*?)<\\/div>`))?.[1];
+        assert.ok(dropdown, `${directory}${page}: ${collection.id} dropdown`);
+        assert.deepEqual([...dropdown.matchAll(/href="([^"]+)"/g)].map(match => match[1]), [collection.id, ...collection.entries.map(([id]) => id)].map(id => `${prefix}${id}/index.html`));
+        for (const [id] of collection.entries) assert.equal(nav.split(`href="${prefix}${id}/index.html"`).length - 1, 1, `${directory}${page}: ${id} appears once in navigation`);
+      }
+      assert.ok(nav.indexOf('nav-development-and-etl') < nav.indexOf(`${prefix}doctoral-research/index.html`), `${directory}${page}: Doctoral Research remains after the categories`);
+    }
+  }
+});
+
+test('the layout retains an Additional projects dropdown for future uncategorized work only', async () => {
+  const build = await readFile(new URL('../scripts/build.mjs', import.meta.url), 'utf8');
+  const start = build.indexOf('function layout(');
+  const end = build.indexOf('\nfunction gallery(', start);
+  assert.ok(start >= 0 && end > start);
+  const esc = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+  for (const extra of [[], [{ id: 'uncategorized-project', title: 'Uncategorized project' }]]) {
+    const context = {
+      esc, origin: 'https://portfolio.example.test', socialAssets: ['assets/social/portfolio.png'],
+      socialVersions: { 'assets/social/portfolio.png': 'abc' }, assetVersions: { 'theme.js': 'a', 'styles.css': 'b', 'script.js': 'c' },
+      browseCollections, additionalProjects: extra, year: 2026,
+      profile: { name: 'Esad Kopru', github: 'https://github.com/efkopru' }, errorPageBaseScript: ''
+    };
+    runInNewContext(`${build.slice(start, end)}\nglobalThis.html = layout({ title: 'Additional projects', description: 'Test', route: 'additional-projects', body: '' });`, context, { timeout: 1000 });
+    const nav = context.html.match(/<nav id="site-nav"[^]*?<\/nav>/)[0];
+    if (!extra.length) {
+      assert.doesNotMatch(nav, /additional-projects|Additional projects/);
+      assert.match(nav, /class="site-nav site-nav--main-only"/);
+    } else {
+      assert.doesNotMatch(nav, /site-nav--main-only/);
+      const dropdown = nav.match(/<div class="dropdown" id="nav-additional-projects">([^]*?)<\/div>/)?.[1];
+      assert.ok(dropdown, 'Future uncategorized work is discoverable');
+      assert.deepEqual([...dropdown.matchAll(/href="([^"]+)"/g)].map(match => match[1]), ['../additional-projects/index.html', '../uncategorized-project/index.html']);
+      assert.ok(nav.includes('aria-controls="nav-additional-projects"'));
+      assert.ok(nav.indexOf('nav-development-and-etl') < nav.indexOf('nav-additional-projects'));
+      assert.ok(nav.indexOf('nav-additional-projects') < nav.indexOf('../doctoral-research/index.html'));
+    }
   }
 });
 
