@@ -91,6 +91,8 @@
 .evidence-figure img{width:100%;height:auto;max-height:650px;object-fit:contain}
 .evidence-figure figcaption{font-size:.88rem;line-height:1.6;color:var(--muted);margin-top:.7rem}
 .screenshot-grid a{padding:.5rem;border-radius:4px;overflow:hidden}
+#gallery-building-footprint-extraction .screenshot-grid a{display:block;height:auto;padding:0;background:transparent;border:0;border-radius:0}
+#gallery-building-footprint-extraction .screenshot-grid img{height:auto}
 .screenshot-grid a:hover,.evidence-figure>a:hover{border-color:var(--heading)}
 .screenshot-grid figcaption{padding-inline:.2rem;color:var(--muted)}
 .companion-callout{padding:1rem;border:1px solid var(--line);background:var(--surface);border-radius:4px}

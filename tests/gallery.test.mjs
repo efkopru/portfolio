@@ -76,6 +76,27 @@ test('newer work appears once in the main index and category without duplicate A
   }
 });
 
+test('unframed building extraction images preserve their original assets, captions and full-size controls', async () => {
+  const project = siteProjects.find(project => project.id === 'building-footprint-extraction');
+  const expected = [
+    ['assets/screenshots/building-footprint-extraction-01.png', 'assets/screenshots/building-footprint-extraction-01-preview.webp', 'Building extraction result 1', 1529, 657],
+    ['assets/screenshots/building-footprint-extraction-02.png', 'assets/screenshots/building-footprint-extraction-02-preview.webp', 'Building extraction result 2', 1173, 509]
+  ];
+  assert.deepEqual(project.gallery.map(image => [image.src, image.preview, image.caption, image.width, image.height]), expected, 'Remove the gallery frame without replacing or cropping the images');
+  for (const directory of ['', 'dist/']) {
+    const html = await readFile(new URL(`../${directory}${project.id}/index.html`, import.meta.url), 'utf8');
+    const group = html.match(/<section class="gallery-group" id="gallery-building-footprint-extraction">([^]*?)<\/section>/)?.[1];
+    assert.ok(group, `${directory}: the unframed style targets the extraction gallery only`);
+    assert.equal((group.match(/<figure\b/g) || []).length, 2);
+    for (const [src, preview, caption, width, height] of expected) {
+      assert.ok(group.includes(`<a data-image-viewer href="../${src}" data-caption="${caption}" aria-label="Open image: ${caption}">`));
+      assert.ok(group.includes(`<img src="../${preview}" width="${width}" height="${height}" alt="${caption}" loading="lazy" decoding="async">`));
+      assert.ok(group.includes(`<figcaption>${caption}</figcaption>`));
+    }
+    for (const control of ['data-viewer-close', 'data-zoom-in', 'data-zoom-out', 'data-zoom-reset']) assert.ok(html.includes(control), `${directory}: preserve ${control}`);
+  }
+});
+
 test('imagery work is grouped under Building Footprint Extraction instead of standalone project listings', async () => {
   const child = siteProjects.find(project => project.id === 'nearmap-imagery-pipeline');
   const parent = siteProjects.find(project => project.id === 'building-footprint-extraction');

@@ -328,3 +328,26 @@ test('shared expanded app layout is 25 percent larger while regular embeds retai
   assert.equal(pixels(declarations(expandedMobile, '.embedded-app--expanded .embed-host iframe'), 'height'), 625);
   assert.equal(css, await source('dist/styles.css'));
 });
+
+test('building extraction previews use natural image heights without white gallery frames', async () => {
+  const css = await source('styles.css');
+  const selector = '#gallery-building-footprint-extraction .screenshot-grid';
+  const frame = declarations(css, `${selector} a`);
+  for (const [property, value] of [
+    ['display', 'block'], ['height', 'auto'], ['padding', '0'],
+    ['background', 'transparent'], ['border', '0'], ['border-radius', '0']
+  ]) {
+    assert.match(frame, new RegExp(`(?:^|;)\\s*${property}:\\s*${value}\\s*(?:;|$)`), `Building extraction frame ${property} removes padding and letterboxing`);
+  }
+  assert.match(declarations(css, `${selector} img`), /(?:^|;)\s*height:\s*auto\s*(?:;|$)/, 'Preview height follows its source aspect ratio');
+  assert.match(declarations(css, '.screenshot-grid img'), /(?:^|;)\s*width:\s*100%\s*(?:;|$)/, 'Previews still fill their responsive gallery column');
+  assert.match(declarations(css, '.screenshot-grid a'), /(?:^|;)\s*height:\s*240px\s*(?:;|$)/, 'Other desktop galleries keep their fixed frame height');
+  assert.match(declarations(css, '.screenshot-grid a'), /(?:^|;)\s*background:\s*#fff\s*(?:;|$)/, 'The frame change is scoped to building extraction');
+  const mobile = [...css.matchAll(/@media\s*\(max-width:\s*650px\)\s*\{/g)]
+    .map(match => blockAfter(css.slice(match.index), /^@media\s*\(max-width:\s*650px\)\s*\{/))
+    .find(block => /\.screenshot-grid a\s*\{/.test(block));
+  assert.ok(mobile, 'The shared mobile gallery rule still exists');
+  assert.match(declarations(mobile, '.screenshot-grid a'), /(?:^|;)\s*height:\s*260px\s*(?:;|$)/, 'The ID-scoped auto height outranks the lower-specificity mobile frame height');
+  assert.doesNotMatch(declarations(mobile, '.screenshot-grid a'), /!important/, 'Mobile gallery defaults cannot override the scoped natural height');
+  assert.equal(css, await source('dist/styles.css'));
+});
