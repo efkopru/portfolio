@@ -90,11 +90,31 @@ test('crime dashboard credits end-to-end contribution without a restrictive attr
   }
 });
 
+test('custom JavaScript map matches the expanded crime dashboard while preserving both application targets', async () => {
+  const expectedEmbeds = [
+    { id: 'interactive-maps-a-custom-js-app', url: 'https://maps.cityoflewisville.com/', title: 'City of Lewisville public GIS map', note: 'The current public application may differ from its historical version.' },
+    { id: 'crime-analysis', url: 'https://www.arcgis.com/apps/dashboards/02de6953d7c54527b0e8259823df2ae6', title: 'Public crime-analysis dashboard' }
+  ];
+  for (const { id, url, title, note } of expectedEmbeds) {
+    const project = siteProjects.find(project => project.id === id);
+    assert.deepEqual(project.embed, { url, title, ...(note ? { note } : {}), expanded: true }, `${id}: only the app area size changes`);
+    for (const prefix of ['', 'dist/']) {
+      const html = await readFile(new URL(`../${prefix}${id}/index.html`, import.meta.url), 'utf8');
+      assert.ok(html.includes(`<section class="embedded-app embedded-app--expanded" aria-label="${esc(title)}">`), `${prefix}${id}: both applications use the same expanded layout`);
+      assert.ok(html.includes(`href="${url}"`), `${prefix}${id}: the original application link remains unchanged`);
+      assert.ok(html.includes(`data-embed-src="${url}" data-embed-title="${esc(title)}"`), `${prefix}${id}: the iframe retains its original target and accessible title`);
+      if (note) assert.ok(html.includes(`<p class="embed-note">${esc(note)}</p>`), `${prefix}${id}: the existing application note remains visible`);
+      else assert.doesNotMatch(html, /class="embed-note"/, `${prefix}${id}: an omitted note stays omitted`);
+      assert.match(html, /<button\b[^>]*\bdata-load-embed\b[^>]*>Load interactive application<\/button>/);
+    }
+  }
+});
+
 test('other embedded applications retain their explanatory notes and regular size', async () => {
-  for (const id of ['interactive-maps-a-custom-js-app', 'interactive-maps-experience-builder', 'code-enforcement-violations']) {
+  for (const id of ['interactive-maps-experience-builder', 'code-enforcement-violations']) {
     const project = siteProjects.find(p => p.id === id);
     assert.ok(project.embed.note, `${id}: the existing application note remains configured`);
-    assert.notEqual(project.embed.expanded, true, `${id}: the application does not opt into the larger crime-dashboard layout`);
+    assert.notEqual(project.embed.expanded, true, `${id}: the application does not opt into the expanded layout`);
     for (const prefix of ['', 'dist/']) {
       const html = await readFile(new URL(`../${prefix}${id}/index.html`, import.meta.url), 'utf8');
       assert.ok(html.includes(`<p class="embed-note">${esc(project.embed.note)}</p>`), `${prefix}${id}: the existing note remains rendered`);

@@ -301,7 +301,7 @@ test('compact featured cards preserve complete content and keep their size chang
   }
 });
 
-test('expanded crime-analysis embed is 25 percent larger while other embeds retain their dimensions', async () => {
+test('shared expanded app layout is 25 percent larger while regular embeds retain their dimensions', async () => {
   const css = await source('styles.css');
   const rules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(match => ({ selectors: match[1].trim().split(',').map(selector => selector.trim()), body: match[2] }));
   const exactRules = selector => rules.filter(rule => rule.selectors.includes(selector)).map(rule => rule.body);
