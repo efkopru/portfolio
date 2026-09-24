@@ -77,40 +77,54 @@ export const groundPatrolProject = {
 // Deliberately omit result, metric, metricLabel, contribution, and context.
 // The existing case retains its established outcome wording and ownership.
 export const utilityInspectionUpdate = {
+  summary: 'Automating flight-track processing and utility inspection data updates in enterprise GIS.',
+  tools: ['Python', 'Selenium', 'ArcPy', 'pandas', 'SQL', 'ArcGIS Portal'],
+  flow: ['Collect records', 'Build flight lines', 'Match nearby assets', 'Update GIS'],
   approach: [
-    'Collect helicopter track exports and flight metadata with Python and Selenium.',
-    'Normalize flight attributes and construct ordered flight lines from timestamped points.',
-    'Consolidate asset schemas and use spatial proximity to associate assets with flight coverage.',
-    'Stage and refresh GIS records, calculate inspection priorities, and publish updated information to ArcGIS Portal.'
+    'Collect flight metadata with Selenium, retrieve GPS track exports, and join them with pandas.',
+    'Select newer records, create points, and build lines grouped by flight and ordered by point sequence.',
+    'Standardize flight attributes and stage points and lines in a local file geodatabase.',
+    'Find assets within 350 feet of flight lines and attach the flight attributes using explicit field mappings.',
+    'Select newer local records for enterprise-geodatabase append. The wider project also joined work orders, calculated inspection priorities, and delivered updated information through ArcGIS Portal.'
   ],
   boundary: 'Client records, infrastructure locations, credentials, and source code are not shared. Proximity to a flight path indicates possible inspection coverage; it does not independently verify that an asset was inspected.',
   links: [],
   relatedProjects: ['ground-patrol-analytics'],
   evidenceSections: [
     {
-      heading: 'From source records to spatial coverage',
+      heading: 'How the flight-track workflow works',
       paragraphs: [
-        'The flight workflow combined exported track points with flight metadata, standardized the fields, and constructed ordered flight lines. A separate consolidation step mapped structures, poles, towers, and substations into a common asset schema.'
-      ]
-    },
-    {
-      heading: 'Define what the spatial match means',
-      paragraphs: [
-        'The archived method used a 350-foot proximity rule to associate existing assets with flight lines and attach flight attributes. This produced candidate coverage information for inspection reporting.',
-        'A nearby flight path is a spatial relationship, not independent confirmation of an inspection. The coverage result must be interpreted alongside the operational inspection records.'
-      ]
-    },
-    {
-      heading: 'Connect processing with GIS delivery',
-      bullets: [
-        'Use stored timestamps to select new flight records for processing.',
-        'Apply explicit field mappings when moving staged data into GIS feature classes.',
-        'Join work orders with asset attributes and geographic context.',
-        'Publish refreshed information for inspection dashboards and related analysis.'
+        'The flight-track component combines flight metadata with GPS points, builds flight lines, and finds nearby utility assets. A Python launcher coordinates six scripts from collection through enterprise GIS updates.'
       ],
+      diagram: {
+        src: 'assets/evidence/utility-data-flow.svg',
+        zoomable: true,
+        title: 'Collect records, build flight lines, match nearby assets, and update GIS',
+        caption: 'A simplified explanation of the historical flight-track workflow. No client records or infrastructure locations are shown. Select the diagram to view it full size.'
+      }
+    },
+    {
+      heading: 'How updates are handled',
+      bullets: [
+        'Combine sources: join flight metadata to GPS points by track identifier and standardize the fields with pandas.',
+        'Select newer records: compare timestamps with the latest stored records, both before local processing and before enterprise append.',
+        'Stage before delivery: prepare points, lines, and asset matches in a local file geodatabase, with explicit field mappings for GIS updates.',
+        'Record progress: write per-stage logs, row counts, and subprocess status to help trace a run.'
+      ]
+    },
+    {
+      heading: 'Outputs and scope',
+      table: {
+        caption: 'What the flight-track component produces',
+        headers: ['Output', 'Purpose'],
+        rows: [
+          ['Ordered flight lines', 'Review each flight path with its identifiers, dates, and movement attributes.'],
+          ['Candidate asset coverage', 'Associate assets within 350 feet of a flight line with its flight attributes. Proximity alone does not confirm an inspection.']
+        ]
+      },
       paragraphs: [
-        'The retained project material includes processing scripts, saved GIS outputs, a tool guide, and historical geoprocessing messages. These support the implementation described here; individual tool-history entries are not counts of complete scheduled pipeline runs.',
-        'The related ground patrol case focuses on inspection rules and reporting. The runnable example on this page uses invented records to demonstrate data-pipeline checks separately from the client workflow.'
+        'These outputs support the wider project’s work-order joins, inspection priorities, and ArcGIS Portal reporting. The related ground patrol case explains the priority rules and reporting work.',
+        'The runnable example below uses invented records. Its validation and rollback behavior belong to that teaching example, not to the historical flight-track scripts.'
       ]
     }
   ]

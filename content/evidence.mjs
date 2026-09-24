@@ -13,11 +13,6 @@ export const methodDiagrams = {
     title: 'Six stages from source pages to an accountable review record',
     caption: 'Version 3 workflow diagram. Extracted material mentions, verified labels, model predictions, and reviewer decisions remain distinct. The published demonstration uses invented records.'
   },
-  'utility-inspection-etl': {
-    src: 'assets/evidence/utility-data-flow.svg',
-    title: 'Flight and asset data meet in spatial coverage analysis before GIS publication',
-    caption: 'An original explanation of the source-data flow. It uses generic components and contains no client records or infrastructure locations.'
-  },
   'accessibility-analysis': {
     src: 'assets/evidence/accessibility-method.svg',
     title: 'How access to amenities was compared',

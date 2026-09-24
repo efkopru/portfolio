@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { caseEvidence, relatedCases } from '../scripts/case-evidence.mjs';
 import { projects } from '../content/portfolio.mjs';
-import { caseEvidenceAssets, evidenceAssets } from '../content/evidence.mjs';
+import { utilityInspectionUpdate } from '../content/inspection-cases.mjs';
+import { caseEvidenceAssets, evidenceAssets, methodDiagrams } from '../content/evidence.mjs';
 
 const esc = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
 const ui = { esc };
@@ -127,4 +128,112 @@ test('all five case expansions publish visible evidence and only allowlisted loc
     const published = await readFile(new URL(`../dist/${src}`, import.meta.url));
     assert.deepEqual(published, original);
   }
+});
+
+test('utility case explains the inspected workflow while preserving its established ownership and results', () => {
+  const project = projects.find(item => item.id === 'utility-inspection-etl');
+  for (const field of ['contribution', 'result', 'metric', 'metricLabel', 'context']) {
+    assert.equal(Object.hasOwn(utilityInspectionUpdate, field), false, `The source audit does not replace established ${field}`);
+  }
+  assert.equal(project.metric, '80%');
+  assert.match(project.metricLabel, /less.*processing time per run/i);
+  assert.match(project.result, /30\+ scheduled monthly runs/);
+  assert.match(project.result, /two hours of manual work per run/);
+  assert.match(project.result, /80% less processing time per run/);
+  assert.match(project.contribution, /I built and maintained the pipeline/);
+  assert.match(project.context, /Independent consulting/);
+
+  const headings = ['How the flight-track workflow works', 'How updates are handled', 'Outputs and scope'];
+  assert.deepEqual(project.evidenceSections.map(section => section.heading), headings);
+  const sectionText = section => [
+    ...(section.paragraphs || []), ...(section.bullets || []),
+    ...(section.table?.headers || []), ...(section.table?.rows.flat() || [])
+  ].join(' ');
+  const updates = sectionText(project.evidenceSections[1]);
+  assert.match(updates, /timestamp|time[- ]based|stored (?:date|time)|last[^.]*?(?:date|time)/i, 'Explain the selection of new flight records');
+  assert.match(updates, /local/i, 'Identify the local processing stage');
+  assert.match(updates, /enterprise/i, 'Identify the enterprise update stage');
+  assert.match(updates, /field[^.]*map|map[^.]*field/i, 'Explain explicit field mapping');
+  assert.match(updates, /stag/i, 'Explain staging before enterprise delivery');
+  assert.match(updates, /log/i, 'Describe stage-level processing logs');
+  const outputs = sectionText(project.evidenceSections[2]);
+  for (const concept of [/flight[- ]lines?/i, /candidate|potential/i, /work[- ]orders?/i, /priorit/i, /Portal/]) {
+    assert.match(outputs, concept, `Keep output scope explicit: ${concept}`);
+  }
+  assert.match(project.boundary, /proximity|nearby|coverage/i);
+  assert.match(project.boundary, /does not[^.]*?(?:verif|confirm)/i, 'Do not present flight proximity as a confirmed inspection');
+});
+
+test('utility workflow diagram appears once near the beginning and before the separate invented-data example', async () => {
+  const project = projects.find(item => item.id === 'utility-inspection-etl');
+  const diagram = project.evidenceSections[0].diagram;
+  assert.equal(diagram.src, 'assets/evidence/utility-data-flow.svg');
+  assert.equal(diagram.zoomable, true, 'Keep full-size viewing when promoting the workflow');
+  assert.equal(Object.hasOwn(methodDiagrams, project.id), false, 'Do not repeat the workflow in the lower evidence callout');
+  assert.ok(caseEvidenceAssets.includes(diagram.src));
+  assert.equal(evidenceAssets.filter(path => path === diagram.src).length, 1, 'Only one allowlisted copy of the diagram is published');
+  const original = await readFile(new URL(`../${project.id}/index.html`, import.meta.url), 'utf8');
+  const published = await readFile(new URL(`../dist/${project.id}/index.html`, import.meta.url), 'utf8');
+  assert.equal(original, published, 'File-based preview and deployment have identical content');
+  for (const [label, html] of [['root', original], ['dist', published]]) {
+    const main = html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)?.[1];
+    assert.ok(main, `${label}: main content exists`);
+    const visible = main.replace(/<details\b[^>]*>[\s\S]*?<\/details>/g, '');
+    const image = `src="../${diagram.src}"`;
+    assert.equal(visible.split(image).length - 1, 1, `${label}: one visible workflow image`);
+    assert.ok(visible.includes(`<a data-image-viewer href="../${diagram.src}"`), `${label}: the diagram retains its full-size viewer`);
+    for (const control of ['data-viewer-close', 'data-zoom-in', 'data-zoom-out', 'data-zoom-reset']) assert.ok(html.includes(control));
+    const workflow = visible.indexOf(esc(project.evidenceSections[0].heading));
+    const imagePosition = visible.indexOf(image);
+    const updates = visible.indexOf(esc(project.evidenceSections[1].heading));
+    const example = visible.indexOf('class="companion-callout"');
+    assert.ok(workflow >= 0 && workflow < imagePosition && imagePosition < updates && updates < example, `${label}: workflow comes before update details and the teaching example`);
+    assert.ok(visible.includes(esc(project.result)), `${label}: established results remain visible`);
+    assert.ok(visible.includes(esc(project.boundary)), `${label}: coverage limitation remains visible`);
+    const callout = visible.match(/<div class="companion-callout">([\s\S]*?)<\/div>/)?.[1];
+    assert.ok(callout);
+    assert.match(callout, /invented data/i, `${label}: the teaching example remains separate from the client implementation`);
+    assert.ok(callout.includes('href="../example-spatial-etl/index.html"'));
+    assert.doesNotMatch(main, /(?:[a-z]:\\|file:\/\/|\\\\[^\s<]+\\|_single_source|\.(?:sde|gdb)\b|\b(?:password|api[_-]?key|access[_-]?token)\s*[:=])/i, `${label}: operational paths and credential assignments are not published`);
+  }
+});
+
+test('utility diagram uses four plain stages without a full-canvas background or private operational material', async () => {
+  const path = 'assets/evidence/utility-data-flow.svg';
+  const original = await readFile(new URL(`../${path}`, import.meta.url), 'utf8');
+  assert.equal(original, await readFile(new URL(`../dist/${path}`, import.meta.url), 'utf8'));
+  for (const label of ['Collect records', 'Build flight lines', 'Match nearby assets', 'Update GIS']) {
+    assert.ok(original.includes(label), `The workflow stage is plainly labeled: ${label}`);
+  }
+  assert.match(original, /350[- ](?:foot|feet)/i);
+  assert.match(original, /candidate|potential/i);
+  assert.match(original, /does not[^<.]*?(?:verif|confirm)/i);
+  const root = original.match(/<svg\b[^>]*>/)?.[0];
+  assert.ok(root);
+  const viewBox = root.match(/\bviewBox="([^"]+)"/)?.[1].trim().split(/\s+/).map(Number);
+  assert.equal(viewBox?.length, 4);
+  const attr = (tag, name) => tag.match(new RegExp(`\\b${name}="([^"]*)"`))?.[1];
+  for (const rect of original.matchAll(/<rect\b[^>]*>/g)) {
+    const x = Number(attr(rect[0], 'x') || 0);
+    const y = Number(attr(rect[0], 'y') || 0);
+    const width = attr(rect[0], 'width');
+    const height = attr(rect[0], 'height');
+    const spansCanvas = x === viewBox[0] && y === viewBox[1]
+      && (width === '100%' || Number(width) >= viewBox[2])
+      && (height === '100%' || Number(height) >= viewBox[3]);
+    assert.equal(spansCanvas, false, 'Do not restore a full-canvas white background around the diagram');
+  }
+  assert.doesNotMatch(original, /<(?:script|foreignObject|image|linearGradient|radialGradient|filter)\b|(?:[a-z]:\\|file:\/\/|_single_source|\.(?:sde|gdb)\b)/i);
+});
+
+test('zoomable case diagrams escape viewer attributes and keep existing diagrams unchanged', () => {
+  const text = '<label> " &';
+  const diagram = { src: 'assets/evidence/fixture.svg', title: text, caption: text };
+  const render = value => caseEvidence({ id: 'fixture', evidenceSections: [{ heading: 'Workflow', diagram: value }] }, ui);
+  assert.doesNotMatch(render(diagram), /data-image-viewer/);
+  const zoomable = render({ ...diagram, zoomable: true });
+  assert.ok(zoomable.includes('data-image-viewer href="../assets/evidence/fixture.svg"'));
+  assert.ok(zoomable.includes(`data-caption="${esc(text)}"`));
+  assert.ok(zoomable.includes(`aria-label="Open diagram: ${esc(text)}"`));
+  assert.match(zoomable, /<div class="diagram-scroll"[^>]*><a [^>]+><img [^>]+><\/a><\/div>/);
 });

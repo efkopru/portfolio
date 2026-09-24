@@ -16,7 +16,9 @@ export function caseEvidence(project, { esc, headingLevel = 2, idPrefix = 'case-
     if (section.diagram) {
       const { src, title, caption } = section.diagram;
       if (!/^assets\/evidence\/[a-z0-9-]+\.svg$/.test(src)) throw new Error(`${project.id}: evidence diagrams must be local SVG assets.`);
-      diagram = `<figure class="evidence-figure case-diagram"><div class="diagram-scroll" tabindex="0" role="region" aria-label="${esc(title)}"><img src="../${esc(src)}" alt="${esc(title)}" loading="lazy" decoding="async"></div><figcaption>${esc(caption)} <span class="diagram-scroll-hint">Scroll horizontally to explore the diagram.</span></figcaption></figure>`;
+      const image = `<img src="../${esc(src)}" alt="${esc(title)}" loading="lazy" decoding="async">`;
+      const content = section.diagram.zoomable ? `<a data-image-viewer href="../${esc(src)}" data-caption="${esc(caption)}" aria-label="Open diagram: ${esc(title)}">${image}</a>` : image;
+      diagram = `<figure class="evidence-figure case-diagram"><div class="diagram-scroll" tabindex="0" role="region" aria-label="${esc(title)}">${content}</div><figcaption>${esc(caption)} <span class="diagram-scroll-hint">Scroll horizontally to explore the diagram.</span></figcaption></figure>`;
     }
     return `<section class="case-evidence" aria-labelledby="${headingId}"><h${headingLevel} id="${headingId}">${esc(section.heading)}</h${headingLevel}>${paragraphs}${bullets}${diagram}${table}</section>`;
   }).join('');
