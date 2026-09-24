@@ -43,7 +43,7 @@ test('additional work appears once in the main index and in its category', async
   const index = home.match(/<section class="shell project-index"[^]*?<\/main>/)[0];
   const additionalPage = await readFile(new URL('../dist/additional-projects/index.html', import.meta.url), 'utf8');
   const additionalMain = additionalPage.match(/<main\b[^]*?<\/main>/)[0];
-  assert.deepEqual(new Set(additionalProjects.map(project => project.id)), new Set(['utility-inspection-etl', 'accessibility-analysis', 'lead-service-line-evidence-workbench', 'lead-service-review-prototype', 'workforce-participation', 'geospatial-processing-tools', 'nearmap-imagery-pipeline', 'ground-patrol-analytics', 'parcel-data-integration']), 'Preserve the selected projects and add the three archive-backed cases');
+  assert.deepEqual(new Set(additionalProjects.map(project => project.id)), new Set(['utility-inspection-etl', 'accessibility-analysis', 'lead-service-line-evidence-workbench', 'lead-service-review-prototype', 'workforce-participation', 'geospatial-processing-tools', 'ground-patrol-analytics', 'parcel-data-integration']), 'Preserve standalone additional projects while grouping the imagery workflow under Building Footprint Extraction');
   for (const collection of browseCollections) {
     const original = collections.find(c => c.id === collection.id);
     assert.deepEqual(collection.entries.slice(0, original.entries.length), original.entries);
@@ -56,6 +56,50 @@ test('additional work appears once in the main index and in its category', async
     assert.ok(category.match(/<main\b[^]*?<\/main>/)[0].includes(`href="../${project.id}/index.html"`));
     const detail = await readFile(new URL(`../dist/${project.id}/index.html`, import.meta.url), 'utf8');
     assert.ok(detail.match(/<nav class="breadcrumbs"[^]*?<\/nav>/)[0].includes(`href="../${project.collection.id}/index.html"`));
+  }
+});
+
+test('imagery work is grouped under Building Footprint Extraction instead of standalone project listings', async () => {
+  const child = siteProjects.find(project => project.id === 'nearmap-imagery-pipeline');
+  const parent = siteProjects.find(project => project.id === 'building-footprint-extraction');
+  const groupedAnchor = `part-${child.id}`;
+  const script = await readFile(new URL('../script.js', import.meta.url), 'utf8');
+  const legacyRoutes = [...script.match(/const routes = new Set\(\[([^\]]+)\]\)/)[1].matchAll(/'([^']+)'/g)].map(match => match[1]);
+  assert.ok(!siteProjects.some(project => project.id === groupedAnchor), 'The grouped anchor must not match a project ID');
+  assert.ok(!legacyRoutes.includes(groupedAnchor), 'The grouped anchor must not trigger legacy hash-route navigation');
+  assert.equal(child.parentProjectId, parent.id);
+  assert.equal(child.collection.id, parent.collection.id);
+  assert.equal(child.collection.id, 'ml-optimization');
+  assert.ok(!additionalProjects.some(project => project.id === child.id));
+  assert.equal(browseCollections.flatMap(collection => collection.entries).filter(([id]) => id === child.id).length, 0);
+  assert.equal(browseCollections.find(collection => collection.id === 'ml-optimization').entries.filter(([id]) => id === parent.id).length, 1);
+
+  const manifest = JSON.parse(await readFile(new URL('../dist/build-manifest.json', import.meta.url), 'utf8'));
+  assert.ok(manifest.pages.includes(`${child.id}/index.html`), 'Keep the existing imagery page for direct links');
+  for (const directory of ['', 'dist/']) {
+    for (const page of manifest.pages) {
+      const html = await readFile(new URL(`../${directory}${page}`, import.meta.url), 'utf8');
+      const nav = html.match(/<nav id="site-nav"[^]*?<\/nav>/)[0];
+      assert.ok(!nav.includes(`${child.id}/index.html`), `${directory}${page}: imagery is not a standalone dropdown item`);
+    }
+    for (const page of ['index.html', 'additional-projects/index.html', 'development-and-etl/index.html', 'ml-optimization/index.html']) {
+      const html = await readFile(new URL(`../${directory}${page}`, import.meta.url), 'utf8');
+      const main = html.match(/<main\b[^]*?<\/main>/)[0];
+      assert.ok(!main.includes(`${child.id}/index.html`), `${directory}${page}: no standalone imagery listing`);
+      if (page === 'index.html' || page === 'ml-optimization/index.html') assert.ok(main.includes(`${parent.id}/index.html`), `${directory}${page}: parent remains listed`);
+    }
+    const childHtml = await readFile(new URL(`../${directory}${child.id}/index.html`, import.meta.url), 'utf8');
+    assert.ok(childHtml.includes(`<h1>${child.title}</h1>`), 'Keep the complete original imagery page');
+    assert.ok(!childHtml.includes('data-redirect='), 'Existing imagery links must not become an empty redirect page');
+    const breadcrumb = childHtml.match(/<nav class="breadcrumbs"[^]*?<\/nav>/)[0];
+    assert.ok(breadcrumb.includes(`href="../${parent.id}/index.html#${groupedAnchor}"`), 'The imagery page links directly back to its grouped section');
+    assert.ok(breadcrumb.includes('href="../ml-optimization/index.html"'));
+    assert.ok(!breadcrumb.includes('href="../development-and-etl/index.html"'));
+    const parentHtml = await readFile(new URL(`../${directory}${parent.id}/index.html`, import.meta.url), 'utf8');
+    assert.ok(parentHtml.includes(`id="${groupedAnchor}"`), 'The grouped jump link has a matching non-route section anchor');
+    assert.ok(!parentHtml.includes(`href="#${child.id}"`), 'The jump link must not navigate to the standalone legacy route');
+    const jumpIndex = parentHtml.indexOf(`href="#${groupedAnchor}"`);
+    assert.ok(jumpIndex >= 0 && jumpIndex < parentHtml.indexOf('class="project-gallery"'), 'The grouped imagery work is reachable before the gallery');
   }
 });
 

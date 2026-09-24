@@ -1,5 +1,6 @@
 export const nearMapProject = {
   id: 'nearmap-imagery-pipeline',
+  parentProjectId: 'building-footprint-extraction',
   title: 'From aerial imagery to building footprints and roads',
   type: 'Professional work',
   roles: ['data-engineering', 'software-engineering'],

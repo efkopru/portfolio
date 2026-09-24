@@ -33,6 +33,70 @@ test('evidence rendering rejects unsafe paths, malformed tables and unknown rela
   assert.equal(relatedCases({ id: 'fixture' }, projects, ui), '');
 });
 
+test('nested evidence supports accessible h3 headings and distinct safe ID prefixes', () => {
+  const project = { id: 'fixture', evidenceSections: [{ heading: 'First section', paragraphs: ['Evidence one.'] }, { heading: 'Second section', paragraphs: ['Evidence two.'] }] };
+  const defaultHtml = caseEvidence(project, ui);
+  assert.equal(defaultHtml, caseEvidence(project, { ...ui, headingLevel: 2, idPrefix: 'case-evidence' }));
+  const nestedHtml = caseEvidence(project, { ...ui, headingLevel: 3, idPrefix: 'nearmap-imagery-pipeline-evidence' });
+  for (const [index, section] of project.evidenceSections.entries()) {
+    const id = `nearmap-imagery-pipeline-evidence-${index + 1}`;
+    assert.ok(nestedHtml.includes(`<section class="case-evidence" aria-labelledby="${id}"><h3 id="${id}">${section.heading}</h3>`));
+    assert.ok(nestedHtml.includes(`<p>${section.paragraphs[0]}</p>`));
+  }
+  assert.doesNotMatch(nestedHtml, /<h2\b|id="case-evidence-/);
+  for (const headingLevel of [1, 4, 0, '3', '3 onclick="alert(1)"', null]) {
+    assert.throws(() => caseEvidence(project, { ...ui, headingLevel }), `Reject heading level ${headingLevel}`);
+  }
+  for (const idPrefix of ['', 'has spaces', '../evidence', 'evidence" onclick="alert(1)', null]) {
+    assert.throws(() => caseEvidence(project, { ...ui, idPrefix }), `Reject unsafe ID prefix ${idPrefix}`);
+  }
+});
+
+test('Building Footprint Extraction preserves the full imagery workflow, evidence and scope', async () => {
+  const child = projects.find(project => project.id === 'nearmap-imagery-pipeline');
+  const parent = projects.find(project => project.id === 'building-footprint-extraction');
+  for (const directory of ['', 'dist/']) {
+    const html = await readFile(new URL(`../${directory}${parent.id}/index.html`, import.meta.url), 'utf8');
+    const startTag = `<section class="project-part" id="part-${child.id}" aria-labelledby="${child.id}-heading">`;
+    const start = html.indexOf(startTag);
+    assert.ok(start >= 0, `${directory}: the imagery case has a named section inside the parent page`);
+    let depth = 0;
+    let end = -1;
+    for (const match of html.slice(start).matchAll(/<\/?section\b[^>]*>/g)) {
+      depth += match[0].startsWith('</') ? -1 : 1;
+      if (depth === 0) { end = start + match.index + match[0].length; break; }
+    }
+    assert.ok(end > start, 'The grouped section is well formed');
+    const grouped = html.slice(start, end);
+    const visible = grouped.replace(/<details\b[^>]*>[\s\S]*?<\/details>/g, '');
+    assert.ok(visible.includes(`<h2 id="${child.id}-heading">${esc(child.title)}</h2>`));
+    for (const text of [child.summary, child.contribution, child.result, child.boundary, ...child.tools]) {
+      assert.ok(visible.includes(esc(text)), `${directory}: grouped overview preserves ${text}`);
+    }
+    for (const [index, section] of child.evidenceSections.entries()) {
+      const headingId = `${child.id}-evidence-${index + 1}`;
+      assert.ok(visible.includes(`aria-labelledby="${headingId}"`));
+      assert.ok(visible.includes(`<h3 id="${headingId}">${esc(section.heading)}</h3>`));
+      for (const text of [...(section.paragraphs || []), ...(section.bullets || [])]) assert.ok(visible.includes(esc(text)), `${directory}: complete visible imagery evidence`);
+      if (section.table) {
+        for (const text of [section.table.caption, ...section.table.headers, ...section.table.rows.flat()]) assert.ok(visible.includes(esc(text)), `${directory}: complete archived-results table`);
+      }
+      if (section.diagram) {
+        assert.ok(visible.includes(`src="../${section.diagram.src}"`));
+        assert.ok(visible.includes(`alt="${esc(section.diagram.title)}"`));
+        assert.ok(visible.includes(esc(section.diagram.caption)));
+      }
+    }
+    const details = grouped.match(/<details class="project-part-details">([^]*?)<\/details>/)?.[1];
+    assert.ok(details?.includes('<summary>Imagery workflow details</summary>'));
+    for (const text of [child.context, child.problem, ...child.approach]) assert.ok(details.includes(esc(text)), `${directory}: complete imagery technical details`);
+    assert.ok(html.includes(esc(parent.contribution)), 'Keep the original extraction work');
+    assert.ok(html.includes(esc(parent.boundary)), 'Keep the pretrained-model scope limitation');
+    const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
+    assert.equal(new Set(ids).size, ids.length, `${directory}: grouped evidence IDs are unique`);
+  }
+});
+
 test('all five case expansions publish visible evidence and only allowlisted local assets', async () => {
   for (const id of ['nearmap-imagery-pipeline', 'ground-patrol-analytics', 'parcel-data-integration', 'utility-inspection-etl', 'doctoral-research']) {
     const project = projects.find(item => item.id === id);

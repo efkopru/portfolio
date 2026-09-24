@@ -1,7 +1,9 @@
 // Structured case-study evidence stays readable without scripts or collapsed panels.
-export function caseEvidence(project, { esc }) {
+export function caseEvidence(project, { esc, headingLevel = 2, idPrefix = 'case-evidence' }) {
+  if (![2, 3].includes(headingLevel)) throw new Error(`${project.id}: evidence heading level must be 2 or 3.`);
+  if (typeof idPrefix !== 'string' || !/^[a-z0-9][a-z0-9-]*$/.test(idPrefix)) throw new Error(`${project.id}: invalid evidence ID prefix.`);
   return (project.evidenceSections || []).map((section, index) => {
-    const headingId = `case-evidence-${index + 1}`;
+    const headingId = `${idPrefix}-${index + 1}`;
     const paragraphs = (section.paragraphs || []).map(text => `<p>${esc(text)}</p>`).join('');
     const bullets = section.bullets?.length ? `<ul>${section.bullets.map(text => `<li>${esc(text)}</li>`).join('')}</ul>` : '';
     let table = '';
@@ -16,7 +18,7 @@ export function caseEvidence(project, { esc }) {
       if (!/^assets\/evidence\/[a-z0-9-]+\.svg$/.test(src)) throw new Error(`${project.id}: evidence diagrams must be local SVG assets.`);
       diagram = `<figure class="evidence-figure case-diagram"><div class="diagram-scroll" tabindex="0" role="region" aria-label="${esc(title)}"><img src="../${esc(src)}" alt="${esc(title)}" loading="lazy" decoding="async"></div><figcaption>${esc(caption)} <span class="diagram-scroll-hint">Scroll horizontally to explore the diagram.</span></figcaption></figure>`;
     }
-    return `<section class="case-evidence" aria-labelledby="${headingId}"><h2 id="${headingId}">${esc(section.heading)}</h2>${paragraphs}${bullets}${diagram}${table}</section>`;
+    return `<section class="case-evidence" aria-labelledby="${headingId}"><h${headingLevel} id="${headingId}">${esc(section.heading)}</h${headingLevel}>${paragraphs}${bullets}${diagram}${table}</section>`;
   }).join('');
 }
 

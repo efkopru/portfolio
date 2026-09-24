@@ -35,7 +35,6 @@ const additionalCollectionIds = {
   'vit-heatwave-calibration': 'ml-optimization',
   'transformer-bias-correction': 'ml-optimization',
   'utility-inspection-etl': 'development-and-etl',
-  'nearmap-imagery-pipeline': 'development-and-etl',
   'parcel-data-integration': 'development-and-etl',
   'ground-patrol-analytics': 'spatial-and-data-analysis',
   'workforce-participation': 'development-and-etl',
@@ -58,11 +57,15 @@ export const siteProjects = [...projects, ...extraPages].map(project => ({
   ...project,
   title: titles.get(project.id) || project.title,
   original: titles.has(project.id),
-  collection: collections.find(c => c.id === additionalCollectionIds[project.id] || c.entries.some(([id]) => id === project.id)),
+  collection: collections.find(c => c.id === additionalCollectionIds[project.id] || c.entries.some(([id]) => id === (project.parentProjectId || project.id))),
   gallery: project.id === 'interactive-maps-a-custom-js-app' ? [] : screenshots[project.id] || project.gallery || [],
   embed: embeds[project.id]
 }));
-export const additionalProjects = siteProjects.filter(project => !project.original && !unlistedProjectIds.has(project.id));
+for (const project of siteProjects.filter(project => project.parentProjectId)) {
+  const parent = siteProjects.find(candidate => candidate.id === project.parentProjectId);
+  if (!parent || parent.id === project.id || parent.parentProjectId) throw new Error(`${project.id}: invalid parent project.`);
+}
+export const additionalProjects = siteProjects.filter(project => !project.original && !project.parentProjectId && !unlistedProjectIds.has(project.id));
 export const browseCollections = collections.map(collection => ({
   ...collection,
   entries: [...collection.entries, ...additionalProjects
