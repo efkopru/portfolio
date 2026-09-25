@@ -307,3 +307,22 @@ test('Apache-style hosting serves the site 404 page, AVIF type, and the baseline
   assert.deepEqual(set.map(([name]) => name).toSorted(), ['Permissions-Policy', 'Referrer-Policy', 'X-Content-Type-Options', 'X-Frame-Options']);
   assert.doesNotMatch(htaccess, /Content-Security-Policy|Strict-Transport-Security|Rewrite|Redirect/i, 'No untested policy or routing change');
 });
+
+test('category overviews add each record type and summary while the homepage index stays a plain list', async () => {
+  const escapeHtml = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+  for (const directory of ['', 'dist/']) {
+    for (const collection of browseCollections) {
+      const main = (await readFile(new URL(`../${directory}${collection.id}/index.html`, import.meta.url), 'utf8')).match(/<main\b[^]*?<\/main>/)[0];
+      const items = [...main.matchAll(/<li>([^]*?)<\/li>/g)].map(match => match[1]);
+      assert.equal(items.length, collection.entries.length, `${directory}${collection.id}: one item per listed project`);
+      for (const [index, [id, title]] of collection.entries.entries()) {
+        const project = siteProjects.find(candidate => candidate.id === id);
+        const label = project.type ? `<span class="collection-type">${escapeHtml(project.type)}.</span> ` : '';
+        assert.equal(items[index], `<a href="../${id}/index.html">${escapeHtml(title)}</a><p class="collection-summary">${label}${escapeHtml(project.summary)}</p>`, `${directory}${collection.id}: ${id} uses only its existing record text, in order`);
+      }
+    }
+    const home = await readFile(new URL(`../${directory}index.html`, import.meta.url), 'utf8');
+    const index = home.match(/<section class="shell project-index"[^]*?<\/section><\/section>/)[0];
+    assert.doesNotMatch(index, /collection-summary|collection-type/, `${directory}: homepage project index remains titles only`);
+  }
+});

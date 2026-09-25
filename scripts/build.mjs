@@ -103,8 +103,17 @@ function projectPage(project) {
   return layout({ title: project.title, description: project.summary, route: project.id, body: `<div class="shell detail"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="../index.html#projects">Projects</a>${parent ? `<span aria-hidden="true">/</span><a href="../${parent.id}/index.html">${esc(parent.title)}</a>` : ''}${parentProject ? `<span aria-hidden="true">/</span><a href="../${parentProject.id}/index.html#part-${esc(project.id)}">${esc(parentProject.title)}</a>` : ''}</nav><header class="project-heading"><h1>${esc(project.title)}</h1><p>${esc(project.summary)}</p>${!stagedWorkflow && project.links?.length ? `<div class="project-links">${links(project.links)}</div>` : ''}</header>${content}${relatedCases(project, siteProjects, { esc })}<p class="back-link"><a href="../index.html#projects">← Back to projects</a></p></div>` });
 }
 
+// Overview pages reuse each record's existing type and summary so visitors can tell work types apart before opening them.
+function collectionList(entries) {
+  return `<ol class="collection-list">${entries.map(([id, title]) => {
+    const project = siteProjects.find(candidate => candidate.id === id);
+    if (!project?.summary) throw new Error(`${id}: collection entries need a project summary.`);
+    return `<li><a href="../${id}/index.html">${esc(title)}</a><p class="collection-summary">${project.type ? `<span class="collection-type">${esc(project.type)}.</span> ` : ''}${esc(project.summary)}</p></li>`;
+  }).join('')}</ol>`;
+}
+
 function collectionPage(collection) {
-  return layout({ title: collection.title, description: `Selected projects in ${collection.title.toLowerCase()}, including maps, analysis, and implementation examples.`, route: collection.id, body: `<div class="shell text-page"><h1>${esc(collection.title)}</h1><p>${esc(collection.heading)}</p>${projectList(collection.entries)}<p class="back-link"><a href="../index.html#projects">← Back to projects</a></p></div>` });
+  return layout({ title: collection.title, description: `Selected projects in ${collection.title.toLowerCase()}, including maps, analysis, and implementation examples.`, route: collection.id, body: `<div class="shell text-page"><h1>${esc(collection.title)}</h1><p>${esc(collection.heading)}</p>${collectionList(collection.entries)}<p class="back-link"><a href="../index.html#projects">← Back to projects</a></p></div>` });
 }
 
 function resume() {

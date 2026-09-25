@@ -143,6 +143,9 @@
 .resume-frame{display:block;width:75%;height:clamp(28.8rem,70.2vh,63rem);margin-inline:auto;border:1px solid var(--line);border-radius:4px;background:#fff;color-scheme:light}
 /* Phones need the full content width for a readable document preview. */
 @media(max-width:650px){.resume-header{width:100%}.resume-frame{width:100%}}
+/* Category overviews: each linked title is followed by its existing type label and summary. */
+.collection-summary{margin:.25rem 0 0;font-size:.92rem;line-height:1.5;color:var(--muted)}
+.collection-type{font-weight:700}
 .theme-toggle{display:inline-flex;align-items:center;gap:.55rem;min-height:44px;max-width:100%;padding:.25rem .2rem;border:0;border-radius:4px;background:transparent;color:var(--ink);font:inherit;cursor:pointer}
 .theme-toggle-label{font-weight:700}
 .theme-toggle-track{position:relative;display:inline-block;flex-shrink:0;width:40px;height:24px;border:1px solid var(--control-border);border-radius:999px;background:var(--surface-alt)}
