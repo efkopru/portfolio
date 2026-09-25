@@ -404,3 +404,19 @@ test('footer background stays a small pre-cropped band that renders like the ori
   for (const rule of footerRules) assert.match(rule, /url\('\.\/assets\/gis-background\.webp'\)\s+center\s+65%\/cover/);
   assert.equal(css, await source('dist/styles.css'));
 });
+
+test('project galleries align with the 900px case-study text column', async () => {
+  const raw = await source('styles.css');
+  const css = raw.replace(/\/\*[\s\S]*?\*\//g, '');
+  const widthOf = selector => [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
+    .filter(rule => rule[1].split(',').map(s => s.trim()).includes(selector))
+    .map(rule => rule[2].match(/(?:^|;)\s*max-width:\s*([^;]+)/)?.[1]?.trim()).filter(Boolean).at(-1);
+  const column = widthOf('.case-overview');
+  assert.equal(column, '900px');
+  for (const selector of ['.case-details', '.case-evidence', '.project-stage', '.project-gallery']) {
+    assert.equal(widthOf(selector), column, `${selector} uses the shared text column width`);
+  }
+  const galleryRules = [...css.matchAll(/(?:^|})\s*\.project-gallery\{([^{}]*)\}/g)].map(rule => rule[1]).join(';');
+  assert.match(galleryRules, /(?:^|;)\s*margin-inline:\s*auto\s*(?:;|$)/, 'The gallery column is centered like the text sections');
+  assert.equal(raw, await source('dist/styles.css'));
+});
