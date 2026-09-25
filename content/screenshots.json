@@ -534,13 +534,13 @@
   ],
   "workforce-participation": [
     {
-      "src": "assets/screenshots/workforce-participation-screenshot.png",
-      "preview": "assets/screenshots/workforce-participation-screenshot.png",
+      "src": "assets/screenshots/workforce-participation-screenshot-v2.png",
+      "preview": "assets/screenshots/workforce-participation-screenshot-v2.png",
       "caption": "Published U.S. workforce atlas, January 2020 to January 2026",
       "width": 1440,
       "height": 1100,
       "sourcePage": "https://github.com/efkopru/workforce-participation",
-      "sourceUrl": "https://raw.githubusercontent.com/efkopru/workforce-participation/main/docs/screenshot.png"
+      "sourceUrl": "https://raw.githubusercontent.com/efkopru/workforce-participation/8a0de35abd32a1488d494ce5531c62e82b14224d/docs/screenshot.png"
     }
   ],
   "s2s-transformer-bias-correction": [
