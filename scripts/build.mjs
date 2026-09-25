@@ -14,8 +14,9 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 const output = resolve(root, 'dist');
 // New asset URLs prevent stale styles, scripts, and updated zoomable diagrams.
 const zoomableDiagrams = [...new Set(siteProjects.flatMap(project => (project.evidenceSections || []).filter(section => section.diagram?.zoomable).map(section => section.diagram.src)))];
+// Hash text with LF endings so Windows CRLF checkouts produce the same versions as the Linux host build.
 const assetVersions = Object.fromEntries(await Promise.all(['theme.js', 'styles.css', 'script.js', ...zoomableDiagrams].map(async file =>
-  [file, createHash('sha256').update(await readFile(resolve(root, file))).digest('hex').slice(0, 12)]
+  [file, createHash('sha256').update((await readFile(resolve(root, file), 'utf8')).replaceAll('\r\n', '\n')).digest('hex').slice(0, 12)]
 )));
 const socialAssets = socialCards.map(card => `assets/social/${card.Name}.png`);
 const socialVersions = Object.fromEntries(await Promise.all(socialAssets.map(async file => [file, createHash('sha256').update(await readFile(resolve(root, file))).digest('hex').slice(0, 12)])));

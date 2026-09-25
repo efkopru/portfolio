@@ -170,7 +170,7 @@ test('utility workflow diagram appears once near the beginning and before the se
   const diagram = project.evidenceSections[0].diagram;
   assert.equal(diagram.src, 'assets/evidence/utility-data-flow.svg');
   assert.equal(diagram.zoomable, true, 'Keep full-size viewing when promoting the workflow');
-  const version = createHash('sha256').update(await readFile(new URL(`../${diagram.src}`, import.meta.url))).digest('hex').slice(0, 12);
+  const version = createHash('sha256').update((await readFile(new URL(`../${diagram.src}`, import.meta.url), 'utf8')).replaceAll('\r\n', '\n')).digest('hex').slice(0, 12);
   const diagramUrl = `../${diagram.src}?v=${version}`;
   assert.equal(Object.hasOwn(methodDiagrams, project.id), false, 'Do not repeat the workflow in the lower evidence callout');
   assert.ok(caseEvidenceAssets.includes(diagram.src));

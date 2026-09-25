@@ -327,7 +327,7 @@ test('every generated page includes current versioned assets, an early initializ
   for (const asset of ['theme.js', 'styles.css', 'script.js']) {
     const text = await source(asset);
     assert.equal(await source(`dist/${asset}`), text, `Publish the current ${asset} asset`);
-    versions.set(asset, createHash('sha256').update(text, 'utf8').digest('hex').slice(0, 12));
+    versions.set(asset, createHash('sha256').update(text.replaceAll('\r\n', '\n'), 'utf8').digest('hex').slice(0, 12));
   }
   for (const path of manifest.pages) {
     const html = await source(`dist/${path}`);
