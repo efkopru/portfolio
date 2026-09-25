@@ -389,3 +389,18 @@ test('all project images use transparent unframed containers and natural image h
   assert.match(declarations(mobile, '.diagram-scroll>img'), /(?:^|;)\s*min-width:\s*620px\s*(?:;|$)/, 'Diagram labels stay legible on small screens');
   assert.equal(css, await source('dist/styles.css'));
 });
+
+test('footer background stays a small pre-cropped band that renders like the original', async () => {
+  const image = await readFile(new URL('../assets/gis-background.webp', import.meta.url));
+  assert.ok(image.length < 150 * 1024, 'Every page downloads the footer image, so it stays small');
+  assert.equal(image.toString('latin1', 0, 4), 'RIFF');
+  assert.equal(image.toString('latin1', 8, 16), 'WEBPVP8 ');
+  const [width, height] = [image.readUInt16LE(26) & 0x3fff, image.readUInt16LE(28) & 0x3fff];
+  assert.deepEqual([width, height], [1440, 720], 'Band of the 1440x2160 original that remains visible at 65% with cover');
+  const css = await source('styles.css');
+  // Cover sizing keeps these rows identical to the original while footer height is at most half its width.
+  const footerRules = [...css.matchAll(/\.site-footer\{([^}]*)\}/g)].map(match => match[1]).filter(rule => rule.includes('gis-background.webp'));
+  assert.ok(footerRules.length > 0);
+  for (const rule of footerRules) assert.match(rule, /url\('\.\/assets\/gis-background\.webp'\)\s+center\s+65%\/cover/);
+  assert.equal(css, await source('dist/styles.css'));
+});

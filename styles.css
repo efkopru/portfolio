@@ -21,6 +21,7 @@
 .embedded-app--expanded{width:min(1300px,calc(100vw - 3rem));max-width:none;position:relative;left:50%;transform:translateX(-50%);margin-inline:0}
 .embedded-app--expanded .embed-host iframe{height:775px}
 @media(max-width:650px){.embedded-app--expanded{width:calc(100vw - 2rem)}.embedded-app--expanded .embed-host iframe{height:625px}}
+/* The footer image holds only the band visible at center 65%/cover (rows 936-1656 of the 1440x2160 original); keep them together. */
 .site-footer{background:linear-gradient(var(--footer-overlay),var(--footer-overlay)),url('./assets/gis-background.webp') center 65%/cover}
 .brand img{background:var(--logo-bg);border-radius:3px}
 /* Preserve the transparent original mark; brighten its blues and lettering only in Midnight. */
