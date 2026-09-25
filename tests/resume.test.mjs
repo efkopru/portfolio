@@ -139,6 +139,12 @@ test('resume frame has scoped responsive sizing in both CSS outputs', async () =
     'The resume heading aligns with the centered, reduced-width frame');
   assert.match(base, /(?:^|;)\s*border:\s*[^;]+/);
   assert.doesNotMatch(base, /(?:^|;)\s*min-width:\s*\d+(?:px|rem)/);
+  const phone = css.match(/@media\s*\(max-width:\s*650px\)\s*\{(\.resume-header\{[^{}]*\}\.resume-frame\{[^{}]*\})\}/)?.[1];
+  assert.ok(phone, 'Phones have a scoped resume width override');
+  for (const selector of ['.resume-header', '.resume-frame']) {
+    const rule = phone.match(new RegExp(`${selector.replace('.', '\\.')}\\{([^{}]*)\\}`))?.[1];
+    assert.match(rule, /^\s*width:\s*100%\s*;?\s*$/, `${selector}: full content width on phones, 75% remains the desktop layout`);
+  }
 });
 
 test('published security policy permits only the specific Google frame origin and existing maps', async () => {
