@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="590" viewBox="0 0 1200 590" role="img" aria-labelledby="title description">
-  <title id="title">Design of the archived network experiments</title>
-  <desc id="description">The follow-up study compared full and convex-hull-reduced synthetic hexagonal networks. Six grid sizes, 61, 91, 127, 169, 217 and 271 cells, were combined with three target layouts, radial arms, near corners and seeded random, and four target counts, 3, 6, 9 and 12. This produced 72 paired configurations. Selected-edge costs match within every archived pair. The design diagram summarizes the saved experiments and is not a new solver result.</desc>
+  <title id="title">Design of the network experiments</title>
+  <desc id="description">The experiments compared full and convex-hull-reduced hexagonal test networks. Six grid sizes, 61, 91, 127, 169, 217 and 271 cells, were combined with three target layouts, radial arms, near corners and seeded random, and four target counts, 3, 6, 9 and 12. This produced 72 paired configurations. Selected-edge costs match within every archived pair. The design diagram summarizes the saved experiments and is not a new solver result.</desc>
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1L8 5L1 9" fill="none" stroke="#43505d" stroke-width="1.8"/></marker>
   </defs>
   <rect width="1200" height="590" rx="10" fill="#f8fbfd"/>
   <g font-family="Arial, Helvetica, sans-serif" fill="#101126">
     <text x="40" y="49" font-size="28" font-weight="700">Testing when a smaller search area helps</text>
-    <text x="40" y="80" font-size="18" fill="#43505d">Archived follow-up experiments on synthetic hexagonal networks</text>
+    <text x="40" y="80" font-size="18" fill="#43505d">Experiments on hexagonal test networks</text>
     <g fill="#fff" stroke="#aebcc7" stroke-width="1.5">
       <rect x="40" y="114" width="340" height="144" rx="6"/>
       <rect x="430" y="114" width="340" height="144" rx="6"/>

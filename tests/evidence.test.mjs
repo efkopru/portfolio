@@ -424,3 +424,14 @@ test('actual build layout derives sharing URLs from SITE_URL instead of hardcodi
   assert.equal(getMeta(context.html, 'og:url'), 'https://preview.example.test/doctoral-research/');
   assert.equal(getMeta(context.html, 'twitter:image'), getMeta(context.html, 'og:image'));
 });
+
+test('doctoral page describes its network experiments generally, without follow-up framing or post-2024 dates', async () => {
+  const pages = [body(await source('doctoral-research/index.html')), body(await source('dist/doctoral-research/index.html'))];
+  const diagram = await source('assets/evidence/network-benchmark.svg');
+  for (const text of [...pages, diagram]) {
+    assert.doesNotMatch(text, /follow-up|after the 2024/i, 'No follow-up framing');
+    assert.doesNotMatch(text, /\b20(?:2[5-9]|[3-9]\d)\b/, 'No dates after 2024');
+  }
+  assert.ok(pages[0].includes('Testing when a smaller search area helps'));
+  assert.match(pages[0], /network-benchmark\.svg\?v=[a-f0-9]{12}/, 'Updated diagram text is not hidden behind a cached copy');
+});

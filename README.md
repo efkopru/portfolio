@@ -85,7 +85,7 @@ Canonical URLs and the sitemap default to `https://www.ekopru.com`. Set `SITE_UR
 
 The generated `_headers` file applies only on hosts that support that convention; Hostinger ignores it. For Hostinger's Apache-style server, the build also writes `dist/.htaccess`: `ErrorDocument 404 /404.html`, the AVIF MIME type for the logo, and the nosniff, referrer, frame, and permissions headers from `_headers`. The content security policy stays only in `_headers` until it is verified against the live Google resume, GIS applications, and contact form. Verify actual hosting headers separately after changes.
 
-CSS, JavaScript, sharing images, and opted-in zoomable case diagrams use content hashes in their URLs. Text assets are hashed with LF line endings, so Windows CRLF checkouts generate the same versions as the Linux host build. If a changed image still looks old, compare the deployed HTML, versioned URL, and served asset before changing unrelated code.
+CSS, JavaScript, sharing images, and all case-study diagrams use content hashes in their URLs. Text assets are hashed with LF line endings, so Windows CRLF checkouts generate the same versions as the Linux host build. If a changed image still looks old, compare the deployed HTML, versioned URL, and served asset before changing unrelated code.
 
 The tag `before-improvements-2026-09-25` marks production `main` before the September 25, 2026 navigation, performance, and category-page changes. Each of those changes is a separate commit that can be undone with `git revert`.
 

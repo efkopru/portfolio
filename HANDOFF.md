@@ -56,7 +56,7 @@ The 350-foot relationship yields candidate coverage, not independently confirmed
 
 The original operational source was inspected statically, not run or published. It is not a ready-to-release code package. Private review notes describe unresolved source issues; repairing or releasing that source requires a separate task.
 
-`assets/evidence/utility-data-flow.svg` is an original explanatory diagram, shown once near the beginning. Keep both thumbnail and viewer URLs content-versioned: the live check previously caught an old cached SVG despite fresh page HTML. `scripts/build.mjs` hashes opted-in zoomable case diagrams; `scripts/case-evidence.mjs` applies the same URL to the image and viewer link.
+`assets/evidence/utility-data-flow.svg` is an original explanatory diagram, shown once near the beginning. Keep both thumbnail and viewer URLs content-versioned: the live check previously caught an old cached SVG despite fresh page HTML. `scripts/build.mjs` hashes every case-study diagram; `scripts/case-evidence.mjs` applies the same URL to the image and viewer link.
 
 The synthetic spatial ETL companion is separate. Its validation, transactional updates, replay, and rollback behavior must not be attributed to the historical pipeline.
 
@@ -64,6 +64,7 @@ The synthetic spatial ETL companion is separate. Its validation, transactional u
 
 - Ground patrol is related preparation, priority logic, and reporting work; do not inherit utility scheduling or savings claims automatically.
 - Doctoral Research keeps a simple explanation, archived comparisons, and a plain dissertation citation. Removed research-resource links and teaching-example sections must not return automatically. The standalone synthetic network example still exists.
+- Describe the doctoral network experiments in general terms. Owner instruction (2026-09-25): do not call them follow-up experiments or mention any date after 2024 on the doctoral page or its diagram.
 - Lead pipe prediction prototype and the independent V3 evidence workbench remain distinct synthetic cases. The older municipal OCR page remains unlisted. Do not add duplicate category/Additional listings or private source links.
 - Unlisted routes remain directly accessible and may be in the sitemap. This is not access control or a promise of deindexing.
 

@@ -93,7 +93,7 @@ test('Building Footprint Extraction shows preprocessing before extraction and pr
         for (const text of [section.table.caption, ...section.table.headers, ...section.table.rows.flat()]) assert.ok(details.includes(esc(text)), `${directory}: complete archived-results table`);
       }
       if (section.diagram) {
-        assert.ok(details.includes(`src="../${section.diagram.src}"`));
+        assert.match(details, new RegExp(`src="\\.\\./${section.diagram.src.replaceAll('.', '\\.')}\\?v=[a-f0-9]{12}"`), `${directory}: versioned preprocessing diagram`);
         assert.ok(details.includes(`alt="${esc(section.diagram.title)}"`));
         assert.ok(details.includes(esc(section.diagram.caption)));
       }
@@ -254,4 +254,14 @@ test('every published diagram image reserves its intrinsic size to prevent layou
     }
   }
   assert.ok(checked >= 10, 'All case and companion diagrams are covered');
+});
+
+test('every case-study diagram URL is content-versioned wherever it appears', async () => {
+  const manifest = JSON.parse(await readFile(new URL('../dist/build-manifest.json', import.meta.url), 'utf8'));
+  const pages = await Promise.all(manifest.pages.map(page => readFile(new URL(`../dist/${page}`, import.meta.url), 'utf8')));
+  for (const src of caseEvidenceAssets) {
+    const references = pages.flatMap(html => html.split(`"../${src}`).slice(1).map(rest => rest.slice(0, 16)));
+    assert.ok(references.length > 0, `${src} is published`);
+    assert.ok(references.every(rest => /^\?v=[a-f0-9]{12}"/.test(rest)), `${src}: every reference carries its content hash`);
+  }
 });
