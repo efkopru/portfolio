@@ -743,7 +743,7 @@
   "income-level-prediction-using-r": [
     {
       "src": "assets/screenshots/income-classification-slide-01.png",
-      "preview": "assets/screenshots/income-classification-slide-01.png",
+      "preview": "assets/screenshots/income-classification-slide-01-preview.webp",
       "caption": "Original R study, slide 1: Title and author",
       "width": 1440,
       "height": 810,
@@ -752,7 +752,7 @@
     },
     {
       "src": "assets/screenshots/income-classification-slide-02.png",
-      "preview": "assets/screenshots/income-classification-slide-02.png",
+      "preview": "assets/screenshots/income-classification-slide-02-preview.webp",
       "caption": "Original R study, slide 2: Contents",
       "width": 1440,
       "height": 810,
@@ -761,7 +761,7 @@
     },
     {
       "src": "assets/screenshots/income-classification-slide-03.png",
-      "preview": "assets/screenshots/income-classification-slide-03.png",
+      "preview": "assets/screenshots/income-classification-slide-03-preview.webp",
       "caption": "Original R study, slide 3: Dataset and provenance",
       "width": 1440,
       "height": 810,
@@ -770,7 +770,7 @@
     },
     {
       "src": "assets/screenshots/income-classification-slide-04.png",
-      "preview": "assets/screenshots/income-classification-slide-04.png",
+      "preview": "assets/screenshots/income-classification-slide-04-preview.webp",
       "caption": "Original R study, slide 4: Data exploration",
       "width": 1440,
       "height": 810,
@@ -780,7 +780,7 @@
     },
     {
       "src": "assets/screenshots/income-classification-slide-05.png",
-      "preview": "assets/screenshots/income-classification-slide-05.png",
+      "preview": "assets/screenshots/income-classification-slide-05-preview.webp",
       "caption": "Original R study, slide 5: Missing-value handling",
       "width": 1440,
       "height": 810,
@@ -789,7 +789,7 @@
     },
     {
       "src": "assets/screenshots/income-classification-slide-06.png",
-      "preview": "assets/screenshots/income-classification-slide-06.png",
+      "preview": "assets/screenshots/income-classification-slide-06-preview.webp",
       "caption": "Original R study, slide 6: Income and predictor exploration",
       "width": 1440,
       "height": 810,
@@ -798,7 +798,7 @@
     },
     {
       "src": "assets/screenshots/income-classification-slide-07.png",
-      "preview": "assets/screenshots/income-classification-slide-07.png",
+      "preview": "assets/screenshots/income-classification-slide-07-preview.webp",
       "caption": "Original R study, slide 7: Occupation and marital-status exploration",
       "width": 1440,
       "height": 810,
@@ -807,7 +807,7 @@
     },
     {
       "src": "assets/screenshots/income-classification-slide-08.png",
-      "preview": "assets/screenshots/income-classification-slide-08.png",
+      "preview": "assets/screenshots/income-classification-slide-08-preview.webp",
       "caption": "Original R study, slide 8: Exploratory plots",
       "width": 1440,
       "height": 810,
@@ -816,7 +816,7 @@
     },
     {
       "src": "assets/screenshots/income-classification-slide-09.png",
-      "preview": "assets/screenshots/income-classification-slide-09.png",
+      "preview": "assets/screenshots/income-classification-slide-09-preview.webp",
       "caption": "Original R study, slide 9: Race and gender exploration",
       "width": 1440,
       "height": 810,
@@ -825,7 +825,7 @@
     },
     {
       "src": "assets/screenshots/income-classification-slide-10.png",
-      "preview": "assets/screenshots/income-classification-slide-10.png",
+      "preview": "assets/screenshots/income-classification-slide-10-preview.webp",
       "caption": "Original R study, slide 10: Train and test split",
       "width": 1440,
       "height": 810,
@@ -834,7 +834,7 @@
     },
     {
       "src": "assets/screenshots/income-classification-slide-11.png",
-      "preview": "assets/screenshots/income-classification-slide-11.png",
+      "preview": "assets/screenshots/income-classification-slide-11-preview.webp",
       "caption": "Original R study, slide 11: Logistic regression setup",
       "width": 1440,
       "height": 810,
@@ -843,7 +843,7 @@
     },
     {
       "src": "assets/screenshots/income-classification-slide-12.png",
-      "preview": "assets/screenshots/income-classification-slide-12.png",
+      "preview": "assets/screenshots/income-classification-slide-12-preview.webp",
       "caption": "Original R study, slide 12: Updated logistic regression",
       "width": 1440,
       "height": 810,
@@ -852,7 +852,7 @@
     },
     {
       "src": "assets/screenshots/income-classification-slide-13.png",
-      "preview": "assets/screenshots/income-classification-slide-13.png",
+      "preview": "assets/screenshots/income-classification-slide-13-preview.webp",
       "caption": "Original R study, slide 13: Final logistic regression model",
       "width": 1440,
       "height": 810,
@@ -861,7 +861,7 @@
     },
     {
       "src": "assets/screenshots/income-classification-slide-14.png",
-      "preview": "assets/screenshots/income-classification-slide-14.png",
+      "preview": "assets/screenshots/income-classification-slide-14-preview.webp",
       "caption": "Original R study, slide 14: Variance inflation factors",
       "width": 1440,
       "height": 810,
@@ -870,7 +870,7 @@
     },
     {
       "src": "assets/screenshots/income-classification-slide-15.png",
-      "preview": "assets/screenshots/income-classification-slide-15.png",
+      "preview": "assets/screenshots/income-classification-slide-15-preview.webp",
       "caption": "Original R study, slide 15: Logistic regression evaluation",
       "width": 1440,
       "height": 810,
@@ -879,7 +879,7 @@
     },
     {
       "src": "assets/screenshots/income-classification-slide-16.png",
-      "preview": "assets/screenshots/income-classification-slide-16.png",
+      "preview": "assets/screenshots/income-classification-slide-16-preview.webp",
       "caption": "Original R study, slide 16: Classification tree",
       "width": 1440,
       "height": 810,
@@ -888,7 +888,7 @@
     },
     {
       "src": "assets/screenshots/income-classification-slide-17.png",
-      "preview": "assets/screenshots/income-classification-slide-17.png",
+      "preview": "assets/screenshots/income-classification-slide-17-preview.webp",
       "caption": "Original R study, slide 17: Tree pruning",
       "width": 1440,
       "height": 810,
@@ -897,7 +897,7 @@
     },
     {
       "src": "assets/screenshots/income-classification-slide-18.png",
-      "preview": "assets/screenshots/income-classification-slide-18.png",
+      "preview": "assets/screenshots/income-classification-slide-18-preview.webp",
       "caption": "Original R study, slide 18: Tree evaluation",
       "width": 1440,
       "height": 810,
@@ -906,7 +906,7 @@
     },
     {
       "src": "assets/screenshots/income-classification-slide-19.png",
-      "preview": "assets/screenshots/income-classification-slide-19.png",
+      "preview": "assets/screenshots/income-classification-slide-19-preview.webp",
       "caption": "Original R study, slide 19: Random forest",
       "width": 1440,
       "height": 810,
@@ -915,7 +915,7 @@
     },
     {
       "src": "assets/screenshots/income-classification-slide-20.png",
-      "preview": "assets/screenshots/income-classification-slide-20.png",
+      "preview": "assets/screenshots/income-classification-slide-20-preview.webp",
       "caption": "Original R study, slide 20: Random-forest tuning",
       "width": 1440,
       "height": 810,
@@ -924,7 +924,7 @@
     },
     {
       "src": "assets/screenshots/income-classification-slide-21.png",
-      "preview": "assets/screenshots/income-classification-slide-21.png",
+      "preview": "assets/screenshots/income-classification-slide-21-preview.webp",
       "caption": "Original R study, slide 21: Variable importance",
       "width": 1440,
       "height": 810,
@@ -933,7 +933,7 @@
     },
     {
       "src": "assets/screenshots/income-classification-slide-22.png",
-      "preview": "assets/screenshots/income-classification-slide-22.png",
+      "preview": "assets/screenshots/income-classification-slide-22-preview.webp",
       "caption": "Original R study, slide 22: Random-forest evaluation",
       "width": 1440,
       "height": 810,
@@ -942,7 +942,7 @@
     },
     {
       "src": "assets/screenshots/income-classification-slide-23.png",
-      "preview": "assets/screenshots/income-classification-slide-23.png",
+      "preview": "assets/screenshots/income-classification-slide-23-preview.webp",
       "caption": "Original R study, slide 23: Linear SVM",
       "width": 1440,
       "height": 810,
@@ -951,7 +951,7 @@
     },
     {
       "src": "assets/screenshots/income-classification-slide-24.png",
-      "preview": "assets/screenshots/income-classification-slide-24.png",
+      "preview": "assets/screenshots/income-classification-slide-24-preview.webp",
       "caption": "Original R study, slide 24: Linear SVM evaluation",
       "width": 1440,
       "height": 810,
@@ -960,7 +960,7 @@
     },
     {
       "src": "assets/screenshots/income-classification-slide-25.png",
-      "preview": "assets/screenshots/income-classification-slide-25.png",
+      "preview": "assets/screenshots/income-classification-slide-25-preview.webp",
       "caption": "Original R study, slide 25: Model comparison",
       "width": 1440,
       "height": 810,
@@ -969,7 +969,7 @@
     },
     {
       "src": "assets/screenshots/income-classification-slide-26.png",
-      "preview": "assets/screenshots/income-classification-slide-26.png",
+      "preview": "assets/screenshots/income-classification-slide-26-preview.webp",
       "caption": "Original R study, slide 26: Discussion and conclusion",
       "width": 1440,
       "height": 810,
