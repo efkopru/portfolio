@@ -435,3 +435,15 @@ test('doctoral page describes its network experiments generally, without follow-
   assert.ok(pages[0].includes('Testing when a smaller search area helps'));
   assert.match(pages[0], /network-benchmark\.svg\?v=[a-f0-9]{12}/, 'Updated diagram text is not hidden behind a cached copy');
 });
+
+test('doctoral page shows its project gallery before the network experiment sections', async () => {
+  for (const path of ['doctoral-research/index.html', 'dist/doctoral-research/index.html']) {
+    const html = body(await source(path));
+    const positions = ['class="case-overview"', 'class="project-gallery"', 'Testing when a smaller search area helps', 'Target placement determines the benefit', 'class="project-details'].map(token => html.indexOf(token));
+    assert.ok(positions.every((position, index) => position >= 0 && (index === 0 || position > positions[index - 1])), `${path}: overview, gallery, experiments, then technical details`);
+  }
+  for (const project of siteProjects.filter(project => project.id !== 'doctoral-research' && project.gallery.length && project.evidenceSections?.length && !siteProjects.some(child => child.parentProjectId === project.id))) {
+    const html = body(await source(`${project.id}/index.html`));
+    assert.ok(html.indexOf('class="case-evidence"') < html.indexOf('class="project-gallery"'), `${project.id}: other pages keep evidence before the gallery`);
+  }
+});

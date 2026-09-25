@@ -99,7 +99,10 @@ function projectPage(project) {
   const parent = project.collection;
   const parentProject = siteProjects.find(candidate => candidate.id === project.parentProjectId);
   const stagedWorkflow = project.id === 'building-footprint-extraction';
-  const content = stagedWorkflow ? buildingFootprintStages(project, siteProjects.find(candidate => candidate.parentProjectId === project.id)) : `${caseSummary(project, { esc, chips })}${caseEvidence(project, { esc, assetVersions })}${embeddedApp(project.embed)}${gallery(project)}${projectEvidence(project, { esc })}${caseDetails(project, { esc, list })}`;
+  const evidenceSections = caseEvidence(project, { esc, assetVersions });
+  // Records may opt to show their screenshots before the longer evidence sections.
+  const middle = project.galleryBeforeEvidence ? `${gallery(project)}${evidenceSections}${embeddedApp(project.embed)}` : `${evidenceSections}${embeddedApp(project.embed)}${gallery(project)}`;
+  const content = stagedWorkflow ? buildingFootprintStages(project, siteProjects.find(candidate => candidate.parentProjectId === project.id)) : `${caseSummary(project, { esc, chips })}${middle}${projectEvidence(project, { esc })}${caseDetails(project, { esc, list })}`;
   return layout({ title: project.title, description: project.summary, route: project.id, body: `<div class="shell detail"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="../index.html#projects">Projects</a>${parent ? `<span aria-hidden="true">/</span><a href="../${parent.id}/index.html">${esc(parent.title)}</a>` : ''}${parentProject ? `<span aria-hidden="true">/</span><a href="../${parentProject.id}/index.html#part-${esc(project.id)}">${esc(parentProject.title)}</a>` : ''}</nav><header class="project-heading"><h1>${esc(project.title)}</h1><p>${esc(project.summary)}</p>${!stagedWorkflow && project.links?.length ? `<div class="project-links">${links(project.links)}</div>` : ''}</header>${content}${relatedCases(project, siteProjects, { esc })}<p class="back-link"><a href="../index.html#projects">← Back to projects</a></p></div>` });
 }
 

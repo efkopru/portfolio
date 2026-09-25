@@ -1,4 +1,5 @@
 export const doctoralResearchUpdate = {
+  galleryBeforeEvidence: true,
   evidenceSections: [
     {
       heading: 'Testing when a smaller search area helps',
