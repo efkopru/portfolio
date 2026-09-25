@@ -293,3 +293,17 @@ test('404 resolves HTTP-root paths while retaining local-file relative paths', a
   assert.ok(headers.includes(`'sha256-${hash}'`));
   assert.ok(html.includes('href="./index.html#projects"'));
 });
+
+test('Apache-style hosting serves the site 404 page, AVIF type, and the baseline headers from _headers', async () => {
+  const [htaccess, headers] = await Promise.all(['../dist/.htaccess', '../dist/_headers'].map(path => readFile(new URL(path, import.meta.url), 'utf8')));
+  const lines = htaccess.split('\n').map(line => line.trim()).filter(line => line && !line.startsWith('#'));
+  assert.ok(lines.includes('ErrorDocument 404 /404.html'), 'A local path keeps the 404 status instead of redirecting');
+  assert.ok(lines.includes('AddType image/avif .avif'), 'The logo is not served as text/plain');
+  assert.equal(lines.filter(line => line === '<IfModule mod_headers.c>').length, 1);
+  assert.equal(lines.at(-1), '</IfModule>', 'Header directives degrade safely without mod_headers');
+  const set = lines.filter(line => line.startsWith('Header ')).map(line => line.match(/^Header always set ([\w-]+) "([^"]+)"$/)?.slice(1));
+  assert.ok(set.length > 0 && set.every(Boolean), 'Only simple header assignments');
+  for (const [name, value] of set) assert.ok(headers.includes(`  ${name}: ${value}\n`), `${name} matches _headers`);
+  assert.deepEqual(set.map(([name]) => name).toSorted(), ['Permissions-Policy', 'Referrer-Policy', 'X-Content-Type-Options', 'X-Frame-Options']);
+  assert.doesNotMatch(htaccess, /Content-Security-Policy|Strict-Transport-Security|Rewrite|Redirect/i, 'No untested policy or routing change');
+});

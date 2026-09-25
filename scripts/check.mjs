@@ -59,7 +59,7 @@ for (const slug of originals) assert.ok(pages.has(`${slug}/index.html`), `Lost o
 for (const collection of collections) {
   for (const [id] of collection.entries) assert.ok(pages.has(`${id}/index.html`), `Missing original collection page ${id}`);
 }
-const allowed = new Set([...manifest.pages, ...siteProjects.flatMap(project => project.gallery.flatMap(image => [image.src, image.preview])), ...evidenceAssets, ...socialCards.map(card => `assets/social/${card.Name}.png`), 'styles.css', 'script.js', 'theme.js', 'assets/efk-logo.avif', 'assets/gis-background.webp', 'sitemap.xml', 'robots.txt', '_headers', 'build-manifest.json']);
+const allowed = new Set([...manifest.pages, ...siteProjects.flatMap(project => project.gallery.flatMap(image => [image.src, image.preview])), ...evidenceAssets, ...socialCards.map(card => `assets/social/${card.Name}.png`), 'styles.css', 'script.js', 'theme.js', 'assets/efk-logo.avif', 'assets/gis-background.webp', 'sitemap.xml', 'robots.txt', '_headers', '.htaccess', 'build-manifest.json']);
 async function walk(directory) {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
     const file = resolve(directory, entry.name);
