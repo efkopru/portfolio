@@ -92,7 +92,7 @@
   const nav = document.querySelector('#site-nav');
   const toggle = document.querySelector('.menu-toggle');
   const groups = [...document.querySelectorAll('.nav-group')];
-  const desktopNavigation = window.matchMedia('(min-width: 1320px)');
+  const desktopNavigation = window.matchMedia('(min-width: 1140px)');
   function closeGroups(except) {
     groups.forEach(group => {
       if (group === except) return;

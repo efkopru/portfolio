@@ -22,10 +22,10 @@ const declarations = (css, selector) => {
   return blockAfter(css, new RegExp(`${escaped}\\s*\\{`));
 };
 
-test('header keeps its logo position and 1320px breakpoint while compacting desktop navigation', async () => {
+test('header keeps its logo position and shows full navigation from 1140px, including 1280px laptops', async () => {
   const [css, script] = await Promise.all([source('styles.css'), source('script.js')]);
   const breakpoint = script.match(/const desktopNavigation\s*=\s*window\.matchMedia\(['"]\(min-width:\s*(\d+)px\)['"]\)/)?.[1];
-  assert.equal(breakpoint, '1320');
+  assert.equal(breakpoint, '1140');
   const desktop = blockAfter(css, new RegExp(`@media\\s*\\(min-width:\\s*${breakpoint}px\\)\\s*\\{`));
   const mobile = blockAfter(css, new RegExp(`@media\\s*\\(max-width:\\s*${Number(breakpoint) - 1}px\\)\\s*\\{`));
   const nav = declarations(desktop, '.site-nav');
@@ -57,6 +57,21 @@ test('header keeps its logo position and 1320px breakpoint while compacting desk
   assert.equal(script, await source('dist/script.js'));
 });
 
+test('desktop navigation fits at its breakpoint beside a classic scrollbar', async () => {
+  const [css, script] = await Promise.all([source('styles.css'), source('script.js')]);
+  const breakpoint = Number(script.match(/const desktopNavigation\s*=\s*window\.matchMedia\(['"]\(min-width:\s*(\d+)px\)['"]\)/)?.[1]);
+  const desktop = blockAfter(css, new RegExp(`@media\\s*\\(min-width:\\s*${breakpoint}px\\)\\s*\\{`));
+  const rootSize = 16;
+  const scrollbar = 17;
+  // Measured in Chromium with the Arial fallback: seven titles and three disclosure buttons, without spacing.
+  const measuredItems = 814;
+  const padding = Number(declarations(desktop, '.site-nav>:not(:last-child)').match(/\bpadding-inline-end:\s*([\d.]+)rem/)?.[1]) * rootSize;
+  const tailBasis = Number(declarations(desktop, '.site-nav--main-only::after').match(/\bflex:\s*[\d.]+\s+0\s+([\d.]+)rem/)?.[1]) * rootSize;
+  const available = Math.min(1440, breakpoint - scrollbar - 3 * rootSize) - 101 - 2 * rootSize;
+  assert.ok(available >= measuredItems + 6 * padding + tailBasis, `Navigation needs ${measuredItems + 6 * padding + tailBasis}px but has ${available}px at ${breakpoint}px`);
+  assert.ok(breakpoint <= 1280, 'Common 1280px laptop windows show the full desktop navigation');
+});
+
 test('desktop spacing distribution uses seven top-level items when Additional projects is empty', async () => {
   for (const path of ['index.html', 'dist/index.html', 'resume/index.html', 'dist/resume/index.html']) {
     const html = await source(path);
@@ -85,7 +100,7 @@ test('desktop spacing distribution uses seven top-level items when Additional pr
 
 test('desktop flex distribution makes each visible gap exactly 75 percent of its previous size', async () => {
   const css = await source('styles.css');
-  const desktop = blockAfter(css, /@media\s*\(min-width:\s*1320px\)\s*\{/);
+  const desktop = blockAfter(css, /@media\s*\(min-width:\s*1140px\)\s*\{/);
   const item = declarations(desktop, '.site-nav>:not(:last-child)');
   const itemGrow = Number(item.match(/\bflex:\s*([\d.]+)\s+0\s+auto/)?.[1]);
   const itemPaddingRem = Number(item.match(/\bpadding-inline-end:\s*([\d.]+)rem/)?.[1]);
@@ -100,7 +115,7 @@ test('desktop flex distribution makes each visible gap exactly 75 percent of its
       const padding = itemPaddingRem * rootSize;
       const tailBasis = tailBasisRem * rootSize;
       assert.equal(gaps * padding + tailBasis, gaps * oldMinimumGap, 'Compacting titles preserves the minimum total navigation width');
-      for (const viewport of [1320, 1440, 1600, 1920]) {
+      for (const viewport of [1140, 1280, 1320, 1440, 1600, 1920]) {
         const navWidth = Math.min(1440, viewport - 3 * rootSize) - 101 - 2 * rootSize;
         for (const intrinsicWidth of [860, 960, 1060]) {
           const oldGap = Math.max(oldMinimumGap, (navWidth - intrinsicWidth) / gaps);
