@@ -1,23 +1,25 @@
 # Synthetic spatial ETL
 
-A small, runnable educational reconstruction of geospatial ingestion patterns. Every record, identifier, coordinate and inspection date is invented. This is not employer code, a deployed architecture, a production benchmark or a claim about historical project results.
+A small, independently authored teaching example of geospatial ingestion patterns. Every record, identifier, coordinate and inspection date is invented. This is not employer code, the original utility inspection pipeline, a deployed architecture, a production benchmark or a claim about historical project results.
+
+Guide reviewed against the included source and tests on 25 September 2026.
 
 ## Run
 
-Requires Python 3.10 or later with its standard-library `sqlite3` module. No packages, credentials, network services or setup steps are needed. Run from the repository root:
+Requires Python 3.10 or later with its standard-library `sqlite3` module. No third-party packages, credentials, network services or dataset setup are needed. Run from the repository root. On Windows:
 
-```sh
-python examples/spatial-etl/demo.py
+```powershell
+py -3 examples/spatial-etl/demo.py
 ```
 
 The command prints the full JSON report to stdout and structured event logs to stderr. SQLite runs in memory, so each invocation starts fresh and leaves no database behind. To regenerate the checked-in report and run the tests:
 
-```sh
-python examples/spatial-etl/demo.py --report examples/spatial-etl/report.json
-python -m unittest discover -s examples/spatial-etl -p "test_*.py" -v
+```powershell
+py -3 examples/spatial-etl/demo.py --report examples/spatial-etl/report.json
+py -3 -m unittest discover -s examples/spatial-etl -p "test_*.py" -v
 ```
 
-On installations where the interpreter is named `python3` or `py`, substitute that executable. The checked-in `report.json` is produced by this command, not manually specified. Tests assert that its content exactly matches a fresh execution.
+On installations where the interpreter is named `python` or `python3`, substitute that executable for `py -3`. The checked-in `report.json` is produced by this command, not manually specified. Tests assert that its content exactly matches a fresh execution. `--report` overwrites the explicitly named file; omitting it leaves the report file unchanged. Python may create `__pycache__` when tests import the module.
 
 ## Architecture
 
@@ -75,3 +77,11 @@ The demo loads four accepted rows, replays them, and prepares two updates plus o
 ## Limits
 
 This is a single-process, tiny in-memory SQLite demonstration. It does not implement PostGIS, spatial indexing, real-world coordinate transformations, orchestration, multi-worker locking/retry policies, secrets management, service authentication, monitoring infrastructure, schema migrations, backups or production-scale performance measurement. Validation rules and a primary key alone cannot prove correctness of real source observations. A real deployment would need those environment-specific controls and an agreed policy for late observations and conflicting source systems.
+
+## Portfolio maintenance
+
+The portfolio build reads the checked-in `report.json`; it does not execute Python or connect to the original utility system. The standalone page is `example-spatial-etl/index.html`. Its guide, source viewer, and downloadable files are generated or copied from this directory.
+
+Keep the invented fixtures separate from professional source material. After changing this example, regenerate its report, run its tests, and run the repository's build and publication checks. `npm run test:examples` tests all three companions in separate Python processes; Node.js 22+ is required for that wrapper, not for this Python example itself. Review generated-file differences before committing.
+
+Repository instructions: [README](../../README.md) and [handoff](../../HANDOFF.md). These links refer to the checkout, not separately deployed documentation pages.

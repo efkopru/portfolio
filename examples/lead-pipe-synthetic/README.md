@@ -1,10 +1,12 @@
 # Lead pipe prediction: synthetic evaluation companion
 
-This is a **newly authored educational companion**, not recovered employer code,
+This is an **independently authored synthetic teaching companion**, not recovered employer code,
 the original TF-IDF/gradient-boosting prototype, a field-validated utility model,
 or evidence of historical savings. All 800 property records, group identifiers,
 observations and targets are invented. There are no real addresses, coordinates,
 documents or customers. No private data or external services are used.
+
+Guide reviewed against the included source and tests on 25 September 2026.
 
 ## Run and reproduce
 
@@ -74,7 +76,7 @@ validated active-learning queue.
 
 - `report.json`: complete settings, split audit, learned weights, raw metrics,
   confusion counts, reliability bins, slices, errors, and presentation-ready tables.
-- `lead-pipe-evaluation.svg`: loss comparison and reliability plot generated from
+- `../../assets/evidence/lead-pipe-evaluation.svg`: loss comparison and reliability plot generated from
   the report's full-precision values. The diagonal is a reference, not a fitted
   calibration curve. A text description is embedded for accessibility.
 - `test_demo.py`: deterministic generation/split, group and property isolation,
@@ -94,3 +96,21 @@ spatial/temporal/cross-utility evaluation and domain-authorized decision rules.
 No result here supports a safe/unsafe material designation, regulatory decision,
 public-health action, or historical savings claim. The original professional
 prototype and its outcomes remain separate from this educational implementation.
+
+## Portfolio maintenance
+
+The portfolio build reads the checked-in report and SVG. It does not train this
+model during a website build. The standalone page is
+`example-lead-pipe-synthetic/index.html`; its guide and source viewers are generated
+from this directory.
+
+Regenerate both the report and chart after a model or presentation change, then
+run this suite and the repository's build and publication checks. Keep the
+default seeds fixed unless a deliberate example revision requires a change.
+Do not substitute private utility records or promote the synthetic scores to
+professional project results. `npm run test:examples` tests all three companions
+in separate Python processes; Node.js 22+ is required for that wrapper, not for
+this Python example itself. Review generated-file differences before committing.
+
+Repository instructions: [README](../../README.md) and [handoff](../../HANDOFF.md).
+These links refer to the checkout, not separately deployed documentation pages.

@@ -1,138 +1,122 @@
 # Esad Kopru portfolio
 
-Static portfolio preserving the original ekopru.com navigation, three-category project index, and separate gallery pages. Three selected projects introduce the portfolio before the complete original collections. Case studies present the problem, contribution, tools, methods, results, and limits before their galleries. No framework or account system is required. The contact form uses FormSubmit for email delivery. External GIS applications load only after an explicit click.
+A static geospatial portfolio with project case studies, local image galleries, interactive application links, and independent Python teaching examples.
 
-## Evidence branch
+- Live site: [www.ekopru.com](https://www.ekopru.com/)
+- Repository: [efkopru/portfolio](https://github.com/efkopru/portfolio)
+- Production branch: `main`
+- Continuation guide: [HANDOFF.md](HANDOFF.md)
 
-`codex/portfolio-evidence` is an independent review branch based on production `main`. It is not the older alternate-homepage branch. Its homepage is the root `index.html` in this checkout. Nothing in the build merges, pushes, or deploys this branch. Keep Hostinger's production branch on `main` until this version is approved.
+This README describes production, not the historical `codex/portfolio-preview` or `codex/portfolio-evidence` branches. The approved improvements are already on `main`.
 
-The additions are three featured projects, visible case-study summaries, three runnable synthetic companions, a cited doctoral research explanation, and project-specific sharing images. Original routes, galleries, Classic/Midnight switch, and the existing Contact form are retained.
+## Run locally
 
-## Work locally
+Use Node.js 22 or newer. There are no npm dependencies to install. Python 3.10+ with standard-library `sqlite3` is required only for the teaching examples and their tests.
 
-Requires Node.js 22 or newer. There are no dependencies to install.
+Run these commands from the production checkout:
 
 ```powershell
+git status --short --branch
 npm run build
 npm run check
 npm test
-npm run dev
-```
-
-Open `http://127.0.0.1:4173/`. The development server binds only to this computer. Rebuild and reload after editing; it is intentionally not an HMR server.
-
-## Where to edit
-
-- `content/portfolio.mjs`: profile, employment, skills, and 21 project case studies.
-- `content/site-structure.mjs`: original navigation order, separate page galleries, additional projects, and public application links.
-- `content/screenshots.json`: local screenshot paths, dimensions, captions, and original source URLs.
-- `content/evidence.mjs`: featured projects, educational companions, diagrams, and the explicit public-source file allowlist.
-- `examples/`: three self-contained Python teaching examples with guides, tests, and actual-run JSON reports.
-- `scripts/evidence-pages.mjs`: case-study summaries, evaluation tables, run instructions, and escaped source viewers.
-- `scripts/social-cards.mjs`: project-specific sharing-card metadata.
-- `scripts/build.mjs`: page templates, metadata, sitemap, publication output.
-- `styles.css`: responsive design, focus states, and print layout.
-- `script.js`: same-page contact submission, theme selection, dropdown/mobile navigation, the accessible image viewer, click-to-load applications, and legacy hash navigation.
-- `theme.js`: restores an allowlisted saved theme before the page styles load.
-
-The HTML at the project root and in page directories is generated. Edit the source above and rebuild. Internal evidence notes, local backups, agent settings, and one-time image recovery tools are excluded from Git and website publication. All assets needed for routine builds are included in this repository.
-
-You can also open the root `index.html` directly from File Explorer. Navigation, styles, image galleries, and the viewer use relative local files without fetching a content manifest. Embedded public applications still need an internet connection. Automated `file://` browser QA is unavailable under the browser tool's security policy; the equivalent HTTP preview is tested.
-
-## Themes
-
-The compact Dark mode switch below the header turns Midnight (dark navy and cyan) on or returns to Classic (the original palette) when off. Classic remains the default. Previously saved themes that are no longer available fall back to Classic. The switch has a stable accessible name, announces its on/off state, supports mouse, touch, Enter, and Space, and retains a 44px minimum target on all screen sizes. Its short animation respects reduced-motion preferences. Themes preserve the same navigation, typography, galleries, and image-viewer controls. Only the selected theme name is saved locally under `ekopru-theme`; contact messages are never saved in browser storage. If storage is unavailable, switching still works for the current page. Persistence across directly opened `file://` pages depends on the browser; use the HTTP preview for consistent cross-page behavior. Without JavaScript the original Classic theme remains usable and the switch stays hidden. Printed pages remain white with dark text.
-
-## Publish
-
-This GitHub repository contains the editable source, tests, image assets, and generated pages. Pushing the repository does not configure website hosting or change the live domain.
-
-Generated pages use content-versioned CSS and JavaScript URLs so deployments do not reuse outdated browser-cached theme styles or controls.
-
-Upload only the contents of `dist/` to a static host that serves directory `index.html` files. Do not upload the workspace root, `content/`, `docs/`, `tests/`, or `work/`.
-
-The build defaults canonical URLs and the sitemap to `https://www.ekopru.com`. To deploy under a different origin, set `SITE_URL` before building. When staging privately, use the host's access controls; `robots.txt` is not authentication.
-
-```powershell
-$env:SITE_URL = 'https://www.ekopru.com'
-npm run build
-npm run check
 npm run preview
 ```
 
-`_headers` supplies security headers for hosts that support this convention. Other hosts need equivalent settings in their own configuration. Configure the host to return `404.html` with HTTP 404 for missing paths. No SPA catch-all rewrite is needed. All 20 old page slugs remain available as their original distinct pages; old hash URLs are redirected by a fixed allowlist. A small hash-authorized 404 script resolves its links against the server root without breaking direct local-file paths.
+Open [http://127.0.0.1:4173/](http://127.0.0.1:4173/). Preview serves `dist/` and binds to localhost only. To use another free port, set `$env:PORT = '4175'` before starting it. Do not stop unrelated servers to free a port.
 
-The contact page submits the visitor's reply email, subject, and message directly to FormSubmit for delivery to the email configured in `content/portfolio.mjs`. With JavaScript, it uses the documented [FormSubmit AJAX endpoint](https://formsubmit.co/ajax-documentation) and keeps visitors on the Contact page. A live status announces progress and the result. Only an HTTP-success response with an explicit positive provider result clears the form; failures and the 20-second timeout retain its contents. Duplicate sends are blocked while a request is pending, and uncertain requests are never retried automatically. A confirmation means FormSubmit accepted the submission, not that inbox delivery was verified. Submissions are never saved in browser storage. The honeypot remains; no CAPTCHA-disabling option is set. Without JavaScript, the normal HTTPS POST still opens FormSubmit's confirmation/spam-check flow, as the page explains. The Contact page contains only the form and its submission feedback; the direct-email, public-work, and location sections are omitted.
+`npm run dev` serves the generated pages in the checkout instead. Neither command provides hot reload: rebuild after editing source, then reload the browser. A previously running server can belong to another worktree, so check the directory it serves.
 
-After a successful submission, a themed **Message sent** dialog opens with a Close button and native Escape/focus handling. The form stays locked after the dialog closes: its inputs are read-only, Send is disabled, and the submission handler rejects repeat attempts. Refreshing the page starts a new attempt; no lock is saved in browser storage. Browsers without dialog support retain the same lock and show the inline confirmation instead. Failed requests remain retryable. This prevents accidental repeat sends in the current page, not automated abuse or submissions from another tab; provider-side protections still apply.
+Generated `index.html` files also use relative links for direct file opening. HTTP preview is the supported verification route. External maps, Google Docs, and contact delivery still require internet access.
 
-Before relying on delivery, submit one test message, open FormSubmit's activation email in the recipient inbox (check spam), and activate the form. Then submit a second test and verify its receipt and Reply-To address. Repeat activation if FormSubmit requests it after an address or site change. Inbox activation and actual delivery must be verified by the owner; a successful local build is not proof of email delivery.
+## Where to edit
 
-The hidden `_url` uses the configured `SITE_URL` contact-page URL, following the [FormSubmit FAQ](https://formsubmit.co/help) for missing referrers and direct-file opening. It never sends a local filesystem path. Sending requires an internet connection. The localhost preview is the supported automated test route; direct `file://` browser QA remains unavailable. Configure both `connect-src https://formsubmit.co` and `form-action https://formsubmit.co` when applying CSP headers on the host. See [FormSubmit setup](https://formsubmit.co/) for activation and field documentation.
+| File or directory | Purpose |
+| --- | --- |
+| `content/portfolio.mjs` | Profile, ownership, results, and base case-study records |
+| `content/site-structure.mjs` | Navigation, category membership, grouped projects, galleries, and app targets |
+| `content/inspection-cases.mjs` | Utility pipeline and ground-patrol case details |
+| `content/nearmap-case.mjs`, `parcel-case.mjs`, `research-update.mjs` | Source-backed case expansions |
+| `content/screenshots.json` | Reviewed image paths, dimensions, captions, and provenance |
+| `content/evidence.mjs` | Highlighted work, teaching examples, diagrams, and publication allowlist |
+| `content/resume.mjs` | Read-only Google Docs resume URL |
+| `scripts/build.mjs` | HTML templates, metadata, asset versions, and static build |
+| `scripts/case-evidence.mjs`, `scripts/evidence-pages.mjs` | Case sections, diagrams, examples, and source readers |
+| `styles.css`, `script.js`, `theme.js` | Layout, navigation, image viewer, contact submission, and themes |
+| `assets/`, `examples/`, `tests/` | Reviewed assets, synthetic examples, and regression checks |
 
-The Resume page embeds the public Google Docs preview from the original portfolio without a separate external resume link. Edit that Google document to update the resume without rebuilding the site; change `content/resume.mjs` only if the document URL changes. The document must remain publicly viewable without granting editing access. The iframe is responsive, but Google controls its internal layout. No download or print button is added to the portfolio. Hosts applying the supplied CSP must allow `https://docs.google.com` in `frame-src`.
+Root and page-directory HTML is generated. Edit the source, then rebuild; do not maintain a second hand-edited copy of a page. The builder refreshes both checkout HTML and `dist/`. Commit the changed generated pages along with their source. `dist/` itself is ignored by Git.
 
-Project galleries use local images recovered from the original portfolio, public repositories, the historical income-classification presentation, and reviewed synthetic-prototype documentation. All images are visible by default. QGIS, SQL/JavaScript/R, and ModelBuilder have separate pages again. Select an image to open the in-page viewer: Close or Escape dismisses it; Zoom in/out changes its size; images open centered and scaled to 95% of the available width or height, preserving their proportions and enlarging small originals; Fit to screen restores that sizing; scroll to pan enlarged images. Keyboard +, -, and 0 are supported. Browser Ctrl/Cmd zoom shortcuts remain available. Without JavaScript the link opens the original local image file. Routine builds do not depend on external image hosts.
+## Current site behavior
 
-## Validation
+- The homepage presents **Highlighted work**, followed by the three original project categories. Additional projects are only listed when they are outside those categories; the currently empty Additional projects menu is hidden. Its old URL remains usable.
+- Building Footprint Extraction contains **1. Imagery preprocessing** and **2. Deep-learning extraction**. The imagery pipeline retains its old route but is not a duplicate standalone menu item.
+- Classic and Midnight are the only themes. A Dark mode on/off switch replaces the old dropdown. Preference storage is optional; invalid old preferences fall back to Classic.
+- Gallery screenshots and evidence containers have no added white frames, borders, or padding. Images retain natural proportions. White pixels inside original screenshots or charts are not automatically removed.
+- The image viewer retains Close/Escape, separated zoom and Fit controls, 95%-fit sizing, keyboard controls, and panning.
+- Utility inspection has a source-backed four-step diagram near the beginning, update-handling details, and explicit output definitions. Its diagram URL is content-versioned for both the preview image and full-size viewer.
+- Crime Analysis retains end-to-end ownership. Its enlarged application area and the custom JavaScript map use the same dimensions.
+- The Resume page embeds the original public Google Docs preview, with a small second-page scrolling hint and no separate Open resume, download, or print button.
+- The contact form uses FormSubmit AJAX without leaving the page. A successful provider response opens **Message sent** with Close; the form stays locked for that page session. Errors retain the message and permit another attempt. Without JavaScript, a normal POST leaves the page.
+- The original project routes and reviewed galleries remain available. Unlisted is not private: preserved direct routes may still appear in the sitemap.
 
-`npm run check` verifies page structure, source-data completeness, all local links and anchors, preservation of old routes, metadata, and the publication file allowlist. `npm test` protects the important factual distinctions between consultant work, automated execution, historical program outcomes, and synthetic experiments.
+## Build and publish
 
-## Reproduce the educational examples
-
-These are newly authored teaching companions using invented data, not recovered employer code or reproductions of original research experiments. Each page labels that distinction and exposes its guide, source, tests, report, settings, and limitations. The code and reports are explicitly allowlisted for static publication; caches, databases, and other workspace files are not.
-
-Python 3.10+ with the standard-library `sqlite3` module is needed only to run these examples and their tests. Website builds on Hostinger need Node.js only and use the checked-in reports and images.
+The existing Hostinger deployment follows `main`. Its verified configuration uses Node.js 24, build command `npm run build`, and output directory `dist`. A push to `main` triggers the configured deployment; it does not configure a new host or change the domain.
 
 ```powershell
-npm run test:examples
+npm run validate
+git diff --check
+git status --short --branch
+# Review and stage only the intended source, docs, assets, and generated pages.
+git commit -m "Describe the verified change"
+git push origin main
+```
+
+After pushing, confirm the hosting build completed for the pushed commit. Then inspect the changed live pages and assets. Local tests or a successful Git push alone do not prove deployment. There is currently no tracked GitHub Actions workflow in production `main`; do not claim that an old branch's workflow gates Hostinger.
+
+For a manual static deployment, upload only the contents of `dist/`. Never upload the entire workspace, private `docs/`, operational source folders, connection files, or data exports.
+
+Canonical URLs and the sitemap default to `https://www.ekopru.com`. Set `SITE_URL` only when intentionally building for a different approved origin. This project uses individual static pages, not an SPA catch-all route. Configure missing paths to return `404.html` with HTTP 404.
+
+The generated `_headers` file applies only on hosts that support that convention; verify actual hosting headers separately. Preserve the specific frame and connection origins needed by the Google resume, GIS applications, and contact form.
+
+CSS, JavaScript, sharing images, and opted-in zoomable case diagrams use content hashes in their URLs. If a changed image still looks old, compare the deployed HTML, versioned URL, and served asset before changing unrelated code.
+
+## Validate
+
+```powershell
 npm run validate
 ```
 
-The runner tries `python`, `python3`, and `py -3`. If needed, set `$env:PYTHON` to the full executable path, without arguments. Each test suite runs in its own interpreter. `validate` builds the site, checks publication output, runs website regressions, then runs all example tests.
+This builds the site, checks all local links and the publication allowlist, runs site regressions, and runs the three Python example suites. Individual commands are `build`, `check`, `test`, and `test:examples`.
 
-From the repository root, regenerate each report independently:
+The example runner tries `python`, `python3`, then `py -3`. If necessary, set `$env:PYTHON` to a full interpreter path, without command-line arguments. A Windows Store alias is not a working interpreter.
 
-```powershell
-python examples/spatial-etl/demo.py --report examples/spatial-etl/report.json
-python examples/lead-pipe-synthetic/demo.py --report examples/lead-pipe-synthetic/report.json --chart assets/evidence/lead-pipe-evaluation.svg
-python examples/network-access/demo.py --report examples/network-access/report.json
-npm run build
-```
+Also check the changed page at desktop and mobile widths, in both themes. Test the relevant viewer, navigation, disclosure, or embedded-app interaction. Do not send real contact messages as part of a routine automated test.
 
-The ETL example validates invented local-grid observations and demonstrates quarantine, transactional revision-aware updates, idempotent replay, rollback, and recovery in SQLite. It does not claim PostGIS or real coordinate transformations. The ML example compares a grouped-split logistic model with a training-prevalence baseline and reports losses, confusion counts, reliability bins, and error slices. Its scores are not field accuracy. The network example contrasts independent shortest-path edges with an exhaustively optimized shared network on tiny graphs; timings are actual local measurements that vary between runs, not dissertation benchmarks.
+FormSubmit acceptance does not prove inbox delivery. Owner confirmation of activation and actual receipt remains a separate verification step. External app availability can also change independently of this repository.
 
-The research page retains a plain dissertation citation and distinguishes the 2024 research from later synthetic-network experiments. Its 72 paired results are archived observations, with timing scopes stated next to the representative comparison table. It does not claim a journal paper or DOI. Each educational example guide documents its own constraints.
+## Teaching examples and publication boundaries
 
-## Archived project case studies
+The three examples use invented data and are distinct from employer implementations or dissertation benchmarks:
 
-The Nearmap imagery pipeline, ground patrol analytics, and parcel integration pages expand the original collections. The utility inspection and doctoral research pages include additional method and result evidence. Public copy lives in `content/nearmap-case.mjs`, `content/inspection-cases.mjs`, `content/parcel-case.mjs`, and `content/research-update.mjs`; `content/portfolio.mjs` integrates those records.
+- [Spatial ETL](examples/spatial-etl/README.md): validation, quarantine, revision-aware SQLite updates, replay, rollback, and recovery.
+- [Lead-pipe prediction](examples/lead-pipe-synthetic/README.md): grouped evaluation, baseline comparison, calibration summaries, and error slices on synthetic records.
+- [Network access](examples/network-access/README.md): tiny shared-network examples and independent shortest-path comparisons.
 
-Structured evidence sections are rendered by `scripts/case-evidence.mjs`. Tables have captions and row/column headers; diagrams are original explanatory SVGs. Diagram paths are included in the publication allowlist through `content/evidence.mjs`. Employer records, licensed imagery, internal addresses, source code, and local audit notes are not part of these additions. Saved-run counts and research timings are labeled as archived observations, not fresh benchmarks. Ground patrol reporting does not inherit the utility pipeline's scheduling or time-saving claims.
+Normal website builds use committed reports and figures; they do not require Python or regenerate benchmarks. Follow each example's guide for regeneration, then rebuild and retest the site. Do not transfer a teaching example's guarantees or scores to the historical professional project.
 
-To regenerate only selected sharing images, pass project IDs to the existing PowerShell authoring helper, for example `./scripts/create-social-previews.ps1 -Names nearmap-imagery-pipeline,ground-patrol-analytics,parcel-data-integration`. Routine builds use the committed PNGs and require Node.js only.
+Private source, credentials, real infrastructure locations, employer records, and licensed imagery are not publication material. Local audit notes live outside the tracked release or in ignored `docs/`. Only reviewed assets and explicitly allowlisted teaching-example files enter `dist/`.
 
-## Lead-service-line workbench case study
-
-`lead-service-line-evidence-workbench/` presents the independent V3 workbench as a synthetic-data demonstration. It is separate from the earlier `lead-service-review-prototype/` page and the historical municipal OCR work. The case study follows the same navigation, theme, and accessible image viewer as the other projects. Its workflow diagram is a code-authored SVG in `assets/evidence/lead-service-line-workbench.svg`.
-
-The public page contains no customer records, historical documents, model pickle, or utility performance claim. The implementation repository remains private, so the page does not expose an inaccessible GitHub source link. Only reviewed synthetic assets should be added to this page; retain the visible validation and human-review limitations.
-
-The allowlisted `assets/demos/lead-service-line-workbench/` directory contains the actual 99-record synthetic review interface from V3 release 0.3.0. `scripts/import-workbench-demo.mjs` imports the reviewed HTML and extracts executable JavaScript and CSS into content-versioned, same-origin files to work under the portfolio's strict CSP. The demo also uses a restrictive meta CSP with `connect-src 'none'`; it stores decisions only in page memory until the visitor exports them. Its source hash and dataset ID are recorded in `provenance.json`. A new input needs a separate synthetic-data review; the importer intentionally checks the release's reviewed record count. The importer is not part of normal builds and must never receive real utility review records.
+The independent lead-service workbench publishes a reviewed synthetic interface, not customer data or private model/source files. Its demo decisions remain in the page until exported; it does not submit them to a service. Any replacement input requires a separate synthetic-data review.
 
 ## Sharing images
 
-Every project has a local 1200 by 630 PNG cover. General pages use `assets/social/portfolio.png`; companion and source pages inherit their parent project's cover. Open Graph and Twitter metadata use absolute, content-versioned image URLs based on `SITE_URL`. Existing reviewed project imagery is used where available. No remote image downloads occur during builds.
+Every project has a committed 1200 by 630 PNG sharing image. General pages use the portfolio card; companion and source pages inherit their project's card. Metadata uses absolute, content-versioned URLs based on `SITE_URL`.
 
-To regenerate the committed images on Windows after changing project titles or summaries:
+The optional Windows helper `scripts/create-social-previews.ps1` regenerates these images using System.Drawing. Ordinary builds only copy committed assets. Follow a selected project change with a targeted image update when needed; do not regenerate all media unnecessarily. Sharing-service cache refresh is a separate check.
 
-```powershell
-powershell -NoProfile -File scripts/create-social-previews.ps1
-npm run build
-npm run check
-npm test
-```
+## Continue in another project or session
 
-PNG generation uses Windows System.Drawing; ordinary website builds on other systems only copy the committed PNGs. Sharing services need the final public HTTPS URLs to fetch these images. Local metadata tests do not prove that a sharing service has refreshed its cached preview.
-
-Image captions, dimensions, and available public source URLs are recorded in `content/screenshots.json`. Internal audit and publication-planning notes remain outside the public repository.
+Read [HANDOFF.md](HANDOFF.md) before making changes. It records the current release baseline, user decisions, known limits, and verification workflow. Local-only workspace routing and private audit references, when available, are in `docs/LOCAL_HANDOFF.md`; the reusable startup prompt is `docs/NEW_PROJECT_PROMPT.md`. Those files are intentionally absent from a public clone.
