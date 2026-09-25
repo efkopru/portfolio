@@ -261,17 +261,19 @@ test('evidence renderers escape source text, report values and figure attributes
   }
 });
 
+const escapeRegExp = value => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const sizedImage = (src, alt) => new RegExp(`src="${escapeRegExp(`../${src}`)}" width="\\d+" height="\\d+" alt="${escapeRegExp(alt)}"`);
 test('method and companion diagrams retain local SVG sources, meaningful alt and provenance', async () => {
   for (const [id, diagram] of Object.entries(methodDiagrams)) {
     const html = body(await source(`${id}/index.html`));
-    assert.ok(html.includes(`src="../${diagram.src}" alt="${esc(diagram.title)}"`));
+    assert.match(html, sizedImage(diagram.src, esc(diagram.title)));
     assert.ok(html.includes(`<figcaption>${esc(diagram.caption)}</figcaption>`));
     assert.ok(html.includes(`href="../${diagram.src}"`));
   }
   for (const companion of companions) {
     const report = JSON.parse(await source(`examples/${companion.id}/report.json`));
     const html = body(await source(`${companionRoute(companion.id)}/index.html`));
-    assert.ok(html.includes(`src="../${companion.diagram}" alt="${esc(report.title)}"`));
+    assert.match(html, sizedImage(companion.diagram, esc(report.title)));
     assert.ok(html.includes(esc(companion.diagramCaption)));
   }
   for (const path of evidenceAssets.filter(path => path.endsWith('.svg'))) {

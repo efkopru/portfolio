@@ -1,3 +1,5 @@
+import { svgSizeAttributes } from './svg-size.mjs';
+
 // Structured case-study evidence stays readable without scripts or collapsed panels.
 export function caseEvidence(project, { esc, headingLevel = 2, idPrefix = 'case-evidence', assetVersions = {} }) {
   if (![2, 3].includes(headingLevel)) throw new Error(`${project.id}: evidence heading level must be 2 or 3.`);
@@ -19,7 +21,7 @@ export function caseEvidence(project, { esc, headingLevel = 2, idPrefix = 'case-
       const version = assetVersions[src];
       if (version && !/^[a-f0-9]{12}$/.test(version)) throw new Error(`${project.id}: invalid diagram asset version.`);
       const url = `../${src}${version ? `?v=${version}` : ''}`;
-      const image = `<img src="${esc(url)}" alt="${esc(title)}" loading="lazy" decoding="async">`;
+      const image = `<img src="${esc(url)}"${svgSizeAttributes(src)} alt="${esc(title)}" loading="lazy" decoding="async">`;
       const content = section.diagram.zoomable ? `<a data-image-viewer href="${esc(url)}" data-caption="${esc(caption)}" aria-label="Open diagram: ${esc(title)}">${image}</a>` : image;
       diagram = `<figure class="evidence-figure case-diagram"><div class="diagram-scroll" tabindex="0" role="region" aria-label="${esc(title)}">${content}</div><figcaption>${esc(caption)} <span class="diagram-scroll-hint">Scroll horizontally to explore the diagram.</span></figcaption></figure>`;
     }

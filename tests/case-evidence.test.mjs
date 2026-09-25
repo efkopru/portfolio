@@ -240,3 +240,18 @@ test('zoomable case diagrams escape viewer attributes and keep existing diagrams
   assert.ok(zoomable.includes(`aria-label="Open diagram: ${esc(text)}"`));
   assert.match(zoomable, /<div class="diagram-scroll"[^>]*><a [^>]+><img [^>]+><\/a><\/div>/);
 });
+
+test('every published diagram image reserves its intrinsic size to prevent layout shift', async () => {
+  const manifest = JSON.parse(await readFile(new URL('../dist/build-manifest.json', import.meta.url), 'utf8'));
+  let checked = 0;
+  for (const page of manifest.pages) {
+    const html = await readFile(new URL(`../dist/${page}`, import.meta.url), 'utf8');
+    for (const [image, src] of html.matchAll(/<img src="\.\.\/(assets\/evidence\/[a-z0-9-]+\.svg)(?:\?v=[a-f0-9]{12})?"[^>]*>/g)) {
+      const svg = (await readFile(new URL(`../${src}`, import.meta.url), 'utf8')).match(/<svg\b[^>]*>/)[0];
+      const [, width, height] = svg.match(/\bviewBox="\s*0[\s,]+0[\s,]+([\d.]+)[\s,]+([\d.]+)\s*"/);
+      assert.ok(image.includes(` width="${Math.round(width)}" height="${Math.round(height)}" `), `${page}: ${src} declares its viewBox size`);
+      checked++;
+    }
+  }
+  assert.ok(checked >= 10, 'All case and companion diagrams are covered');
+});

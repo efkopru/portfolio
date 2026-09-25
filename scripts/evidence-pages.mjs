@@ -1,5 +1,6 @@
 import { projects } from '../content/portfolio.mjs';
 import { featuredWork, methodDiagrams, companions, companionRoute, sourceRoute, workbenchDemo } from '../content/evidence.mjs';
+import { svgSizeAttributes } from './svg-size.mjs';
 
 const sources = new Map(projects.map(project => [project.id, project]));
 const projectArrow = (workflow = false) => `<svg class="project-arrow${workflow ? ' flow-arrow' : ''}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h16m-6-6 6 6-6 6"/></svg>`;
@@ -24,7 +25,7 @@ export function caseDetails(project, { esc, list }) {
 }
 
 export function figure(src, title, caption, esc) {
-  return `<figure class="evidence-figure"><a data-image-viewer href="../${esc(src)}" data-caption="${esc(caption)}" aria-label="Open diagram: ${esc(title)}"><img src="../${esc(src)}" alt="${esc(title)}" loading="lazy" decoding="async"></a><figcaption>${esc(caption)}</figcaption></figure>`;
+  return `<figure class="evidence-figure"><a data-image-viewer href="../${esc(src)}" data-caption="${esc(caption)}" aria-label="Open diagram: ${esc(title)}"><img src="../${esc(src)}"${svgSizeAttributes(src)} alt="${esc(title)}" loading="lazy" decoding="async"></a><figcaption>${esc(caption)}</figcaption></figure>`;
 }
 
 export function projectEvidence(project, ui) {
