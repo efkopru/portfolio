@@ -8,11 +8,11 @@ Maintain Esad Kopru's portfolio for geospatial data science, data engineering, s
 
 - Repository: [efkopru/portfolio](https://github.com/efkopru/portfolio).
 - Production branch: `main`; live origin: [www.ekopru.com](https://www.ekopru.com/).
-- Last functional release reviewed before this documentation refresh: `5493068`, the utility diagram cache-version fix, deployed 2026-09-24.
-- Earlier relevant commits: `a96de74` utility source-backed case update; `4f408af` frameless images across project pages; `aa37e4c` two-stage building-footprint workflow.
+- Latest approved improvements, 2026-09-25, one commit each so any can be reverted alone: `e8a2ed8` line-ending-independent asset hashes; `eb378fe` full desktop navigation from 1140px; `aa47147` footer background cropped and re-encoded from 772 KB to 111 KB; `5253107` full-width resume preview on phones; `75b29c0` `dist/.htaccess` for Hostinger 404 page, AVIF type, and baseline headers; `87e8850` WebP previews for the 26 income-prediction slides; `88ca031` type labels and summaries on category overview pages; `5d0ba49` intrinsic sizes for workflow diagrams.
+- Rollback point: tag `before-improvements-2026-09-25` (`1622dec`) is production `main` before those changes.
+- Earlier relevant commits: `5493068` utility diagram cache-version fix; `a96de74` utility source-backed case update; `4f408af` frameless images across project pages; `aa37e4c` two-stage building-footprint workflow.
 - Build baseline: 51 static pages, 24 base project records, 29 project routes including five historical gallery/application pages, and 20 preserved original routes.
-- Regression baseline: 115 site tests and 54 Python example tests. Run validation again after changes; counts are not permanent acceptance criteria.
-- Documentation refresh validation on 2026-09-25 passed `npm run validate`, `git diff --check`, and local Markdown link checks. Generated example guide pages were rebuilt; no operational source was executed or changed.
+- Regression baseline: 120 site tests and 54 Python example tests. Run validation again after changes; counts are not permanent acceptance criteria.
 - No tracked GitHub Actions workflow currently exists on production `main`. Hostinger auto-deployment is not gated by a workflow on a historical branch.
 
 The older preview and evidence branches are historical work, not the current editing target. Local workspace routing, including the correct managed worktree, is recorded in ignored `docs/LOCAL_HANDOFF.md` when available.
@@ -30,7 +30,8 @@ The older preview and evidence branches are historical work, not the current edi
 
 - Keep the design simple, text compact, and workflow arrows clear. Do not introduce a replacement visual design or restore discarded oversized cards.
 - Use **Highlighted work**, not Selected work. Do not restore its removed black button. Preserve the five existing homepage keywords and compact introduction.
-- Keep the original three categories and current navigation order/spacing. Additional projects must exclude anything already in a main category. Hide its menu when empty, but retain the direct route.
+- Keep the original three categories and current navigation order/spacing. Additional projects must exclude anything already in a main category. Hide its menu when empty, but retain the direct route. The full desktop navigation starts at 1140px; adding or renaming top-level items requires rechecking that it still fits.
+- Category overview pages may only reuse each record's existing `type` and `summary`; do not write new labels for records without a type. The homepage project index stays titles only.
 - Only Classic and Midnight remain. Use the accessible Dark mode toggle, not a dropdown or extra themes.
 - Keep image containers transparent and frameless, with natural proportions. Do not remove white content from original charts or screenshots, crop evidence, or recolor the original media. Preserve Close/Escape, zoom, Fit, keyboard support, and captions.
 - Keep case explanations simple. Preserve established ownership and qualify real outcomes versus synthetic demonstrations.
@@ -89,3 +90,11 @@ The full-size viewer fits proportionally, not by cropping. Scrollable diagram co
 ## Remaining work
 
 There is no authorized feature implementation waiting in this handoff. Start the next session by establishing current state and then follow the user's next request. Source-code cleanup, a backend replacement for FormSubmit, indexing changes, or a new design are separate tasks, not implied next steps.
+
+Open questions from the 2026-09-25 review, each awaiting the owner's decision rather than implementation:
+
+- The About page has no internal links but is in the sitemap, and its employer text is written in the present tense. Link it, unlist it, or leave it.
+- `ekopru.com` serves the same pages as `www.ekopru.com` without redirecting; canonical tags point to www. A redirect is a Hostinger panel setting.
+- The highlighted card "Public web GIS and application modernization" opens the page titled "Interactive Maps - A custom JS App".
+- The content security policy in `_headers` is not enforced on Hostinger. Enforcing it through `.htaccess` needs a live check of the resume, GIS embeds, workbench demo, and contact form first.
+- Smaller galleries without previews (lead-service prototype, workbench, workforce atlas, and unlisted forecast demonstrations) still load their original PNGs as thumbnails.

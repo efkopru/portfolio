@@ -50,13 +50,17 @@ Root and page-directory HTML is generated. Edit the source, then rebuild; do not
 ## Current site behavior
 
 - The homepage presents **Highlighted work**, followed by the three original project categories. Additional projects are only listed when they are outside those categories; the currently empty Additional projects menu is hidden. Its old URL remains usable.
+- The full desktop navigation appears from 1140px (including 1280px laptop windows); narrower windows use the Menu button. `styles.css` and the `desktopNavigation` query in `script.js` must use the same breakpoint, and a layout test checks that the seven items fit there.
+- Category overview pages list each project with its existing type label and one-line summary from the project record. The homepage project index remains a plain title list.
 - Building Footprint Extraction contains **1. Imagery preprocessing** and **2. Deep-learning extraction**. The imagery pipeline retains its old route but is not a duplicate standalone menu item.
 - Classic and Midnight are the only themes. A Dark mode on/off switch replaces the old dropdown. Preference storage is optional; invalid old preferences fall back to Classic.
 - Gallery screenshots and evidence containers have no added white frames, borders, or padding. Images retain natural proportions. White pixels inside original screenshots or charts are not automatically removed.
 - The image viewer retains Close/Escape, separated zoom and Fit controls, 95%-fit sizing, keyboard controls, and panning.
 - Utility inspection has a source-backed four-step diagram near the beginning, update-handling details, and explicit output definitions. Its diagram URL is content-versioned for both the preview image and full-size viewer.
 - Crime Analysis retains end-to-end ownership. Its enlarged application area and the custom JavaScript map use the same dimensions.
-- The Resume page embeds the original public Google Docs preview, with a small second-page scrolling hint and no separate Open resume, download, or print button.
+- The Resume page embeds the original public Google Docs preview, with a small second-page scrolling hint and no separate Open resume, download, or print button. The preview is 75% wide on desktop and full content width below 650px.
+- The footer background `assets/gis-background.webp` is only the 1440x720 band visible at `center 65%/cover` (rows 936-1656 of the original 1440x2160 image). Change the image and its CSS position together.
+- Gallery thumbnails are 720px-wide WebP previews where available; the viewer always opens the original image.
 - The contact form uses FormSubmit AJAX without leaving the page. A successful provider response opens **Message sent** with Close; the form stays locked for that page session. Errors retain the message and permit another attempt. Without JavaScript, a normal POST leaves the page.
 - The original project routes and reviewed galleries remain available. Unlisted is not private: preserved direct routes may still appear in the sitemap.
 
@@ -79,9 +83,11 @@ For a manual static deployment, upload only the contents of `dist/`. Never uploa
 
 Canonical URLs and the sitemap default to `https://www.ekopru.com`. Set `SITE_URL` only when intentionally building for a different approved origin. This project uses individual static pages, not an SPA catch-all route. Configure missing paths to return `404.html` with HTTP 404.
 
-The generated `_headers` file applies only on hosts that support that convention; verify actual hosting headers separately. Preserve the specific frame and connection origins needed by the Google resume, GIS applications, and contact form.
+The generated `_headers` file applies only on hosts that support that convention; Hostinger ignores it. For Hostinger's Apache-style server, the build also writes `dist/.htaccess`: `ErrorDocument 404 /404.html`, the AVIF MIME type for the logo, and the nosniff, referrer, frame, and permissions headers from `_headers`. The content security policy stays only in `_headers` until it is verified against the live Google resume, GIS applications, and contact form. Verify actual hosting headers separately after changes.
 
-CSS, JavaScript, sharing images, and opted-in zoomable case diagrams use content hashes in their URLs. If a changed image still looks old, compare the deployed HTML, versioned URL, and served asset before changing unrelated code.
+CSS, JavaScript, sharing images, and opted-in zoomable case diagrams use content hashes in their URLs. Text assets are hashed with LF line endings, so Windows CRLF checkouts generate the same versions as the Linux host build. If a changed image still looks old, compare the deployed HTML, versioned URL, and served asset before changing unrelated code.
+
+The tag `before-improvements-2026-09-25` marks production `main` before the September 25, 2026 navigation, performance, and category-page changes. Each of those changes is a separate commit that can be undone with `git revert`.
 
 ## Validate
 
